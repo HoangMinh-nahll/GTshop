@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+        <!-- Cột ảnh -->
+        <div class="col-md-6">
+            <div class="product-gallery border rounded-4 overflow-hidden shadow-sm">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="max-height: 500px; object-fit: contain;">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                        <i class="fas fa-image fa-5x text-secondary"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Cột thông tin -->
+        <div class="col-md-6">
+            <div class="product-info">
+                <h1 class="fw-bold h2 mb-3">{{ product.name }}</h1>
+
+                <!-- Giá và giảm giá -->
+                <div class="price-section mb-4">
+                    <span class="text-muted text-decoration-line-through fs-4 me-3" id="original-price" style="display: none;">{{ product.price|currency }}</span>
+                    <span class="text-danger fw-bold fs-1" id="current-price">{{ product.price|currency }}</span>
+                    <span class="badge bg-danger fs-6 ms-3" id="discount-badge" style="display: none;"></span>
+                </div>
+
+                <!-- Biến thể (size, dung tích...) -->
+                {% if variants %}
+                <div class="mb-4">
+                    <label class="fw-bold">Chọn phân loại:</label>
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        {% for var in variants %}
+                        <label class="variant-option">
+                            <input type="radio" name="variant_id" value="{{ var.id }}"
+                                   data-price="{% if var.price %}{{ var.price }}{% else %}{{ product.price }}{% endif %}"
+                                   data-original-price="{{ product.price }}"
+                                   {% if forloop.first %}checked{% endif %} class="d-none">
+                            <span class="border rounded-3 px-3 py-2 d-inline-block" style="cursor:pointer;">
+                                {{ var.name }}
+                                {% if var.price %}<br><small>{{ var.price|currency }}</small>{% endif %}
+                            </span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs mb-4" id="productTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button" role="tab">Mô tả</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Thông tin</button>
+                    </li>
+                </ul>
+                <div class="tab-content mb-4" id="productTabContent">
+                    <div class="tab-pane fade show active" id="desc" role="tabpanel">
+                        <p>{{ product.description|linebreaks }}</p>
+                    </div>
+                    <div class="tab-pane fade" id="info" role="tabpanel">
+                        <p><strong>Danh mục:</strong> {{ product.category.name }}</p>
+                        <p><strong>Ngày đăng:</strong> {{ product.created|date:"d/m/Y" }}</p>
+                        <p><strong>Tình trạng:</strong> {% if product.stock > 0 %}Còn hàng{% else %}Hết hàng{% endif %}</p>
+                    </div>
+                </div>
+
+                <!-- Form thêm giỏ hàng -->
+                <form method="post" action="{% url 'carts:cart_add' product.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="variant_id" id="selected_variant" value="">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label fw-500">Số lượng:</label>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group" style="width: 140px;">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQty(-1)">-</button>
+                                <input type="number" name="quantity" id="quantity" class="form-control text-center" value="1" min="1">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary px-4 py-2">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm format số có dấu chấm
+    function formatCurrency(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
+    }
+
+    // Cập nhật giá và badge giảm giá
+    function updatePriceAndDiscount(variantPrice, originalPrice) {
+        const currentPriceSpan = document.getElementById('current-price');
+        const originalPriceSpan = document.getElementById('original-price');
+        const discountSpan = document.getElementById('discount-badge');
+
+        if (!currentPriceSpan) return;
+
+        currentPriceSpan.innerText = formatCurrency(variantPrice);
+
+        if (variantPrice < originalPrice) {
+            originalPriceSpan.style.display = 'inline';
+            originalPriceSpan.innerText = formatCurrency(originalPrice);
+            discountSpan.style.display = 'inline-block';
+            const discountPercent = Math.round((originalPrice - variantPrice) / originalPrice * 100);
+            discountSpan.innerText = `-${discountPercent}%`;
+        } else {
+            originalPriceSpan.style.display = 'none';
+            discountSpan.style.display = 'none';
+        }
+    }
+
+    // Xử lý sự kiện khi chọn radio
+    document.querySelectorAll('.variant-option input').forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Highlight
+            document.querySelectorAll('.variant-option span').forEach(s => s.classList.remove('bg-primary', 'text-white'));
+            this.nextElementSibling.classList.add('bg-primary', 'text-white');
+
+            // Lấy giá
+            const variantPrice = parseInt(this.getAttribute('data-price'));
+            const originalPrice = parseInt(this.getAttribute('data-original-price'));
+            updatePriceAndDiscount(variantPrice, originalPrice);
+
+            // Lưu variant_id
+            document.getElementById('selected_variant').value = this.value;
+        });
+    });
+
+    // Cho phép click vào span để chọn radio (tốt hơn UX)
+    document.querySelectorAll('.variant-option span').forEach(span => {
+        span.addEventListener('click', function() {
+            const radio = this.previousElementSibling;
+            if (radio && radio.type === 'radio') {
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+
+    // Kích hoạt radio đầu tiên khi trang tải
+    window.onload = function() {
+        const firstRadio = document.querySelector('.variant-option input');
+        if (firstRadio) {
+            firstRadio.dispatchEvent(new Event('change'));
+        } else {
+            // Nếu không có variant, hiển thị giá gốc (có sale_price)
+            const originalPrice = parseInt('{{ product.price }}');
+            const currentPrice = {% if product.sale_price %}{{ product.sale_price }}{% else %}{{ product.price }}{% endif %};
+            updatePriceAndDiscount(currentPrice, originalPrice);
+        }
+    };
+
+    function changeQty(delta) {
+        let qty = document.getElementById('quantity');
+        let newVal = parseInt(qty.value) + delta;
+        if (newVal >= 1) qty.value = newVal;
+    }
+</script>
+{% endblock %}

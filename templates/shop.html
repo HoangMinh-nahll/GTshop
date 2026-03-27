@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="section-title">{% if category %}{{ category.name }}{% else %}Cửa hàng{% endif %}</h2>
+
+    <!-- Search Form -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-6">
+            <form class="d-flex" action="." method="get">
+                <input type="text" name="q" class="form-control me-2" placeholder="Tìm kiếm..." value="{{ request.GET.q }}">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row g-4">
+        {% for p in page_obj %}
+        <div class="col-md-3 col-6">
+            <div class="product-card">
+                {% if p.is_hot %}
+                    <span class="product-badge">Hot</span>
+                {% endif %}
+                <div class="product-image">
+                    {% if p.image %}
+                        <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                    {% else %}
+                        <div class="product-image-placeholder">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="product-body">
+                    <h6 class="product-title">
+                        <a href="{{ p.get_absolute_url }}">{{ p.name|truncatechars:40 }}</a>
+                    </h6>
+                    <div class="product-price">
+                        {% if p.sale_price %}
+                            <span class="price-old">{{ p.price|currency }}</span>
+                            <span class="price-sale">{{ p.sale_price|currency }}</span>
+                            <span class="discount-badge">-{{ p.get_discount_percent }}%</span>
+                        {% else %}
+                            <span class="price-current">{{ p.price|currency }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-actions">
+                        <a href="{{ p.get_absolute_url }}" class="btn-detail">Chi tiết</a>
+                        <form method="post" action="{% url 'carts:cart_add' p.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn-add-cart">Thêm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>Không có sản phẩm.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="pagination mt-4">
+        {% if page_obj.has_previous %}
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">«</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="page-link active">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">»</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

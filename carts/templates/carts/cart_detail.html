@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<div class="container cart-section">
+    <h2 class="section-title">Giỏ hàng của bạn</h2>
+
+    {% if cart_items %}
+    <div class="cart-wrapper">
+        <div class="cart-items">
+            <div class="cart-header">
+                <span>Chọn</span>
+                <span>Sản phẩm</span>
+                <span>Đơn giá</span>
+                <span>Số lượng</span>
+                <span>Thành tiền</span>
+                <span></span>
+            </div>
+
+            {% for item in cart_items %}
+            <div class="cart-row">
+                <div class="cart-select" data-label="Chọn">
+                    <input type="checkbox" class="item-checkbox" value="{{ item.key }}" {% if item.key in selected_keys %}checked{% endif %}>
+                </div>
+                <div class="cart-product">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/no-image.png' %}" alt="No image">
+                    {% endif %}
+                    <div class="cart-product-info">
+                        <h6><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></h6>
+                        {% if item.variant %}
+                            <p class="text-muted small mb-0">Phân loại: {{ item.variant.name }}</p>
+                        {% endif %}
+                        <p class="text-muted small">Mã: #{{ item.product.id }}</p>
+                    </div>
+                </div>
+                <div class="cart-price" data-label="Đơn giá">{{ item.price|currency }}</div>
+                <div class="cart-quantity" data-label="Số lượng">
+                    <form method="post" action="{% url 'carts:cart_update' item.key %}" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="cart-total" data-label="Thành tiền">{{ item.total|currency }}</div>
+                <div class="cart-remove" data-label="Xóa">
+                    <a href="{% url 'carts:cart_remove' item.key %}" onclick="return confirm('Xóa sản phẩm này?')">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="action-buttons">
+                <button id="update-selection-btn" class="btn btn-outline-primary">
+                    <i class="fas fa-save"></i> Cập nhật lựa chọn
+                </button>
+                <button id="delete-selected-btn" class="btn btn-outline-danger">
+                    <i class="fas fa-trash-alt"></i> Xóa các mục đã chọn
+                </button>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h5 class="mb-3">Tổng giỏ hàng</h5>
+            <div class="summary-item">
+                <span>Tạm tính (sản phẩm chọn):</span>
+                <span>{{ total_selected|currency }}</span>
+            </div>
+            <div class="summary-item">
+                <span>Phí vận chuyển:</span>
+                <span>{% if shipping_selected > 0 %}{{ shipping_selected|currency }}{% else %}Miễn phí{% endif %}</span>
+            </div>
+            <div class="summary-item total">
+                <span>Tổng cộng:</span>
+                <span>{{ grand_total_selected|currency }}</span>
+            </div>
+            <a href="{% url 'carts:checkout' %}" class="btn-checkout">Tiến hành thanh toán</a>
+            <a href="{% url 'store:shop' %}" class="btn-continue">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+        <h4>Giỏ hàng trống</h4>
+        <p class="text-muted">Hãy thêm sản phẩm để tiếp tục.</p>
+        <a href="{% url 'store:shop' %}" class="btn btn-primary btn-lg px-5 mt-3">Mua sắm ngay</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Hàm gửi các key đã chọn tới URL
+    function submitSelectedKeys(url, confirmMessage) {
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        const selected = Array.from(checkboxes).map(cb => cb.value);
+        if (selected.length === 0) {
+            alert('Vui lòng chọn ít nhất một sản phẩm.');
+            return;
+        }
+        if (confirmMessage && !confirm(confirmMessage)) return;
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        const csrf = document.createElement('input');
+        csrf.type = 'hidden';
+        csrf.name = 'csrfmiddlewaretoken';
+        csrf.value = '{{ csrf_token }}';
+        form.appendChild(csrf);
+        selected.forEach(key => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_items';
+            input.value = key;
+            form.appendChild(input);
+        });
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // Cập nhật lựa chọn
+    document.getElementById('update-selection-btn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        submitSelectedKeys("{% url 'carts:update_selection' %}", null);
+    });
+
+    // Xóa các mục đã chọn
+    document.getElementById('delete-selected-btn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        submitSelectedKeys("{% url 'carts:delete_selected' %}", 'Bạn có chắc chắn muốn xóa các sản phẩm đã chọn?');
+    });
+</script>
+{% endblock %}

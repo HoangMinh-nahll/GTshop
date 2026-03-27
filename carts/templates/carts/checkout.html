@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="section-title text-center mb-5">Thanh toán đơn hàng</h2>
+
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="checkout-form">
+                <h4 class="mb-4">Thông tin giao hàng</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="full_name" class="form-label">Họ tên người nhận</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="phone" name="phone" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email">
+                        </div>
+                        <div class="col-12">
+                            <label for="address" class="form-label">Địa chỉ giao hàng</label>
+                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label for="note" class="form-label">Ghi chú (không bắt buộc)</label>
+                            <textarea class="form-control" id="note" name="note" rows="2"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success w-100 py-3 rounded-pill">
+                                <i class="fas fa-check-circle me-2"></i>Đặt hàng
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="order-summary">
+                <h4 class="mb-4">Đơn hàng của bạn</h4>
+                <div class="list-group list-group-flush">
+                    {% for item in cart_items %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            {{ item.product.name }}
+                            {% if item.variant %}
+                                <small class="text-muted">({{ item.variant.name }})</small>
+                            {% endif %}
+                            x {{ item.quantity }}
+                        </span>
+                        <span class="fw-bold">{{ item.total|currency }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Tạm tính</span>
+                    <span>{{ total|currency }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Phí vận chuyển</span>
+                    <span>{% if shipping_fee > 0 %}{{ shipping_fee|currency }}{% else %}Miễn phí{% endif %}</span>
+                </div>
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Tổng cộng</span>
+                    <span class="text-danger">{{ grand_total|currency }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

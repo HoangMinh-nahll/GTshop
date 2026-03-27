@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} - GreatShop{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'blog:article_list' %}">Tin tức</a></li>
+            <li class="breadcrumb-item active">{{ article.title }}</li>
+        </ol>
+    </nav>
+
+    <article>
+        <h1 class="mb-3">{{ article.title }}</h1>
+        <p class="text-muted">Đăng ngày {{ article.created_at|date:"d/m/Y" }} bởi {{ article.author.username }}</p>
+        {% if article.image %}
+            <img src="{{ article.image.url }}" class="img-fluid mb-4" alt="{{ article.title }}">
+        {% endif %}
+        <div class="content">
+            {{ article.content|linebreaks }}
+        </div>
+    </article>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block content %}
+<div class="container product-detail-section py-5">
+    <div class="row g-5">
+        <!-- Cột ảnh sản phẩm -->
+        <div class="col-md-6">
+            <div class="product-gallery border rounded-4 overflow-hidden shadow-sm">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="max-height: 500px; object-fit: contain;">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                        <i class="fas fa-image fa-5x text-secondary"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Cột thông tin -->
+        <div class="col-md-6">
+            <div class="product-info">
+                <h1 class="fw-bold h2 mb-3">{{ product.name }}</h1>
+
+                <!-- Giá -->
+                <div class="price-section mb-4">
+                    {% if product.sale_price %}
+                        <span class="text-muted text-decoration-line-through fs-4 me-3">{{ product.price|currency }}</span>
+                        <span class="text-danger fw-bold fs-1">{{ product.sale_price|currency }}</span>
+                        <span class="badge bg-danger fs-6 ms-3">-{{ product.get_discount_percent }}%</span>
+                    {% else %}
+                        <span class="text-danger fw-bold fs-1">{{ product.price|currency }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs mb-4" id="productTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button" role="tab" aria-controls="desc" aria-selected="true">Mô tả</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Thông tin</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mb-4" id="productTabContent">
+                    <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">
+                        <p>{{ product.description|linebreaks }}</p>
+                    </div>
+                    <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+                        <p><strong>Danh mục:</strong> {{ product.category.name }}</p>
+                        <p><strong>Ngày đăng:</strong> {{ product.created|date:"d/m/Y" }}</p>
+                        <p><strong>Tình trạng:</strong> {% if product.stock > 0 %}Còn hàng{% else %}Hết hàng{% endif %}</p>
+                    </div>
+                </div>
+
+                <!-- Form thêm giỏ hàng -->
+                <form method="post" action="{% url 'carts:cart_add' product.id %}">
+                    {% csrf_token %}
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="quantity" class="form-label fw-500">Số lượng:</label>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group" style="width: 140px;">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQty(-1)">-</button>
+                                <input type="number" name="quantity" id="quantity" class="form-control text-center" value="1" min="1">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary px-4 py-2">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeQty(delta) {
+        let qty = document.getElementById('quantity');
+        let newVal = parseInt(qty.value) + delta;
+        if (newVal >= 1) qty.value = newVal;
+    }
+</script>
+{% endblock %}

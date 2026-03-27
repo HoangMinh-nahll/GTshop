@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block content %}
+<div class="container cart-section">
+    <h2 class="section-title">Giỏ hàng của bạn</h2>
+
+    {% if cart_items %}
+    <div class="cart-wrapper">
+        <div class="cart-items">
+            <div class="cart-header">
+                <span>Sản phẩm</span>
+                <span>Đơn giá</span>
+                <span>Số lượng</span>
+                <span>Thành tiền</span>
+                <span></span>
+            </div>
+            {% for item in cart_items %}
+            <div class="cart-row">
+                <div class="cart-product">
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/no-image.png' %}" alt="No image">
+                    {% endif %}
+                    <div class="cart-product-info">
+                        <h6><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></h6>
+                        <p class="text-muted">Mã: #{{ item.product.id }}</p>
+                    </div>
+                </div>
+                <div class="cart-price">{{ item.product.price|currency }}</div>
+                <div class="cart-quantity">
+                    <form method="post" action="{% url 'carts:cart_update' item.product.id %}" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control" style="width:80px;">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Cập nhật</button>
+                    </form>
+                </div>
+                <div class="cart-total">{{ item.total|currency }}</div>
+                <div class="cart-remove">
+                    <a href="{% url 'carts:cart_remove' item.product.id %}" class="text-danger" onclick="return confirm('Xóa sản phẩm này?')">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="cart-summary">
+            <h5>Tổng giỏ hàng</h5>
+            <div class="summary-item">
+                <span>Tạm tính:</span>
+                <span>{{ total|currency }}</span>
+            </div>
+            <div class="summary-item">
+                <span>Phí vận chuyển:</span>
+                <span>0₫</span>
+            </div>
+            <div class="summary-item total">
+                <span>Tổng cộng:</span>
+                <span>{{ total|currency }}</span>
+            </div>
+            <a href="{% url 'carts:checkout' %}" class="btn-checkout">Tiến hành thanh toán</a>
+            <a href="{% url 'store:shop' %}" class="btn-continue text-center d-block">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+        <h4>Giỏ hàng trống</h4>
+        <p class="text-muted">Hãy thêm sản phẩm để tiếp tục.</p>
+        <a href="{% url 'store:shop' %}" class="btn btn-primary btn-lg px-5 mt-3">Mua sắm ngay</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

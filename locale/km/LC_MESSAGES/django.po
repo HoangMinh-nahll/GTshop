@@ -1,0 +1,87 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-27 07:50+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: .\GTshop\settings.py:77
+msgid "Tiếng Việt"
+msgstr ""
+
+#: .\GTshop\settings.py:78
+msgid "English"
+msgstr ""
+
+#: .\GTshop\settings.py:79
+msgid "中文"
+msgstr ""
+
+#: .\GTshop\settings.py:80
+msgid "日本語"
+msgstr ""
+
+#: .\GTshop\settings.py:81
+msgid "Русский"
+msgstr ""
+
+#: .\GTshop\settings.py:82
+msgid "ភាសាខ្មែរ"
+msgstr ""
+
+#: .\templates\base.html:26 .\templates\base.html:180
+msgid "Trang chủ"
+msgstr ""
+
+#: .\templates\base.html:30 .\templates\base.html:181
+msgid "Cửa hàng"
+msgstr ""
+
+#: .\templates\base.html:33 .\templates\base.html:183
+msgid "Tin tức"
+msgstr ""
+
+#: .\templates\base.html:40
+msgid "Tìm kiếm..."
+msgstr ""
+
+#: .\templates\base.html:128 .\templates\base.html:182
+msgid "Giỏ hàng"
+msgstr ""
+
+#: .\templates\base.html:142
+msgid "Đăng xuất"
+msgstr ""
+
+#: .\templates\base.html:146
+msgid "Đăng nhập"
+msgstr ""
+
+#: .\templates\base.html:147
+msgid "Đăng ký"
+msgstr ""
+
+#: .\templates\base.html:175
+msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam."
+msgstr ""
+
+#: .\templates\base.html:178
+msgid "Liên kết"
+msgstr ""
+
+#: .\templates\base.html:187
+msgid "Kết nối"
+msgstr ""
