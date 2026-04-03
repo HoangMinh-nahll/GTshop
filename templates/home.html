@@ -1,130 +1,264 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load store_filters %}
+{% load i18n %}
+
+{% block title %}GTShop — Siêu thị trực tuyến{% endblock %}
 
 {% block content %}
 
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 fade-in">
-                <h1 class="hero-title">Chào mừng đến <span class="text-white">GTShop</span></h1>
-                <p class="hero-subtitle">Siêu thị trực tuyến uy tín hàng đầu Việt Nam</p>
-                <a href="{% url 'store:shop' %}" class="btn btn-outline-light btn-lg pulse">Mua sắm ngay</a>
-            </div>
-            <div class="col-lg-6 text-center">
-                <i class="fas fa-store fa-7x text-white floating"></i>
-            </div>
+{# ═══════════════════════════════════════ HERO SECTION #}
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-blob hero-blob--red"></div>
+    <div class="hero-blob hero-blob--orange"></div>
+    <div class="hero-blob hero-blob--gold"></div>
+    <div class="hero-grid-overlay"></div>
+  </div>
+
+  <div class="container position-relative">
+    <div class="row align-items-center" style="min-height:520px;">
+
+      <div class="col-lg-6 hero-content">
+        <span class="hero-tag">🛍️ {% trans "Siêu thị trực tuyến #1" %}</span>
+        <h1 class="hero-title">
+          {% trans "Chào mừng đến" %}<br>
+          <span class="hero-title-highlight">GTShop</span>
+        </h1>
+        <p class="hero-subtitle">{% trans "Siêu thị trực tuyến uy tín hàng đầu" %}</p>
+        <div class="hero-buttons">
+          <a href="{% url 'store:shop' %}" class="btn-hero-primary">
+            {% trans "Mua sắm ngay" %} <span class="btn-arrow">→</span>
+          </a>
+          <a href="{% url 'blog:article_list' %}" class="btn-hero-ghost">{% trans "Tin tức" %}</a>
         </div>
+
+      </div>
+
+      <div class="col-lg-6 hero-visual">
+        <div class="hero-floating-chip hero-chip--shipping"><span>📦</span>{% trans "Giao nhanh 2h" %}</div>
+        <div class="hero-floating-chip hero-chip--secure"><span>🔒</span>{% trans "Bảo mật 100%" %}</div>
+        <div class="hero-floating-chip hero-chip--rating"><span>⭐</span>4.9 / 5.0</div>
+        <div class="hero-store-icon"><i class="fas fa-store"></i></div>
+      </div>
+
     </div>
+  </div>
+
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+    </svg>
+  </div>
 </section>
 
-<!-- Categories Section -->
+{# ═══════════════════════════════════════ FEATURES BAR #}
+<section class="features-bar">
+  <div class="container">
+    <div class="features-bar-inner">
+      <div class="feature-item">
+        <span class="feature-icon">🚚</span>
+        <div><b>{% trans "Miễn phí vận chuyển" %}</b><br><small>{% trans "Đơn hàng trên 500K" %}</small></div>
+      </div>
+      <div class="feature-divider"></div>
+      <div class="feature-item">
+        <span class="feature-icon">🔄</span>
+        <div><b>{% trans "Đổi trả dễ dàng" %}</b><br><small>{% trans "30 ngày miễn phí" %}</small></div>
+      </div>
+      <div class="feature-divider"></div>
+      <div class="feature-item">
+        <span class="feature-icon">💳</span>
+        <div><b>{% trans "Thanh toán an toàn" %}</b><br><small>{% trans "Mã hoá SSL 256-bit" %}</small></div>
+      </div>
+      <div class="feature-divider"></div>
+      <div class="feature-item">
+        <span class="feature-icon">🎧</span>
+        <div><b>{% trans "Hỗ trợ 24/7" %}</b><br><small>{% trans "Luôn sẵn sàng phục vụ" %}</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════════════════════════════ CATEGORIES SECTION #}
 <section class="categories-section">
-    <div class="container">
-        <h2 class="section-title">Danh mục nổi bật</h2>
-        <div class="row g-4">
-            {% for cat in categories %}
-            <div class="col-md-3 col-6">
-                <div class="category-card">
-                    <a href="{{ cat.get_absolute_url }}" class="text-decoration-none">
-                        <div class="category-image">
-                            {% if cat.image %}
-                                <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
-                            {% else %}
-                                <div style="width:100%; height:100%; background:linear-gradient(135deg, var(--primary-light), var(--primary));"></div>
-                            {% endif %}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="category-title">{{ cat.name }}</h5>
-                            <p class="category-count">{{ cat.product_count }} sản phẩm</p>
-                            <span class="category-link">Xem ngay</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center">
-                <p>Chưa có danh mục nổi bật.</p>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">{% trans "Khám phá" %}</p>
+        <h2 class="section-heading">{% trans "Danh mục nổi bật" %}</h2>
+      </div>
+      <a href="{% url 'store:shop' %}" class="section-view-all">{% trans "Xem tất cả" %} →</a>
     </div>
+    <div class="row g-4">
+      {% for cat in categories %}
+      <div class="col-lg-3 col-md-4 col-6">
+        <a href="{{ cat.get_absolute_url }}" class="category-card">
+          <div class="category-card-image">
+            {% if cat.image %}
+              <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+            {% else %}
+              <div class="category-card-placeholder"><i class="fas fa-tag"></i></div>
+            {% endif %}
+            <div class="category-card-overlay"></div>
+          </div>
+          <div class="category-card-body">
+            <div>
+              <h5 class="category-card-name">{{ cat.name }}</h5>
+              <span class="category-card-count">{{ cat.product_count }} {% trans "sản phẩm" %}</span>
+            </div>
+            <span class="category-card-arrow">→</span>
+          </div>
+        </a>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5 text-muted">{% trans "Chưa có danh mục." %}</div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
-<!-- Hot Products Carousel (Bootstrap) -->
-<section class="products-section">
-    <div class="container">
-        <h2 class="section-title">Sản phẩm hot</h2>
-
-        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                {% for p in products %}
-                    {% if forloop.counter0|divisibleby:4 %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <div class="row">
-                    {% endif %}
-
-                    <div class="col-md-3 col-6">
-                        <div class="product-card">
-                            <span class="product-badge">Hot</span>
-                            <div class="product-image">
-                                {% if p.image %}
-                                    <img src="{{ p.image.url }}" alt="{{ p.name }}">
-                                {% else %}
-                                    <div class="product-image-placeholder">
-                                        <i class="fas fa-image fa-3x text-muted"></i>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="product-body">
-                                <h6 class="product-title">
-                                    <a href="{{ p.get_absolute_url }}">{{ p.name|truncatechars:40 }}</a>
-                                </h6>
-                                <div class="product-price">
-                                    {% if p.sale_price %}
-                                        <span class="price-old">{{ p.price|currency }}</span>
-                                        <span class="price-sale">{{ p.sale_price|currency }}</span>
-                                        <span class="discount-badge">-{{ p.get_discount_percent }}%</span>
-                                    {% else %}
-                                        <span class="price-current">{{ p.price|currency }}</span>
-                                    {% endif %}
-                                </div>
-                                <div class="product-actions">
-                                    <a href="{{ p.get_absolute_url }}" class="btn-detail">Chi tiết</a>
-                                    <form method="post" action="{% url 'carts:cart_add' p.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="btn-add-cart">Thêm</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if forloop.counter|divisibleby:4 or forloop.last %}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% empty %}
-                <div class="col-12 text-center">
-                    <p>Chưa có sản phẩm hot.</p>
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Nút điều hướng -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
+{# ═══════════════════════════════════════ PROMO BANNER #}
+<section class="promo-section">
+  <div class="container">
+    <div class="promo-banner">
+      <div class="promo-content">
+        <span class="promo-tag">🔥 Flash Sale</span>
+        <h2 class="promo-title">{% trans "Giảm đến" %} <span>50%</span></h2>
+        <p class="promo-subtitle">{% trans "Ưu đãi có hạn — Nhanh tay kẻo lỡ!" %}</p>
+        <a href="{% url 'store:shop' %}" class="btn-promo">{% trans "Mua ngay" %}</a>
+      </div>
+      <div class="promo-decoration">
+        <div class="promo-circle promo-circle--large"></div>
+        <div class="promo-circle promo-circle--small"></div>
+        <span class="promo-emoji">🛒</span>
+      </div>
     </div>
+  </div>
+</section>
+
+{# ═══════════════════════════════════════ HOT PRODUCTS #}
+<section class="products-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Trending</p>
+        <h2 class="section-heading">{% trans "Sản phẩm hot" %} 🔥</h2>
+      </div>
+      <a href="{% url 'store:shop' %}" class="section-view-all">{% trans "Xem tất cả" %} →</a>
+    </div>
+
+    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-inner">
+        {% for p in products %}
+          {% if forloop.counter0|divisibleby:4 %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <div class="row g-3">
+          {% endif %}
+
+          <div class="col-lg-3 col-md-4 col-6">
+            <div class="product-card">
+              {% if p.sale_price %}
+                <span class="product-badge product-badge--sale">-{{ p.get_discount_percent }}%</span>
+              {% else %}
+                <span class="product-badge product-badge--hot">HOT</span>
+              {% endif %}
+
+              <div class="product-image-wrap">
+                {% if p.image %}
+                  <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                {% else %}
+                  <div class="product-image-placeholder"><i class="fas fa-image"></i></div>
+                {% endif %}
+                <div class="product-quick-view">
+                  <a href="{{ p.get_absolute_url }}" class="btn-quick-view"><i class="fas fa-eye"></i></a>
+                </div>
+              </div>
+
+              <div class="product-info">
+                <div class="product-stars">★★★★★</div>
+                <h6 class="product-name">
+                  <a href="{{ p.get_absolute_url }}">{{ p.name|truncatechars:40 }}</a>
+                </h6>
+                <div class="product-price">
+                  {% if p.sale_price %}
+                    <span class="price-original">{{ p.price|currency }}</span>
+                    <span class="price-sale">{{ p.sale_price|currency }}</span>
+                  {% else %}
+                    <span class="price-regular">{{ p.price|currency }}</span>
+                  {% endif %}
+                </div>
+                <div class="product-actions">
+                  <a href="{{ p.get_absolute_url }}" class="btn-product-detail">
+                    <i class="fas fa-eye"></i> {% trans "Chi tiết" %}
+                  </a>
+                  <form method="post" action="{% url 'carts:cart_add' p.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn-add-to-cart">
+                      <i class="fas fa-cart-plus"></i> {% trans "Thêm" %}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% if forloop.counter|divisibleby:4 or forloop.last %}
+              </div>
+            </div>
+          {% endif %}
+        {% empty %}
+        <div class="carousel-item active">
+          <div class="col-12 text-center py-5 text-muted">{% trans "Chưa có sản phẩm." %}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button class="carousel-btn carousel-btn--prev" type="button"
+              data-bs-target="#productCarousel" data-bs-slide="prev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="carousel-btn carousel-btn--next" type="button"
+              data-bs-target="#productCarousel" data-bs-slide="next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════════════════════════════ WHY CHOOSE US #}
+<section class="why-section">
+  <div class="container">
+    <div class="why-inner">
+      <div class="why-text">
+        <h2>{% trans "Tại sao chọn" %} <span>GTShop</span>?</h2>
+        <p>{% trans "Chúng tôi cam kết mang đến trải nghiệm mua sắm tốt nhất." %}</p>
+        <a href="{% url 'store:shop' %}" class="btn-why-cta">{% trans "Mua sắm ngay" %} →</a>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-card-icon">🏆</div>
+          <h4>{% trans "Chất lượng hàng đầu" %}</h4>
+          <p>{% trans "100% hàng chính hãng, kiểm định kỹ lưỡng" %}</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-icon">💰</div>
+          <h4>{% trans "Giá tốt nhất" %}</h4>
+          <p>{% trans "Cam kết giá cạnh tranh, hoàn tiền nếu rẻ hơn" %}</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-icon">⚡</div>
+          <h4>{% trans "Giao hàng siêu tốc" %}</h4>
+          <p>{% trans "Giao trong 2 giờ tại nội thành" %}</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-icon">💎</div>
+          <h4>{% trans "Ưu đãi thành viên" %}</h4>
+          <p>{% trans "Tích điểm, nhận quà, giảm giá độc quyền" %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 {% endblock %}

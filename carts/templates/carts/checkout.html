@@ -1,80 +1,204 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load store_filters %}
+{% load i18n %}
+
+{% block title %}{% trans "Thanh toán" %} — GTShop{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h2 class="section-title text-center mb-5">Thanh toán đơn hàng</h2>
 
-    <div class="row g-5">
-        <div class="col-lg-7">
-            <div class="checkout-form">
-                <h4 class="mb-4">Thông tin giao hàng</h4>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label for="full_name" class="form-label">Họ tên người nhận</label>
-                            <input type="text" class="form-control" id="full_name" name="full_name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" id="phone" name="phone" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email">
-                        </div>
-                        <div class="col-12">
-                            <label for="address" class="form-label">Địa chỉ giao hàng</label>
-                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label for="note" class="form-label">Ghi chú (không bắt buộc)</label>
-                            <textarea class="form-control" id="note" name="note" rows="2"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-success w-100 py-3 rounded-pill">
-                                <i class="fas fa-check-circle me-2"></i>Đặt hàng
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-lg-5">
-            <div class="order-summary">
-                <h4 class="mb-4">Đơn hàng của bạn</h4>
-                <div class="list-group list-group-flush">
-                    {% for item in cart_items %}
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                            {{ item.product.name }}
-                            {% if item.variant %}
-                                <small class="text-muted">({{ item.variant.name }})</small>
-                            {% endif %}
-                            x {{ item.quantity }}
-                        </span>
-                        <span class="fw-bold">{{ item.total|currency }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-                <hr>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Tạm tính</span>
-                    <span>{{ total|currency }}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Phí vận chuyển</span>
-                    <span>{% if shipping_fee > 0 %}{{ shipping_fee|currency }}{% else %}Miễn phí{% endif %}</span>
-                </div>
-                <div class="d-flex justify-content-between fw-bold fs-5">
-                    <span>Tổng cộng</span>
-                    <span class="text-danger">{{ grand_total|currency }}</span>
-                </div>
-            </div>
-        </div>
+{# ═══ PAGE HEADER WITH STEPS ═══ #}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop</p>
+    <h1 class="page-header-title">{% trans "Thanh toán đơn hàng" %}</h1>
+    <div class="checkout-steps">
+      <div class="checkout-step checkout-step--done"><span>✓</span> {% trans "Giỏ hàng" %}</div>
+      <div class="checkout-step-line"></div>
+      <div class="checkout-step checkout-step--active"><span>2</span> {% trans "Thông tin" %}</div>
+      <div class="checkout-step-line"></div>
+      <div class="checkout-step"><span>3</span> {% trans "Hoàn tất" %}</div>
     </div>
+  </div>
 </div>
+
+<div class="container checkout-container">
+  <div class="checkout-layout">
+
+    {# ═══ LEFT: SHIPPING FORM ═══ #}
+    <div class="checkout-form-column">
+      <div class="checkout-form-card">
+        <h3 class="checkout-form-title">
+          <span>📦</span> {% trans "Thông tin giao hàng" %}
+        </h3>
+
+        <form method="post" class="checkout-form">
+          {% csrf_token %}
+
+          {# Full name #}
+          <div class="form-field">
+            <label class="form-field-label">
+              {% trans "Họ tên người nhận" %} <span class="form-field-required">*</span>
+            </label>
+            <div class="form-input-wrap">
+              <i class="fas fa-user form-input-icon"></i>
+              <input type="text" name="full_name" class="form-input"
+                     placeholder="{% trans 'Nguyễn Văn A' %}" required>
+            </div>
+          </div>
+
+          {# Phone + Email row #}
+          <div class="form-two-columns">
+            <div class="form-field">
+              <label class="form-field-label">
+                {% trans "Số điện thoại" %} <span class="form-field-required">*</span>
+              </label>
+              <div class="form-input-wrap">
+                <i class="fas fa-phone form-input-icon"></i>
+                <input type="tel" name="phone" class="form-input"
+                       placeholder="0912 345 678" required>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-field-label">Email</label>
+              <div class="form-input-wrap">
+                <i class="fas fa-envelope form-input-icon"></i>
+                <input type="email" name="email" class="form-input"
+                       placeholder="email@example.com">
+              </div>
+            </div>
+          </div>
+
+          {# Address #}
+          <div class="form-field">
+            <label class="form-field-label">
+              {% trans "Địa chỉ giao hàng" %} <span class="form-field-required">*</span>
+            </label>
+            <div class="form-input-wrap">
+              <i class="fas fa-map-marker-alt form-input-icon form-input-icon--top"></i>
+              <textarea name="address" class="form-input form-textarea" rows="3"
+                        placeholder="{% trans 'Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố' %}"
+                        required></textarea>
+            </div>
+          </div>
+
+          {# Note #}
+          <div class="form-field">
+            <label class="form-field-label">{% trans "Ghi chú" %}</label>
+            <div class="form-input-wrap">
+              <i class="fas fa-sticky-note form-input-icon form-input-icon--top"></i>
+              <textarea name="note" class="form-input form-textarea" rows="2"
+                        placeholder="{% trans 'Ghi chú thêm cho đơn hàng (không bắt buộc)' %}"></textarea>
+            </div>
+          </div>
+
+          {# Payment method #}
+          <div class="form-field">
+            <label class="form-field-label">{% trans "Phương thức thanh toán" %}</label>
+            <div class="payment-options">
+              <label class="payment-option payment-option--selected">
+                <input type="radio" name="payment" value="cod" checked>
+                <span class="payment-option-icon">💵</span>
+                <span class="payment-option-text">
+                  <b>{% trans "Thanh toán khi nhận hàng" %}</b>
+                  <small>COD</small>
+                </span>
+                <span class="payment-option-check">✓</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="bank">
+                <span class="payment-option-icon">🏦</span>
+                <span class="payment-option-text">
+                  <b>{% trans "Chuyển khoản ngân hàng" %}</b>
+                  <small>Bank transfer</small>
+                </span>
+                <span class="payment-option-check">✓</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-place-order">
+            <i class="fas fa-check-circle"></i> {% trans "Đặt hàng ngay" %}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {# ═══ RIGHT: ORDER SUMMARY ═══ #}
+    <div class="checkout-summary-column">
+      <div class="checkout-summary-box">
+        <h3 class="checkout-summary-title">
+          <span>🛒</span> {% trans "Đơn hàng của bạn" %}
+        </h3>
+
+        {# Item list #}
+        <div class="checkout-item-list">
+          {% for item in cart_items %}
+          <div class="checkout-item">
+            <div class="checkout-item-image">
+              {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+              {% else %}
+                <div class="checkout-item-image-placeholder"><i class="fas fa-image"></i></div>
+              {% endif %}
+              <span class="checkout-item-qty-badge">{{ item.quantity }}</span>
+            </div>
+            <div class="checkout-item-info">
+              <span class="checkout-item-name">{{ item.product.name|truncatechars:40 }}</span>
+              {% if item.variant %}
+                <span class="checkout-item-variant">{{ item.variant.name }}</span>
+              {% endif %}
+            </div>
+            <span class="checkout-item-total">{{ item.total|currency }}</span>
+          </div>
+          {% endfor %}
+        </div>
+
+        {# Price breakdown #}
+        <div class="checkout-price-breakdown">
+          <div class="checkout-price-row">
+            <span>{% trans "Tạm tính" %}</span>
+            <span>{{ total|currency }}</span>
+          </div>
+          <div class="checkout-price-row">
+            <span>{% trans "Phí vận chuyển" %}</span>
+            <span class="{% if shipping_fee == 0 %}text-free-shipping{% endif %}">
+              {% if shipping_fee > 0 %}
+                {{ shipping_fee|currency }}
+              {% else %}
+                {% trans "Miễn phí" %} 🎉
+              {% endif %}
+            </span>
+          </div>
+        </div>
+
+        <div class="checkout-grand-total">
+          <span>{% trans "Tổng cộng" %}</span>
+          <span class="checkout-grand-total-amount">{{ grand_total|currency }}</span>
+        </div>
+
+        {# Security badges #}
+        <div class="checkout-security-badges">
+          <div class="security-badge"><i class="fas fa-lock"></i> {% trans "Thanh toán bảo mật SSL" %}</div>
+          <div class="security-badge"><i class="fas fa-shield-alt"></i> {% trans "Đảm bảo hoàn tiền 100%" %}</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.payment-option input').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.payment-option').forEach(opt => {
+      opt.classList.remove('payment-option--selected');
+    });
+    radio.closest('.payment-option').classList.add('payment-option--selected');
+  });
+});
+</script>
 {% endblock %}

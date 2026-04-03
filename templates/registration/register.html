@@ -1,23 +1,90 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+{% load i18n %}
+
+{% block title %}{% trans "Đăng ký" %} — GTShop{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-4">Đăng ký tài khoản</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
-                </form>
-                <hr>
-                <p class="text-center">
-                    Đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a>
-                </p>
-            </div>
-        </div>
+<div class="auth-page">
+  <div class="auth-bg">
+    <div class="auth-blob auth-blob--one"></div>
+    <div class="auth-blob auth-blob--two"></div>
+    <div class="auth-grid-lines"></div>
+  </div>
+
+  <div class="auth-card auth-card--register">
+
+    {# Left panel #}
+    <div class="auth-left-panel">
+      <a href="{% url 'store:home' %}" class="auth-brand-logo">GTShop</a>
+      <h2 class="auth-panel-title">{% trans "Tham gia GTShop!" %}</h2>
+      <p class="auth-panel-subtitle">{% trans "Tạo tài khoản miễn phí và bắt đầu trải nghiệm mua sắm thông minh." %}</p>
+      <ul class="auth-benefits-list">
+        <li class="auth-benefit"><span>🎉</span> {% trans "Đăng ký miễn phí, không ràng buộc" %}</li>
+        <li class="auth-benefit"><span>💰</span> {% trans "Voucher 50K cho đơn hàng đầu tiên" %}</li>
+        <li class="auth-benefit"><span>🔔</span> {% trans "Nhận thông báo ưu đãi sớm nhất" %}</li>
+        <li class="auth-benefit"><span>💎</span> {% trans "Tích điểm mỗi đơn hàng" %}</li>
+      </ul>
+      <div class="auth-panel-decoration">
+        <div class="auth-deco-circle auth-deco-circle--lg"></div>
+        <div class="auth-deco-circle auth-deco-circle--sm"></div>
+        <span class="auth-deco-emoji">🎁</span>
+      </div>
     </div>
+
+    {# Right panel - Form #}
+    <div class="auth-right-panel">
+      <div class="auth-form-header">
+        <h3 class="auth-form-title">{% trans "Tạo tài khoản" %}</h3>
+        <p class="auth-form-subtitle">{% trans "Điền thông tin để bắt đầu mua sắm" %}</p>
+      </div>
+
+      <form method="post" class="auth-form">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="auth-field-group">
+          <label class="auth-field-label">{{ field.label }}</label>
+          <div class="auth-field-input-wrap">
+            {% if 'password' in field.html_name %}
+              <i class="fas fa-lock auth-field-icon"></i>
+            {% elif 'email' in field.html_name %}
+              <i class="fas fa-envelope auth-field-icon"></i>
+            {% elif 'username' in field.html_name %}
+              <i class="fas fa-user auth-field-icon"></i>
+            {% else %}
+              <i class="fas fa-edit auth-field-icon"></i>
+            {% endif %}
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <span class="auth-field-error">{{ field.errors|join:", " }}</span>
+          {% endif %}
+          {% if field.help_text %}
+            <span class="auth-field-hint">{{ field.help_text }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+        <div class="auth-error-alert">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ form.non_field_errors|join:", " }}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn-auth-submit">
+          <i class="fas fa-user-plus"></i> {% trans "Tạo tài khoản" %}
+        </button>
+      </form>
+
+      <div class="auth-divider"><span>{% trans "hoặc" %}</span></div>
+
+      <p class="auth-switch-link">
+        {% trans "Đã có tài khoản?" %}
+        <a href="{% url 'login' %}">{% trans "Đăng nhập" %} →</a>
+      </p>
+    </div>
+
+  </div>
 </div>
 {% endblock %}

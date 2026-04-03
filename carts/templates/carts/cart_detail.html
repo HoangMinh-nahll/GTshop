@@ -1,142 +1,238 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load store_filters %}
+{% load i18n %}
 
-{% block extra_css %}
-{% endblock %}
+{% block title %}{% trans "Giỏ hàng" %} — GTShop{% endblock %}
 
 {% block content %}
-<div class="container cart-section">
-    <h2 class="section-title">Giỏ hàng của bạn</h2>
 
-    {% if cart_items %}
-    <div class="cart-wrapper">
-        <div class="cart-items">
-            <div class="cart-header">
-                <span>Chọn</span>
-                <span>Sản phẩm</span>
-                <span>Đơn giá</span>
-                <span>Số lượng</span>
-                <span>Thành tiền</span>
-                <span></span>
-            </div>
-
-            {% for item in cart_items %}
-            <div class="cart-row">
-                <div class="cart-select" data-label="Chọn">
-                    <input type="checkbox" class="item-checkbox" value="{{ item.key }}" {% if item.key in selected_keys %}checked{% endif %}>
-                </div>
-                <div class="cart-product">
-                    {% if item.product.image %}
-                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-                    {% else %}
-                        <img src="{% static 'images/no-image.png' %}" alt="No image">
-                    {% endif %}
-                    <div class="cart-product-info">
-                        <h6><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></h6>
-                        {% if item.variant %}
-                            <p class="text-muted small mb-0">Phân loại: {{ item.variant.name }}</p>
-                        {% endif %}
-                        <p class="text-muted small">Mã: #{{ item.product.id }}</p>
-                    </div>
-                </div>
-                <div class="cart-price" data-label="Đơn giá">{{ item.price|currency }}</div>
-                <div class="cart-quantity" data-label="Số lượng">
-                    <form method="post" action="{% url 'carts:cart_update' item.key %}" class="d-flex gap-2">
-                        {% csrf_token %}
-                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm">
-                        <button type="submit" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </form>
-                </div>
-                <div class="cart-total" data-label="Thành tiền">{{ item.total|currency }}</div>
-                <div class="cart-remove" data-label="Xóa">
-                    <a href="{% url 'carts:cart_remove' item.key %}" onclick="return confirm('Xóa sản phẩm này?')">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
-
-            <div class="action-buttons">
-                <button id="update-selection-btn" class="btn btn-outline-primary">
-                    <i class="fas fa-save"></i> Cập nhật lựa chọn
-                </button>
-                <button id="delete-selected-btn" class="btn btn-outline-danger">
-                    <i class="fas fa-trash-alt"></i> Xóa các mục đã chọn
-                </button>
-            </div>
-        </div>
-
-        <div class="cart-summary">
-            <h5 class="mb-3">Tổng giỏ hàng</h5>
-            <div class="summary-item">
-                <span>Tạm tính (sản phẩm chọn):</span>
-                <span>{{ total_selected|currency }}</span>
-            </div>
-            <div class="summary-item">
-                <span>Phí vận chuyển:</span>
-                <span>{% if shipping_selected > 0 %}{{ shipping_selected|currency }}{% else %}Miễn phí{% endif %}</span>
-            </div>
-            <div class="summary-item total">
-                <span>Tổng cộng:</span>
-                <span>{{ grand_total_selected|currency }}</span>
-            </div>
-            <a href="{% url 'carts:checkout' %}" class="btn-checkout">Tiến hành thanh toán</a>
-            <a href="{% url 'store:shop' %}" class="btn-continue">Tiếp tục mua sắm</a>
-        </div>
-    </div>
-    {% else %}
-    <div class="text-center py-5">
-        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
-        <h4>Giỏ hàng trống</h4>
-        <p class="text-muted">Hãy thêm sản phẩm để tiếp tục.</p>
-        <a href="{% url 'store:shop' %}" class="btn btn-primary btn-lg px-5 mt-3">Mua sắm ngay</a>
-    </div>
-    {% endif %}
+{# ═══ PAGE HEADER ═══ #}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop</p>
+    <h1 class="page-header-title">{% trans "Giỏ hàng của bạn" %}</h1>
+  </div>
 </div>
 
+<div class="container cart-container">
+
+{% if cart_items %}
+<div class="cart-layout">
+
+  {# ═══ LEFT: CART ITEMS ═══ #}
+  <div class="cart-items-column">
+
+    {# Table header #}
+    <div class="cart-table-header">
+      <span></span>
+      <span>{% trans "Sản phẩm" %}</span>
+      <span>{% trans "Đơn giá" %}</span>
+      <span>{% trans "Số lượng" %}</span>
+      <span>{% trans "Thành tiền" %}</span>
+      <span></span>
+    </div>
+
+    {# Cart rows #}
+    {% for item in cart_items %}
+    <div class="cart-item-row {% if item.key in selected_keys %}cart-item-row--selected{% endif %}"
+         id="row-{{ item.key }}">
+
+      {# Checkbox #}
+      <div class="cart-item-check">
+        <label class="custom-checkbox">
+          <input type="checkbox" class="item-checkbox" value="{{ item.key }}"
+                 {% if item.key in selected_keys %}checked{% endif %}>
+          <span class="custom-checkbox-box"></span>
+        </label>
+      </div>
+
+      {# Product info #}
+      <div class="cart-item-product">
+        <div class="cart-item-thumbnail">
+          {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+          {% else %}
+            <div class="cart-item-thumbnail-placeholder"><i class="fas fa-image"></i></div>
+          {% endif %}
+        </div>
+        <div class="cart-item-meta">
+          <a href="{{ item.product.get_absolute_url }}" class="cart-item-name">
+            {{ item.product.name|truncatechars:50 }}
+          </a>
+          {% if item.variant %}
+            <span class="cart-item-variant">{{ item.variant.name }}</span>
+          {% endif %}
+          <span class="cart-item-id">#{{ item.product.id }}</span>
+        </div>
+      </div>
+
+      {# Unit price #}
+      <div class="cart-item-price" data-label="{% trans 'Đơn giá' %}">
+        {{ item.price|currency }}
+      </div>
+
+      {# Quantity #}
+      <div class="cart-item-qty" data-label="{% trans 'Số lượng' %}">
+        <form method="post" action="{% url 'carts:cart_update' item.key %}">
+          {% csrf_token %}
+          <div class="qty-control">
+            <button type="button" onclick="adjustCartQty(this, -1)" class="qty-btn">−</button>
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input">
+            <button type="button" onclick="adjustCartQty(this, 1)" class="qty-btn">+</button>
+          </div>
+          <button type="submit" class="qty-update-btn" title="Cập nhật">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </form>
+      </div>
+
+      {# Subtotal #}
+      <div class="cart-item-subtotal" data-label="{% trans 'Thành tiền' %}">
+        {{ item.total|currency }}
+      </div>
+
+      {# Remove #}
+      <div class="cart-item-remove">
+        <a href="{% url 'carts:cart_remove' item.key %}"
+           onclick="return confirm('{% trans 'Xóa sản phẩm này?' %}')"
+           class="btn-remove-item">
+          <i class="fas fa-times"></i>
+        </a>
+      </div>
+
+    </div>
+    {% endfor %}
+
+    {# Bulk action buttons #}
+    <div class="cart-bulk-actions">
+      <button id="btn-update-selection" class="btn-cart-action btn-cart-action--primary">
+        <i class="fas fa-check-square"></i> {% trans "Cập nhật lựa chọn" %}
+      </button>
+      <button id="btn-delete-selected" class="btn-cart-action btn-cart-action--danger">
+        <i class="fas fa-trash-alt"></i> {% trans "Xóa đã chọn" %}
+      </button>
+    </div>
+
+  </div>
+
+  {# ═══ RIGHT: ORDER SUMMARY ═══ #}
+  <div class="cart-summary-column">
+    <div class="cart-summary-box">
+      <h3 class="cart-summary-title">{% trans "Tổng giỏ hàng" %}</h3>
+
+      <div class="cart-summary-rows">
+        <div class="cart-summary-row">
+          <span>{% trans "Tạm tính" %}</span>
+          <span>{{ total_selected|currency }}</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>{% trans "Phí vận chuyển" %}</span>
+          <span class="{% if shipping_selected == 0 %}text-free-shipping{% endif %}">
+            {% if shipping_selected > 0 %}
+              {{ shipping_selected|currency }}
+            {% else %}
+              {% trans "Miễn phí" %} 🎉
+            {% endif %}
+          </span>
+        </div>
+      </div>
+
+      <div class="cart-summary-total">
+        <span>{% trans "Tổng cộng" %}</span>
+        <span class="cart-summary-total-amount">{{ grand_total_selected|currency }}</span>
+      </div>
+
+      <a href="{% url 'carts:checkout' %}" class="btn-checkout">
+        <i class="fas fa-lock"></i> {% trans "Tiến hành thanh toán" %}
+      </a>
+      <a href="{% url 'store:shop' %}" class="btn-continue-shopping">
+        <i class="fas fa-arrow-left"></i> {% trans "Tiếp tục mua sắm" %}
+      </a>
+
+      <div class="cart-trust-badges">
+        <div class="cart-trust-item"><span>🔒</span> {% trans "Thanh toán bảo mật" %}</div>
+        <div class="cart-trust-item"><span>🚚</span> {% trans "Miễn phí từ 500K" %}</div>
+        <div class="cart-trust-item"><span>🔄</span> {% trans "Đổi trả 30 ngày" %}</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% else %}
+
+{# ═══ EMPTY CART ═══ #}
+<div class="empty-cart">
+  <div class="empty-cart-icon">🛒</div>
+  <h2>{% trans "Giỏ hàng trống" %}</h2>
+  <p>{% trans "Hãy thêm sản phẩm để tiếp tục mua sắm nhé!" %}</p>
+  <a href="{% url 'store:shop' %}" class="btn-go-shopping">
+    <i class="fas fa-store"></i> {% trans "Khám phá cửa hàng" %}
+  </a>
+</div>
+
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
 <script>
-    // Hàm gửi các key đã chọn tới URL
-    function submitSelectedKeys(url, confirmMessage) {
-        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-        const selected = Array.from(checkboxes).map(cb => cb.value);
-        if (selected.length === 0) {
-            alert('Vui lòng chọn ít nhất một sản phẩm.');
-            return;
-        }
-        if (confirmMessage && !confirm(confirmMessage)) return;
+function adjustCartQty(btn, delta) {
+  const input = btn.closest('.qty-control').querySelector('.qty-input');
+  const newVal = parseInt(input.value) + delta;
+  if (newVal >= 1) input.value = newVal;
+}
 
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = url;
-        const csrf = document.createElement('input');
-        csrf.type = 'hidden';
-        csrf.name = 'csrfmiddlewaretoken';
-        csrf.value = '{{ csrf_token }}';
-        form.appendChild(csrf);
-        selected.forEach(key => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'selected_items';
-            input.value = key;
-            form.appendChild(input);
-        });
-        document.body.appendChild(form);
-        form.submit();
-    }
+function submitSelection(url, confirmMsg) {
+  const checked = document.querySelectorAll('.item-checkbox:checked');
+  if (!checked.length) {
+    alert('{% trans "Vui lòng chọn ít nhất một sản phẩm." %}');
+    return;
+  }
+  if (confirmMsg && !confirm(confirmMsg)) return;
 
-    // Cập nhật lựa chọn
-    document.getElementById('update-selection-btn')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        submitSelectedKeys("{% url 'carts:update_selection' %}", null);
-    });
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = url;
 
-    // Xóa các mục đã chọn
-    document.getElementById('delete-selected-btn')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        submitSelectedKeys("{% url 'carts:delete_selected' %}", 'Bạn có chắc chắn muốn xóa các sản phẩm đã chọn?');
-    });
+  const csrf = document.createElement('input');
+  csrf.type = 'hidden';
+  csrf.name = 'csrfmiddlewaretoken';
+  csrf.value = '{{ csrf_token }}';
+  form.appendChild(csrf);
+
+  checked.forEach(cb => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = 'selected_items';
+    inp.value = cb.value;
+    form.appendChild(inp);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
+document.getElementById('btn-update-selection')?.addEventListener('click', e => {
+  e.preventDefault();
+  submitSelection("{% url 'carts:update_selection' %}", null);
+});
+
+document.getElementById('btn-delete-selected')?.addEventListener('click', e => {
+  e.preventDefault();
+  submitSelection(
+    "{% url 'carts:delete_selected' %}",
+    '{% trans "Bạn có chắc muốn xóa các sản phẩm đã chọn?" %}'
+  );
+});
+
+// Highlight row on checkbox change
+document.querySelectorAll('.item-checkbox').forEach(cb => {
+  cb.addEventListener('change', function () {
+    this.closest('.cart-item-row').classList.toggle('cart-item-row--selected', this.checked);
+  });
+});
 </script>
 {% endblock %}
