@@ -1,25 +1,78 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}{{ article.title }} - GreatShop{% endblock %}
+{% block title %}{{ article.title }} — GTShop{% endblock %}
 
 {% block content %}
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'blog:article_list' %}">Tin tức</a></li>
-            <li class="breadcrumb-item active">{{ article.title }}</li>
-        </ol>
-    </nav>
+<div class="container article-container">
 
-    <article>
-        <h1 class="mb-3">{{ article.title }}</h1>
-        <p class="text-muted">Đăng ngày {{ article.created_at|date:"d/m/Y" }} bởi {{ article.author.username }}</p>
-        {% if article.image %}
-            <img src="{{ article.image.url }}" class="img-fluid mb-4" alt="{{ article.title }}">
-        {% endif %}
-        <div class="content">
-            {{ article.content|linebreaks }}
-        </div>
+  {# ═══ BREADCRUMB ═══ #}
+  <nav class="breadcrumb-nav">
+    <a href="{% url 'store:home' %}">{% trans "Trang chủ" %}</a>
+    <span>/</span>
+    <a href="{% url 'blog:article_list' %}">{% trans "Tin tức" %}</a>
+    <span>/</span>
+    <span class="breadcrumb-current">{{ article.title|truncatechars:50 }}</span>
+  </nav>
+
+  <div class="article-layout">
+
+    {# ═══ MAIN CONTENT ═══ #}
+    <article class="article-main">
+
+      {# Title #}
+      <h1 class="article-title">{{ article.title }}</h1>
+
+      {# Meta #}
+      <div class="article-meta">
+        <span class="article-meta-item">
+          <i class="fas fa-calendar-alt"></i>
+          {{ article.created_at|date:"d/m/Y" }}
+        </span>
+        <span class="article-meta-divider">·</span>
+        <span class="article-meta-item">
+          <i class="fas fa-user"></i>
+          {{ article.author.username }}
+        </span>
+      </div>
+
+      {# Featured image #}
+      {% if article.image %}
+      <div class="article-featured-image">
+        <img src="{{ article.image.url }}" alt="{{ article.title }}">
+      </div>
+      {% endif %}
+
+      {# Content #}
+      <div class="article-content">
+        {{ article.content|linebreaks }}
+      </div>
+
+      {# Back button #}
+      <div class="article-footer">
+        <a href="{% url 'blog:article_list' %}" class="btn-back-to-blog">
+          <i class="fas fa-arrow-left"></i> {% trans "Quay lại tin tức" %}
+        </a>
+      </div>
+
     </article>
+
+    {# ═══ SIDEBAR ═══ #}
+    <aside class="article-sidebar">
+      <div class="sidebar-card">
+        <h4 class="sidebar-title">{% trans "Về GTShop" %}</h4>
+        <p class="sidebar-text">{% trans "Siêu thị trực tuyến uy tín hàng đầu Việt Nam." %}</p>
+        <a href="{% url 'store:shop' %}" class="btn-sidebar-shop">
+          <i class="fas fa-store"></i> {% trans "Mua sắm ngay" %}
+        </a>
+      </div>
+      <div class="sidebar-card sidebar-card--promo">
+        <span class="sidebar-promo-tag">🔥 Flash Sale</span>
+        <h4 class="sidebar-promo-title">{% trans "Giảm đến" %} <span>50%</span></h4>
+        <a href="{% url 'store:shop' %}" class="btn-sidebar-promo">{% trans "Xem ngay" %}</a>
+      </div>
+    </aside>
+
+  </div>
 </div>
 {% endblock %}
