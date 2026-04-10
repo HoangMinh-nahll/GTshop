@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'accounts',
     'blog',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,12 @@ TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
+# ── Language cookie: LocaleMiddleware đọc cookie thay vì URL prefix ──
+LANGUAGE_COOKIE_NAME     = 'django_language'
+LANGUAGE_COOKIE_AGE      = 365 * 24 * 60 * 60   # 1 năm
+LANGUAGE_COOKIE_HTTPONLY = False
+LANGUAGE_COOKIE_SAMESITE = 'Lax'
+
 # Cookie ngôn ngữ
 LANGUAGE_COOKIE_NAME = 'django_language'
 LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60  # 1 năm
@@ -107,5 +114,3 @@ LOGIN_REDIRECT_URL = 'store:home'
 LOGOUT_REDIRECT_URL = 'store:home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

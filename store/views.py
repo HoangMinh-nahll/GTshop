@@ -40,3 +40,4 @@ def product_detail(request, slug):
         'product': product,
         'variants': variants,
     })
+

@@ -83,4 +83,4 @@ def stats_dashboard(request):
         'revenue_labels':   json.dumps(revenue_labels),
         'revenue_data':     json.dumps(revenue_data),
     }
-    return render(request, 'stats.html', context)
+    return render(request, 'stats/dashboard.html', context)

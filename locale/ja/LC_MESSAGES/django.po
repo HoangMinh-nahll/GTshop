@@ -1,87 +1,499 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Japanese translation for GTShop
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-27 07:50+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ja\n"
 
-#: .\GTshop\settings.py:77
-msgid "Tiếng Việt"
-msgstr ""
-
-#: .\GTshop\settings.py:78
-msgid "English"
-msgstr ""
-
-#: .\GTshop\settings.py:79
-msgid "中文"
-msgstr ""
-
-#: .\GTshop\settings.py:80
-msgid "日本語"
-msgstr ""
-
-#: .\GTshop\settings.py:81
-msgid "Русский"
-msgstr ""
-
-#: .\GTshop\settings.py:82
-msgid "ភាសាខ្មែរ"
-msgstr ""
-
-#: .\templates\base.html:26 .\templates\base.html:180
 msgid "Trang chủ"
-msgstr ""
+msgstr "ホーム"
 
-#: .\templates\base.html:30 .\templates\base.html:181
 msgid "Cửa hàng"
-msgstr ""
+msgstr "ショップ"
 
-#: .\templates\base.html:33 .\templates\base.html:183
 msgid "Tin tức"
-msgstr ""
+msgstr "ニュース"
 
-#: .\templates\base.html:40
 msgid "Tìm kiếm..."
-msgstr ""
+msgstr "検索..."
 
-#: .\templates\base.html:128 .\templates\base.html:182
 msgid "Giỏ hàng"
-msgstr ""
+msgstr "カート"
 
-#: .\templates\base.html:142
-msgid "Đăng xuất"
-msgstr ""
-
-#: .\templates\base.html:146
 msgid "Đăng nhập"
-msgstr ""
+msgstr "ログイン"
 
-#: .\templates\base.html:147
 msgid "Đăng ký"
-msgstr ""
+msgstr "新規登録"
 
-#: .\templates\base.html:175
+msgid "Đăng xuất"
+msgstr "ログアウト"
+
+msgid "Thống kê"
+msgstr "統計"
+
+msgid "Siêu thị trực tuyến #1"
+msgstr "オンラインストア #1"
+
+msgid "Chào mừng đến"
+msgstr "ようこそ"
+
+msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam"
+msgstr "ベトナム最高の信頼できるオンラインスーパー"
+
+msgid "Mua sắm ngay"
+msgstr "今すぐ購入"
+
+msgid "Sản phẩm"
+msgstr "商品"
+
+msgid "Khách hàng"
+msgstr "顧客"
+
+msgid "Hài lòng"
+msgstr "満足"
+
+msgid "Giao nhanh 2h"
+msgstr "2時間配達"
+
+msgid "Bảo mật 100%"
+msgstr "100% セキュア"
+
+msgid "Miễn phí vận chuyển"
+msgstr "送料無料"
+
+msgid "Đơn hàng trên 500K"
+msgstr "500K以上のご注文"
+
+msgid "Đổi trả dễ dàng"
+msgstr "簡単返品"
+
+msgid "30 ngày miễn phí"
+msgstr "30日間無料"
+
+msgid "Thanh toán an toàn"
+msgstr "安全なお支払い"
+
+msgid "Mã hoá SSL 256-bit"
+msgstr "SSL 256ビット暗号化"
+
+msgid "Hỗ trợ 24/7"
+msgstr "24時間サポート"
+
+msgid "Luôn sẵn sàng phục vụ"
+msgstr "いつでもご対応"
+
+msgid "Khám phá"
+msgstr "探索"
+
+msgid "Danh mục nổi bật"
+msgstr "人気カテゴリ"
+
+msgid "Xem tất cả"
+msgstr "すべて見る"
+
+msgid "sản phẩm"
+msgstr "点の商品"
+
+msgid "Giảm đến"
+msgstr "最大"
+
+msgid "Ưu đãi có hạn — Nhanh tay kẻo lỡ!"
+msgstr "期間限定！お早めに！"
+
+msgid "Mua ngay"
+msgstr "今すぐ買う"
+
+msgid "Sản phẩm hot"
+msgstr "人気商品"
+
+msgid "Chi tiết"
+msgstr "詳細"
+
+msgid "Thêm"
+msgstr "追加"
+
+msgid "Chưa có sản phẩm."
+msgstr "まだ商品がありません。"
+
+msgid "Tại sao chọn"
+msgstr "なぜ選ぶの"
+
+msgid "Chúng tôi cam kết mang đến trải nghiệm mua sắm tốt nhất."
+msgstr "最高のショッピング体験をお約束します。"
+
+msgid "Chất lượng hàng đầu"
+msgstr "最高品質"
+
+msgid "100% hàng chính hãng, kiểm định kỹ lưỡng"
+msgstr "100%正規品、厳格な検査"
+
+msgid "Giá tốt nhất"
+msgstr "最高の価格"
+
+msgid "Cam kết giá cạnh tranh, hoàn tiền nếu rẻ hơn"
+msgstr "最安値保証"
+
+msgid "Giao hàng siêu tốc"
+msgstr "超速配達"
+
+msgid "Giao trong 2 giờ tại nội thành"
+msgstr "市内2時間以内お届け"
+
+msgid "Ưu đãi thành viên"
+msgstr "会員特典"
+
+msgid "Tích điểm, nhận quà, giảm giá độc quyền"
+msgstr "ポイント獲得、プレゼント、限定割引"
+
+msgid "Khám phá hàng ngàn sản phẩm chất lượng"
+msgstr "何千もの高品質商品を探索"
+
+msgid "Tìm kiếm sản phẩm..."
+msgstr "商品を検索..."
+
+msgid "Tìm"
+msgstr "検索"
+
+msgid "Không tìm thấy sản phẩm"
+msgstr "商品が見つかりません"
+
+msgid "Thử tìm với từ khoá khác nhé!"
+msgstr "別のキーワードを試してください！"
+
+msgid "Mô tả"
+msgstr "説明"
+
+msgid "Thông tin"
+msgstr "情報"
+
+msgid "Danh mục"
+msgstr "カテゴリ"
+
+msgid "Ngày đăng"
+msgstr "投稿日"
+
+msgid "Tình trạng"
+msgstr "状態"
+
+msgid "Trọng lượng"
+msgstr "重さ"
+
+msgid "Còn hàng"
+msgstr "在庫あり"
+
+msgid "Hết hàng"
+msgstr "在庫切れ"
+
+msgid "Số lượng"
+msgstr "数量"
+
+msgid "Thêm vào giỏ"
+msgstr "カートに追加"
+
+msgid "Sản phẩm hiện đã hết hàng."
+msgstr "この商品は在庫切れです。"
+
+msgid "Đổi trả 30 ngày"
+msgstr "30日返品可"
+
+msgid "Bảo mật SSL"
+msgstr "SSL保護"
+
+msgid "Chọn phân loại:"
+msgstr "種類を選択："
+
+msgid "đánh giá"
+msgstr "レビュー"
+
+msgid "Tiết kiệm"
+msgstr "節約"
+
+msgid "Giỏ hàng của bạn"
+msgstr "あなたのカート"
+
+msgid "Đơn giá"
+msgstr "単価"
+
+msgid "Thành tiền"
+msgstr "小計"
+
+msgid "Cập nhật lựa chọn"
+msgstr "選択を更新"
+
+msgid "Xóa đã chọn"
+msgstr "選択を削除"
+
+msgid "Tổng giỏ hàng"
+msgstr "カート合計"
+
+msgid "Tạm tính"
+msgstr "小計"
+
+msgid "Phí vận chuyển"
+msgstr "送料"
+
+msgid "Miễn phí"
+msgstr "無料"
+
+msgid "Tổng cộng"
+msgstr "合計"
+
+msgid "Tiến hành thanh toán"
+msgstr "レジへ進む"
+
+msgid "Tiếp tục mua sắm"
+msgstr "買い物を続ける"
+
+msgid "Thanh toán bảo mật"
+msgstr "安全なお支払い"
+
+msgid "Miễn phí từ 500K"
+msgstr "500K以上送料無料"
+
+msgid "Giỏ hàng trống"
+msgstr "カートが空です"
+
+msgid "Hãy thêm sản phẩm để tiếp tục mua sắm nhé!"
+msgstr "商品を追加して買い物を続けましょう！"
+
+msgid "Khám phá cửa hàng"
+msgstr "ショップへ"
+
+msgid "Vui lòng chọn ít nhất một sản phẩm."
+msgstr "少なくとも1つの商品を選択してください。"
+
+msgid "Bạn có chắc muốn xóa các sản phẩm đã chọn?"
+msgstr "選択した商品を削除しますか？"
+
+msgid "Thanh toán đơn hàng"
+msgstr "注文の支払い"
+
+msgid "Hoàn tất"
+msgstr "完了"
+
+msgid "Thông tin giao hàng"
+msgstr "配送情報"
+
+msgid "Họ tên người nhận"
+msgstr "お名前"
+
+msgid "Nguyễn Văn A"
+msgstr "山田太郎"
+
+msgid "Số điện thoại"
+msgstr "電話番号"
+
+msgid "Địa chỉ giao hàng"
+msgstr "配送先住所"
+
+msgid "Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
+msgstr "番地、通り、区、都道府県"
+
+msgid "Ghi chú"
+msgstr "備考"
+
+msgid "Ghi chú thêm cho đơn hàng (không bắt buộc)"
+msgstr "追加メモ（任意）"
+
+msgid "Phương thức thanh toán"
+msgstr "支払い方法"
+
+msgid "Thanh toán khi nhận hàng"
+msgstr "代引き払い"
+
+msgid "Chuyển khoản ngân hàng"
+msgstr "銀行振込"
+
+msgid "Đặt hàng ngay"
+msgstr "今すぐ注文"
+
+msgid "Đơn hàng của bạn"
+msgstr "ご注文内容"
+
+msgid "Thanh toán bảo mật SSL"
+msgstr "SSL安全決済"
+
+msgid "Đảm bảo hoàn tiền 100%"
+msgstr "100%返金保証"
+
+msgid "Thông tin chuyển khoản"
+msgstr "振込情報"
+
+msgid "Quét mã bằng app ngân hàng"
+msgstr "銀行アプリでスキャン"
+
+msgid "Ngân hàng"
+msgstr "銀行"
+
+msgid "Số tài khoản"
+msgstr "口座番号"
+
+msgid "Chủ tài khoản"
+msgstr "口座名義"
+
+msgid "Số tiền"
+msgstr "金額"
+
+msgid "Nội dung CK"
+msgstr "振込メモ"
+
+msgid "Đơn hàng sẽ được xử lý sau khi chúng tôi xác nhận thanh toán (trong vòng 1-2 giờ)."
+msgstr "入金確認後に処理します（1-2時間以内）。"
+
+msgid "Nhập thông tin tài khoản của bạn"
+msgstr "アカウント情報を入力"
+
+msgid "Chào mừng trở lại!"
+msgstr "お帰りなさい！"
+
+msgid "Đăng nhập để trải nghiệm mua sắm tuyệt vời cùng GTShop."
+msgstr "ログインして素晴らしいショッピングを。"
+
+msgid "Ưu đãi độc quyền cho thành viên"
+msgstr "会員限定特典"
+
+msgid "Theo dõi đơn hàng dễ dàng"
+msgstr "注文の追跡が簡単"
+
+msgid "Tích điểm đổi quà hấp dẫn"
+msgstr "ポイントで素敵な景品に交換"
+
+msgid "Chưa có tài khoản?"
+msgstr "アカウントをお持ちでない方？"
+
+msgid "Đăng ký ngay"
+msgstr "今すぐ登録"
+
+msgid "hoặc"
+msgstr "または"
+
+msgid "Tạo tài khoản"
+msgstr "アカウント作成"
+
+msgid "Điền thông tin để bắt đầu mua sắm"
+msgstr "情報を入力して買い物を始めよう"
+
+msgid "Tham gia GTShop!"
+msgstr "GTShopに参加！"
+
+msgid "Tạo tài khoản miễn phí và bắt đầu trải nghiệm mua sắm thông minh."
+msgstr "無料アカウントを作成してスマートな買い物を。"
+
+msgid "Đăng ký miễn phí, không ràng buộc"
+msgstr "無料登録、縛りなし"
+
+msgid "Voucher 50K cho đơn hàng đầu tiên"
+msgstr "初回注文50Kバウチャー"
+
+msgid "Nhận thông báo ưu đãi sớm nhất"
+msgstr "早期割引通知を受け取る"
+
+msgid "Tích điểm mỗi đơn hàng"
+msgstr "注文ごとにポイント獲得"
+
+msgid "Đã có tài khoản?"
+msgstr "すでにアカウントをお持ちですか？"
+
 msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam."
-msgstr ""
+msgstr "ベトナム最高の信頼できるオンラインスーパー。"
 
-#: .\templates\base.html:178
 msgid "Liên kết"
-msgstr ""
+msgstr "リンク"
 
-#: .\templates\base.html:187
 msgid "Kết nối"
-msgstr ""
+msgstr "フォロー"
+
+msgid "Cập nhật những thông tin mới nhất từ GTShop"
+msgstr "GTShopの最新情報"
+
+msgid "Quay lại tin tức"
+msgstr "ニュースに戻る"
+
+msgid "Chưa có bài viết nào"
+msgstr "記事がありません"
+
+msgid "Hãy quay lại sau nhé!"
+msgstr "後でまたご覧ください！"
+
+msgid "Đọc tiếp"
+msgstr "続きを読む"
+
+msgid "Về GTShop"
+msgstr "GTShopについて"
+
+# Dashboard / Statistics
+msgid "Thống kê & Báo cáo"
+msgstr "統計とレポート"
+
+msgid "Tổng quan hoạt động kinh doanh GTShop"
+msgstr "GTShop ビジネス概要"
+
+msgid "DOANH THU THÁNG NÀY"
+msgstr "今月の売上"
+
+msgid "so với tháng trước"
+msgstr "前月比"
+
+msgid "ĐƠN HÀNG THÁNG NÀY"
+msgstr "今月の注文"
+
+msgid "đơn hàng chờ xử lý"
+msgstr "保留中の注文"
+
+msgid "KHÁCH HÀNG MỚI"
+msgstr "新規顧客"
+
+msgid "tổng khách hàng"
+msgstr "総顧客数"
+
+msgid "DOANH THU HÔM NAY"
+msgstr "本日の売上"
+
+msgid "đơn hôm nay"
+msgstr "本日の注文"
+
+msgid "Doanh thu 7 ngày qua"
+msgstr "過去7日間の売上"
+
+msgid "Trạng thái đơn hàng"
+msgstr "注文ステータス"
+
+msgid "Sản phẩm bán chạy"
+msgstr "ベストセラー"
+
+msgid "Đã bán"
+msgstr "販売数"
+
+msgid "Doanh thu"
+msgstr "売上"
+
+msgid "MÃ ĐƠN"
+msgstr "注文ID"
+
+msgid "KHÁCH HÀNG"
+msgstr "お客様"
+
+msgid "TỔNG TIỀN"
+msgstr "合計"
+
+msgid "TRẠNG THÁI"
+msgstr "ステータス"
+
+msgid "NGÀY ĐẶT"
+msgstr "注文日"
+
+msgid "Đã thanh toán"
+msgstr "支払済"
+
+msgid "Chờ xử lý"
+msgstr "保留中"
+
+msgid "Chưa có dữ liệu"
+msgstr "データなし"
+
+msgid "Chưa có đơn hàng"
+msgstr "注文はありません"
+
+msgid "© 2026 GreatShop. All rights reserved."
+msgstr "© 2026 GTShop. 全著作権所有。"

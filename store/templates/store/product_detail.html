@@ -1,174 +1,372 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load store_filters %}
+{% load i18n %}
+
+{% block title %}{{ product.name }} — GTShop{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row g-5">
-        <!-- Cột ảnh -->
-        <div class="col-md-6">
-            <div class="product-gallery border rounded-4 overflow-hidden shadow-sm">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" class="img-fluid w-100" alt="{{ product.name }}" style="max-height: 500px; object-fit: contain;">
-                {% else %}
-                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
-                        <i class="fas fa-image fa-5x text-secondary"></i>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+<div class="container product-detail-container">
 
-        <!-- Cột thông tin -->
-        <div class="col-md-6">
-            <div class="product-info">
-                <h1 class="fw-bold h2 mb-3">{{ product.name }}</h1>
+  {# ═══ BREADCRUMB ═══ #}
+  <nav class="breadcrumb-nav">
+    <a href="{% url 'store:home' %}">{% trans "Trang chủ" %}</a>
+    <span>/</span>
+    <a href="{% url 'store:shop' %}">{% trans "Cửa hàng" %}</a>
+    {% if product.category %}
+    <span>/</span>
+    <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+    {% endif %}
+    <span>/</span>
+    <span class="breadcrumb-current">{{ product.name|truncatechars:40 }}</span>
+  </nav>
 
-                <!-- Giá và giảm giá -->
-                <div class="price-section mb-4">
-                    <span class="text-muted text-decoration-line-through fs-4 me-3" id="original-price" style="display: none;">{{ product.price|currency }}</span>
-                    <span class="text-danger fw-bold fs-1" id="current-price">{{ product.price|currency }}</span>
-                    <span class="badge bg-danger fs-6 ms-3" id="discount-badge" style="display: none;"></span>
-                </div>
+  <div class="row g-5">
 
-                <!-- Biến thể (size, dung tích...) -->
-                {% if variants %}
-                <div class="mb-4">
-                    <label class="fw-bold">Chọn phân loại:</label>
-                    <div class="d-flex flex-wrap gap-2 mt-2">
-                        {% for var in variants %}
-                        <label class="variant-option">
-                            <input type="radio" name="variant_id" value="{{ var.id }}"
-                                   data-price="{% if var.price %}{{ var.price }}{% else %}{{ product.price }}{% endif %}"
-                                   data-original-price="{{ product.price }}"
-                                   {% if forloop.first %}checked{% endif %} class="d-none">
-                            <span class="border rounded-3 px-3 py-2 d-inline-block" style="cursor:pointer;">
-                                {{ var.name }}
-                                {% if var.price %}<br><small>{{ var.price|currency }}</small>{% endif %}
-                            </span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
+    {# ═══ LEFT: PRODUCT IMAGE ═══ #}
+    <div class="col-lg-6">
+      <div class="product-gallery">
+        {# Ảnh chính — sẽ được đổi bằng JS khi chọn biến thể #}
+        {% if product.image %}
+          <img id="main-product-image"
+               src="{{ product.image.url }}"
+               alt="{{ product.name }}"
+               class="product-gallery-image">
+        {% else %}
+          <div class="product-gallery-placeholder">
+            <i class="fas fa-image"></i>
+          </div>
+        {% endif %}
 
-                <!-- Tabs -->
-                <ul class="nav nav-tabs mb-4" id="productTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button" role="tab">Mô tả</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Thông tin</button>
-                    </li>
-                </ul>
-                <div class="tab-content mb-4" id="productTabContent">
-                    <div class="tab-pane fade show active" id="desc" role="tabpanel">
-                        <p>{{ product.description|linebreaks }}</p>
-                    </div>
-                    <div class="tab-pane fade" id="info" role="tabpanel">
-                        <p><strong>Danh mục:</strong> {{ product.category.name }}</p>
-                        <p><strong>Ngày đăng:</strong> {{ product.created|date:"d/m/Y" }}</p>
-                        <p><strong>Tình trạng:</strong> {% if product.stock > 0 %}Còn hàng{% else %}Hết hàng{% endif %}</p>
-                    </div>
-                </div>
+        {% if product.sale_price %}
+          <span class="product-gallery-badge" id="discount-badge">
+            -{{ product.get_discount_percent }}%
+          </span>
+        {% endif %}
+      </div>
 
-                <!-- Form thêm giỏ hàng -->
-                <form method="post" action="{% url 'carts:cart_add' product.id %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="variant_id" id="selected_variant" value="">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="quantity" class="form-label fw-500">Số lượng:</label>
-                        </div>
-                        <div class="col-auto">
-                            <div class="input-group" style="width: 140px;">
-                                <button type="button" class="btn btn-outline-secondary" onclick="changeQty(-1)">-</button>
-                                <input type="number" name="quantity" id="quantity" class="form-control text-center" value="1" min="1">
-                                <button type="button" class="btn btn-outline-secondary" onclick="changeQty(1)">+</button>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary px-4 py-2">Thêm vào giỏ</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+      {# Thumbnail variants ở dưới ảnh chính #}
+      {% if product.variants.exists %}
+      <div class="variant-thumbnails">
+        {# Ảnh gốc sản phẩm #}
+        {% if product.image %}
+        <button type="button"
+                class="variant-thumb variant-thumb--active"
+                onclick="selectVariantThumb(this, '{{ product.image.url }}', null)">
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        </button>
+        {% endif %}
+        {# Ảnh từng biến thể #}
+        {% for variant in product.variants.all %}
+          {% if variant.image %}
+          <button type="button"
+                  class="variant-thumb"
+                  onclick="selectVariantThumb(this, '{{ variant.image.url }}', {{ variant.id }})">
+            <img src="{{ variant.image.url }}" alt="{{ variant.name }}">
+          </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
+
+    {# ═══ RIGHT: PRODUCT INFO ═══ #}
+    <div class="col-lg-6">
+      <div class="product-detail-info">
+
+        {% if product.category %}
+        <a href="{{ product.category.get_absolute_url }}" class="product-category-tag">
+          <i class="fas fa-tag"></i> {{ product.category.name }}
+        </a>
+        {% endif %}
+
+        <h1 class="product-detail-title">{{ product.name }}</h1>
+
+        <div class="product-rating-row">
+          <span class="product-stars">★★★★★</span>
+          <span class="product-rating-text">(4.9) · 128 {% trans "đánh giá" %}</span>
+        </div>
+
+        {# Price — cập nhật bằng JS khi chọn biến thể #}
+        <div class="product-detail-price" id="price-block">
+          {% if product.sale_price %}
+            <span class="price-sale-large" id="price-display">{{ product.sale_price|currency }}</span>
+            <span class="price-original-large" id="price-original-display">{{ product.price|currency }}</span>
+            <span class="price-save-badge" id="discount-pct-badge">
+              -{{ product.get_discount_percent }}%
+            </span>
+          {% else %}
+            <span class="price-sale-large" id="price-display">{{ product.price|currency }}</span>
+          {% endif %}
+        </div>
+
+        {# Stock #}
+        <div class="product-stock-status" id="stock-status">
+          {% if product.stock > 0 %}
+            <span class="stock-in">
+              <i class="fas fa-check-circle"></i> {% trans "Còn hàng" %} ({{ product.stock }})
+            </span>
+          {% else %}
+            <span class="stock-out">
+              <i class="fas fa-times-circle"></i> {% trans "Hết hàng" %}
+            </span>
+          {% endif %}
+        </div>
+
+        {# ═══ VARIANT SELECTOR ═══ #}
+        {% if product.variants.exists %}
+        <div class="variant-selector">
+          <p class="variant-selector-label">{% trans "Chọn phân loại:" %}</p>
+          <div class="variant-options" id="variant-options">
+            {% for variant in product.variants.all %}
+            <button type="button"
+                    class="variant-option-btn"
+                    data-variant-id="{{ variant.id }}"
+                    data-variant-name="{{ variant.name }}"
+                    data-variant-price="{{ variant.price|default:product.price }}"
+                    data-variant-stock="{{ variant.stock }}"
+                    data-variant-image="{% if variant.image %}{{ variant.image.url }}{% else %}{{ product.image.url }}{% endif %}"
+                    onclick="selectVariant(this)">
+              <span class="variant-btn-name">{{ variant.name }}</span>
+              <span class="variant-btn-price">
+                {{ variant.price|default:product.price|currency }}
+              </span>
+            </button>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {# Tabs #}
+        <div class="detail-tabs">
+          <button class="detail-tab detail-tab--active"
+                  onclick="switchDetailTab(this, 'tab-description')">
+            {% trans "Mô tả" %}
+          </button>
+          <button class="detail-tab"
+                  onclick="switchDetailTab(this, 'tab-specs')">
+            {% trans "Thông tin" %}
+          </button>
+        </div>
+
+        <div class="detail-tab-panel" id="tab-description">
+          <div class="product-description">{{ product.description|linebreaks }}</div>
+        </div>
+        <div class="detail-tab-panel detail-tab-panel--hidden" id="tab-specs">
+          <table class="product-specs-table">
+            <tr><td>{% trans "Danh mục" %}</td><td>{{ product.category.name }}</td></tr>
+            <tr><td>{% trans "Ngày đăng" %}</td><td>{{ product.created|date:"d/m/Y" }}</td></tr>
+            <tr>
+              <td>{% trans "Tình trạng" %}</td>
+              <td>{% if product.stock > 0 %}{% trans "Còn hàng" %}{% else %}{% trans "Hết hàng" %}{% endif %}</td>
+            </tr>
+            {% if product.weight %}
+            <tr><td>{% trans "Trọng lượng" %}</td><td>{{ product.weight }}g</td></tr>
+            {% endif %}
+          </table>
+        </div>
+
+        {# Add to cart #}
+        <form method="post"
+              action="{% url 'carts:cart_add' product.id %}"
+              class="add-to-cart-form"
+              id="add-to-cart-form">
+          {% csrf_token %}
+          {# Hidden: gửi variant_id đã chọn #}
+          <input type="hidden" name="variant_id" id="selected-variant-id" value="">
+
+          <div class="quantity-selector">
+            <span class="quantity-label">{% trans "Số lượng" %}</span>
+            <div class="quantity-controls">
+              <button type="button" onclick="changeProductQty(-1)" class="quantity-btn">−</button>
+              <input type="number" name="quantity" id="quantity"
+                     value="1" min="1" max="{{ product.stock }}"
+                     class="quantity-input">
+              <button type="button" onclick="changeProductQty(1)" class="quantity-btn">+</button>
+            </div>
+          </div>
+
+          <div class="add-to-cart-buttons">
+            <button type="submit" class="btn-add-to-cart-large" id="btn-add-cart">
+              <i class="fas fa-cart-plus"></i> {% trans "Thêm vào giỏ" %}
+            </button>
+            <a href="{% url 'store:shop' %}" class="btn-back-to-shop">
+              <i class="fas fa-arrow-left"></i>
+            </a>
+          </div>
+        </form>
+
+        {# Trust badges #}
+        <div class="product-trust-badges">
+          <div class="trust-badge"><span>🚚</span> {% trans "Giao nhanh 2h" %}</div>
+          <div class="trust-badge"><span>🔄</span> {% trans "Đổi trả 30 ngày" %}</div>
+          <div class="trust-badge"><span>🔒</span> {% trans "Bảo mật SSL" %}</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/* ── Variant thumbnails ──────────────────────────── */
+.variant-thumbnails {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
+}
+.variant-thumb {
+  width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
+  border: 2px solid var(--border); cursor: pointer; padding: 0;
+  background: #f8f8f8; transition: all .2s; flex-shrink: 0;
+}
+.variant-thumb img { width:100%;height:100%;object-fit:cover; }
+.variant-thumb:hover { border-color: var(--pink); }
+.variant-thumb--active { border-color: var(--pink); box-shadow: 0 0 0 2px rgba(255,107,107,.25); }
+
+/* ── Variant option buttons ──────────────────────── */
+.variant-selector { margin-bottom: 1.2rem; }
+.variant-selector-label {
+  font-size: .82rem; font-weight: 800; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .05em; margin-bottom: .6rem;
+}
+.variant-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.variant-option-btn {
+  display: flex; flex-direction: column; align-items: center;
+  padding: .5rem .9rem; border: 1.5px solid var(--border);
+  border-radius: var(--r-md); background: var(--white);
+  cursor: pointer; transition: all .2s; min-width: 72px;
+}
+.variant-option-btn:hover {
+  border-color: var(--pink); background: var(--pink-soft);
+}
+.variant-option-btn.active {
+  border-color: var(--pink); background: var(--pink);
+  box-shadow: 0 4px 12px rgba(255,107,107,.3);
+}
+.variant-option-btn.active .variant-btn-name,
+.variant-option-btn.active .variant-btn-price { color: #fff; }
+.variant-option-btn.out-of-stock {
+  opacity: .45; cursor: not-allowed; text-decoration: line-through;
+}
+.variant-btn-name  { font-size: .88rem; font-weight: 700; color: var(--heading); }
+.variant-btn-price { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+</style>
 
 <script>
-    // Hàm format số có dấu chấm
-    function formatCurrency(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "₫";
+// ── Dữ liệu giá gốc sản phẩm ─────────────────────
+const basePrice    = '{{ product.price }}';
+const baseSalePrice = '{{ product.sale_price|default:"" }}';
+const baseImageUrl = '{{ product.image.url|default:"" }}';
+
+// ── Format tiền VND ───────────────────────────────
+function formatVND(amount) {
+  const n = parseFloat(amount);
+  if (isNaN(n)) return '';
+  return n.toLocaleString('vi-VN') + 'đ';
+}
+
+// ── Chọn biến thể ─────────────────────────────────
+function selectVariant(btn) {
+  // Bỏ active tất cả
+  document.querySelectorAll('.variant-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const variantId    = btn.dataset.variantId;
+  const variantPrice = btn.dataset.variantPrice;
+  const variantStock = parseInt(btn.dataset.variantStock);
+  const variantImage = btn.dataset.variantImage;
+  const variantName  = btn.dataset.variantName;
+
+  // 1. Đổi ảnh chính
+  if (variantImage) {
+    const mainImg = document.getElementById('main-product-image');
+    if (mainImg) {
+      mainImg.style.opacity = '0';
+      setTimeout(() => {
+        mainImg.src = variantImage;
+        mainImg.style.opacity = '1';
+      }, 150);
     }
-
-    // Cập nhật giá và badge giảm giá
-    function updatePriceAndDiscount(variantPrice, originalPrice) {
-        const currentPriceSpan = document.getElementById('current-price');
-        const originalPriceSpan = document.getElementById('original-price');
-        const discountSpan = document.getElementById('discount-badge');
-
-        if (!currentPriceSpan) return;
-
-        currentPriceSpan.innerText = formatCurrency(variantPrice);
-
-        if (variantPrice < originalPrice) {
-            originalPriceSpan.style.display = 'inline';
-            originalPriceSpan.innerText = formatCurrency(originalPrice);
-            discountSpan.style.display = 'inline-block';
-            const discountPercent = Math.round((originalPrice - variantPrice) / originalPrice * 100);
-            discountSpan.innerText = `-${discountPercent}%`;
-        } else {
-            originalPriceSpan.style.display = 'none';
-            discountSpan.style.display = 'none';
-        }
-    }
-
-    // Xử lý sự kiện khi chọn radio
-    document.querySelectorAll('.variant-option input').forEach(radio => {
-        radio.addEventListener('change', function() {
-            // Highlight
-            document.querySelectorAll('.variant-option span').forEach(s => s.classList.remove('bg-primary', 'text-white'));
-            this.nextElementSibling.classList.add('bg-primary', 'text-white');
-
-            // Lấy giá
-            const variantPrice = parseInt(this.getAttribute('data-price'));
-            const originalPrice = parseInt(this.getAttribute('data-original-price'));
-            updatePriceAndDiscount(variantPrice, originalPrice);
-
-            // Lưu variant_id
-            document.getElementById('selected_variant').value = this.value;
-        });
+    // Sync thumbnail active
+    document.querySelectorAll('.variant-thumb').forEach(t => t.classList.remove('variant-thumb--active'));
+    document.querySelectorAll('.variant-thumb img').forEach(img => {
+      if (img.src === variantImage || img.src.endsWith(variantImage)) {
+        img.closest('.variant-thumb').classList.add('variant-thumb--active');
+      }
     });
+  }
 
-    // Cho phép click vào span để chọn radio (tốt hơn UX)
-    document.querySelectorAll('.variant-option span').forEach(span => {
-        span.addEventListener('click', function() {
-            const radio = this.previousElementSibling;
-            if (radio && radio.type === 'radio') {
-                radio.checked = true;
-                radio.dispatchEvent(new Event('change'));
-            }
-        });
-    });
+  // 2. Đổi giá
+  const priceEl    = document.getElementById('price-display');
+  const origEl     = document.getElementById('price-original-display');
+  const pctEl      = document.getElementById('discount-pct-badge');
+  if (priceEl) priceEl.textContent = formatVND(variantPrice);
+  if (origEl)  origEl.style.display = 'none';
+  if (pctEl)   pctEl.style.display  = 'none';
 
-    // Kích hoạt radio đầu tiên khi trang tải
-    window.onload = function() {
-        const firstRadio = document.querySelector('.variant-option input');
-        if (firstRadio) {
-            firstRadio.dispatchEvent(new Event('change'));
-        } else {
-            // Nếu không có variant, hiển thị giá gốc (có sale_price)
-            const originalPrice = parseInt('{{ product.price }}');
-            const currentPrice = {% if product.sale_price %}{{ product.sale_price }}{% else %}{{ product.price }}{% endif %};
-            updatePriceAndDiscount(currentPrice, originalPrice);
-        }
-    };
-
-    function changeQty(delta) {
-        let qty = document.getElementById('quantity');
-        let newVal = parseInt(qty.value) + delta;
-        if (newVal >= 1) qty.value = newVal;
+  // 3. Đổi stock
+  const stockEl = document.getElementById('stock-status');
+  const qtyInput = document.getElementById('quantity');
+  const addBtn   = document.getElementById('btn-add-cart');
+  if (stockEl) {
+    if (variantStock > 0) {
+      stockEl.innerHTML = `<span class="stock-in"><i class="fas fa-check-circle"></i> Còn hàng (${variantStock})</span>`;
+      if (qtyInput) qtyInput.max = variantStock;
+      if (addBtn)   addBtn.disabled = false;
+    } else {
+      stockEl.innerHTML = `<span class="stock-out"><i class="fas fa-times-circle"></i> Hết hàng</span>`;
+      if (addBtn) addBtn.disabled = true;
     }
+  }
+
+  // 4. Ghi variant_id vào form
+  document.getElementById('selected-variant-id').value = variantId;
+}
+
+// ── Chọn ảnh từ thumbnail ─────────────────────────
+function selectVariantThumb(btn, imageUrl, variantId) {
+  document.querySelectorAll('.variant-thumb').forEach(t => t.classList.remove('variant-thumb--active'));
+  btn.classList.add('variant-thumb--active');
+
+  const mainImg = document.getElementById('main-product-image');
+  if (mainImg) {
+    mainImg.style.opacity = '0';
+    setTimeout(() => {
+      mainImg.src = imageUrl;
+      mainImg.style.opacity = '1';
+    }, 150);
+  }
+
+  // Sync active variant button nếu có
+  if (variantId) {
+    document.querySelectorAll('.variant-option-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.variantId == variantId);
+    });
+    document.getElementById('selected-variant-id').value = variantId;
+  }
+}
+
+// ── Số lượng ─────────────────────────────────────
+function changeProductQty(delta) {
+  const el  = document.getElementById('quantity');
+  const val = parseInt(el.value) + delta;
+  const max = parseInt(el.max) || 9999;
+  if (val >= 1 && val <= max) el.value = val;
+}
+
+// ── Tab ───────────────────────────────────────────
+function switchDetailTab(btn, tabId) {
+  document.querySelectorAll('.detail-tab').forEach(b => b.classList.remove('detail-tab--active'));
+  document.querySelectorAll('.detail-tab-panel').forEach(p => p.classList.add('detail-tab-panel--hidden'));
+  btn.classList.add('detail-tab--active');
+  document.getElementById(tabId).classList.remove('detail-tab-panel--hidden');
+}
+
+// ── Hiệu ứng fade ảnh ────────────────────────────
+const mainImg = document.getElementById('main-product-image');
+if (mainImg) {
+  mainImg.style.transition = 'opacity 0.15s ease';
+}
 </script>
 {% endblock %}

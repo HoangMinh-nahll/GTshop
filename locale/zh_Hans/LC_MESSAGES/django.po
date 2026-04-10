@@ -1,87 +1,496 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Chinese Simplified translation for GTShop
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-27 07:50+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_hans\n"
 
-#: .\GTshop\settings.py:77
-msgid "Tiếng Việt"
-msgstr ""
-
-#: .\GTshop\settings.py:78
-msgid "English"
-msgstr ""
-
-#: .\GTshop\settings.py:79
-msgid "中文"
-msgstr ""
-
-#: .\GTshop\settings.py:80
-msgid "日本語"
-msgstr ""
-
-#: .\GTshop\settings.py:81
-msgid "Русский"
-msgstr ""
-
-#: .\GTshop\settings.py:82
-msgid "ភាសាខ្មែរ"
-msgstr ""
-
-#: .\templates\base.html:26 .\templates\base.html:180
 msgid "Trang chủ"
-msgstr ""
+msgstr "首页"
 
-#: .\templates\base.html:30 .\templates\base.html:181
 msgid "Cửa hàng"
-msgstr ""
+msgstr "商店"
 
-#: .\templates\base.html:33 .\templates\base.html:183
 msgid "Tin tức"
-msgstr ""
+msgstr "新闻"
 
-#: .\templates\base.html:40
 msgid "Tìm kiếm..."
-msgstr ""
+msgstr "搜索..."
 
-#: .\templates\base.html:128 .\templates\base.html:182
 msgid "Giỏ hàng"
-msgstr ""
+msgstr "购物车"
 
-#: .\templates\base.html:142
-msgid "Đăng xuất"
-msgstr ""
-
-#: .\templates\base.html:146
 msgid "Đăng nhập"
-msgstr ""
+msgstr "登录"
 
-#: .\templates\base.html:147
 msgid "Đăng ký"
-msgstr ""
+msgstr "注册"
 
-#: .\templates\base.html:175
+msgid "Đăng xuất"
+msgstr "退出"
+
+msgid "Thống kê"
+msgstr "统计"
+
+msgid "Siêu thị trực tuyến #1"
+msgstr "线上超市 #1"
+
+msgid "Chào mừng đến"
+msgstr "欢迎来到"
+
+msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam"
+msgstr "越南领先的可信赖在线超市"
+
+msgid "Mua sắm ngay"
+msgstr "立即购物"
+
+msgid "Sản phẩm"
+msgstr "商品"
+
+msgid "Khách hàng"
+msgstr "客户"
+
+msgid "Hài lòng"
+msgstr "满意"
+
+msgid "Giao nhanh 2h"
+msgstr "2小时快递"
+
+msgid "Bảo mật 100%"
+msgstr "100% 安全"
+
+msgid "Miễn phí vận chuyển"
+msgstr "免费配送"
+
+msgid "Đơn hàng trên 500K"
+msgstr "订单满500K"
+
+msgid "Đổi trả dễ dàng"
+msgstr "轻松退换"
+
+msgid "30 ngày miễn phí"
+msgstr "30天免费"
+
+msgid "Thanh toán an toàn"
+msgstr "安全支付"
+
+msgid "Mã hoá SSL 256-bit"
+msgstr "256位SSL加密"
+
+msgid "Hỗ trợ 24/7"
+msgstr "24/7 客服"
+
+msgid "Luôn sẵn sàng phục vụ"
+msgstr "随时为您服务"
+
+msgid "Khám phá"
+msgstr "探索"
+
+msgid "Danh mục nổi bật"
+msgstr "热门分类"
+
+msgid "Xem tất cả"
+msgstr "查看全部"
+
+msgid "sản phẩm"
+msgstr "件商品"
+
+msgid "Giảm đến"
+msgstr "高达"
+
+msgid "Ưu đãi có hạn — Nhanh tay kẻo lỡ!"
+msgstr "限时优惠，快抢！"
+
+msgid "Mua ngay"
+msgstr "立即购买"
+
+msgid "Sản phẩm hot"
+msgstr "热销商品"
+
+msgid "Chi tiết"
+msgstr "详情"
+
+msgid "Thêm"
+msgstr "加入"
+
+msgid "Chưa có sản phẩm."
+msgstr "暂无商品。"
+
+msgid "Tại sao chọn"
+msgstr "为什么选择"
+
+msgid "Chúng tôi cam kết mang đến trải nghiệm mua sắm tốt nhất."
+msgstr "我们致力于提供最佳购物体验。"
+
+msgid "Chất lượng hàng đầu"
+msgstr "顶级品质"
+
+msgid "100% hàng chính hãng, kiểm định kỹ lưỡng"
+msgstr "100%正品，严格检验"
+
+msgid "Giá tốt nhất"
+msgstr "最优价格"
+
+msgid "Cam kết giá cạnh tranh, hoàn tiền nếu rẻ hơn"
+msgstr "保证最低价，找到更便宜退款"
+
+msgid "Giao hàng siêu tốc"
+msgstr "超快配送"
+
+msgid "Giao trong 2 giờ tại nội thành"
+msgstr "市区2小时内送达"
+
+msgid "Ưu đãi thành viên"
+msgstr "会员优惠"
+
+msgid "Tích điểm, nhận quà, giảm giá độc quyền"
+msgstr "积分、礼品、独家折扣"
+
+msgid "Khám phá hàng ngàn sản phẩm chất lượng"
+msgstr "探索数千种优质商品"
+
+msgid "Tìm kiếm sản phẩm..."
+msgstr "搜索商品..."
+
+msgid "Tìm"
+msgstr "搜索"
+
+msgid "Không tìm thấy sản phẩm"
+msgstr "未找到商品"
+
+msgid "Thử tìm với từ khoá khác nhé!"
+msgstr "请尝试其他关键词！"
+
+msgid "Mô tả"
+msgstr "描述"
+
+msgid "Thông tin"
+msgstr "信息"
+
+msgid "Danh mục"
+msgstr "分类"
+
+msgid "Ngày đăng"
+msgstr "发布日期"
+
+msgid "Tình trạng"
+msgstr "状态"
+
+msgid "Trọng lượng"
+msgstr "重量"
+
+msgid "Còn hàng"
+msgstr "有货"
+
+msgid "Hết hàng"
+msgstr "缺货"
+
+msgid "Số lượng"
+msgstr "数量"
+
+msgid "Thêm vào giỏ"
+msgstr "加入购物车"
+
+msgid "Sản phẩm hiện đã hết hàng."
+msgstr "此商品暂时缺货。"
+
+msgid "Đổi trả 30 ngày"
+msgstr "30天退换"
+
+msgid "Bảo mật SSL"
+msgstr "SSL安全"
+
+msgid "Chọn phân loại:"
+msgstr "选择规格："
+
+msgid "đánh giá"
+msgstr "评价"
+
+msgid "Tiết kiệm"
+msgstr "节省"
+
+msgid "Giỏ hàng của bạn"
+msgstr "您的购物车"
+
+msgid "Đơn giá"
+msgstr "单价"
+
+msgid "Thành tiền"
+msgstr "小计"
+
+msgid "Cập nhật lựa chọn"
+msgstr "更新选择"
+
+msgid "Xóa đã chọn"
+msgstr "删除所选"
+
+msgid "Tổng giỏ hàng"
+msgstr "购物车总计"
+
+msgid "Tạm tính"
+msgstr "小计"
+
+msgid "Phí vận chuyển"
+msgstr "运费"
+
+msgid "Miễn phí"
+msgstr "免费"
+
+msgid "Tổng cộng"
+msgstr "总计"
+
+msgid "Tiến hành thanh toán"
+msgstr "去结账"
+
+msgid "Tiếp tục mua sắm"
+msgstr "继续购物"
+
+msgid "Thanh toán bảo mật"
+msgstr "安全支付"
+
+msgid "Miễn phí từ 500K"
+msgstr "满500K免运费"
+
+msgid "Giỏ hàng trống"
+msgstr "购物车是空的"
+
+msgid "Hãy thêm sản phẩm để tiếp tục mua sắm nhé!"
+msgstr "添加商品继续购物！"
+
+msgid "Khám phá cửa hàng"
+msgstr "逛商店"
+
+msgid "Vui lòng chọn ít nhất một sản phẩm."
+msgstr "请至少选择一件商品。"
+
+msgid "Bạn có chắc muốn xóa các sản phẩm đã chọn?"
+msgstr "确定要删除所选商品吗？"
+
+msgid "Thanh toán đơn hàng"
+msgstr "订单结账"
+
+msgid "Hoàn tất"
+msgstr "完成"
+
+msgid "Thông tin giao hàng"
+msgstr "配送信息"
+
+msgid "Họ tên người nhận"
+msgstr "收件人姓名"
+
+msgid "Nguyễn Văn A"
+msgstr "张三"
+
+msgid "Số điện thoại"
+msgstr "电话号码"
+
+msgid "Địa chỉ giao hàng"
+msgstr "收货地址"
+
+msgid "Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
+msgstr "门牌号、街道、区、省/市"
+
+msgid "Ghi chú"
+msgstr "备注"
+
+msgid "Ghi chú thêm cho đơn hàng (không bắt buộc)"
+msgstr "额外备注（可选）"
+
+msgid "Phương thức thanh toán"
+msgstr "支付方式"
+
+msgid "Thanh toán khi nhận hàng"
+msgstr "货到付款"
+
+msgid "Chuyển khoản ngân hàng"
+msgstr "银行转账"
+
+msgid "Đặt hàng ngay"
+msgstr "立即下单"
+
+msgid "Đơn hàng của bạn"
+msgstr "您的订单"
+
+msgid "Thanh toán bảo mật SSL"
+msgstr "SSL安全支付"
+
+msgid "Đảm bảo hoàn tiền 100%"
+msgstr "100%退款保证"
+
+msgid "Thông tin chuyển khoản"
+msgstr "转账信息"
+
+msgid "Quét mã bằng app ngân hàng"
+msgstr "使用银行APP扫码"
+
+msgid "Ngân hàng"
+msgstr "银行"
+
+msgid "Số tài khoản"
+msgstr "账号"
+
+msgid "Chủ tài khoản"
+msgstr "账户持有人"
+
+msgid "Số tiền"
+msgstr "金额"
+
+msgid "Nội dung CK"
+msgstr "转账备注"
+
+msgid "Đơn hàng sẽ được xử lý sau khi chúng tôi xác nhận thanh toán (trong vòng 1-2 giờ)."
+msgstr "确认付款后处理订单（1-2小时内）。"
+
+msgid "Nhập thông tin tài khoản của bạn"
+msgstr "输入您的账户信息"
+
+msgid "Chào mừng trở lại!"
+msgstr "欢迎回来！"
+
+msgid "Đăng nhập để trải nghiệm mua sắm tuyệt vời cùng GTShop."
+msgstr "登录享受精彩购物体验。"
+
+msgid "Ưu đãi độc quyền cho thành viên"
+msgstr "会员独家优惠"
+
+msgid "Theo dõi đơn hàng dễ dàng"
+msgstr "轻松追踪订单"
+
+msgid "Tích điểm đổi quà hấp dẫn"
+msgstr "积分换好礼"
+
+msgid "Chưa có tài khoản?"
+msgstr "没有账户？"
+
+msgid "Đăng ký ngay"
+msgstr "立即注册"
+
+msgid "hoặc"
+msgstr "或者"
+
+msgid "Tạo tài khoản"
+msgstr "创建账户"
+
+msgid "Điền thông tin để bắt đầu mua sắm"
+msgstr "填写信息开始购物"
+
+msgid "Tham gia GTShop!"
+msgstr "加入GTShop！"
+
+msgid "Tạo tài khoản miễn phí và bắt đầu trải nghiệm mua sắm thông minh."
+msgstr "创建免费账户，开始智能购物。"
+
+msgid "Đăng ký miễn phí, không ràng buộc"
+msgstr "免费注册，无约束"
+
+msgid "Voucher 50K cho đơn hàng đầu tiên"
+msgstr "首单50K优惠券"
+
+msgid "Nhận thông báo ưu đãi sớm nhất"
+msgstr "最早获取优惠通知"
+
+msgid "Tích điểm mỗi đơn hàng"
+msgstr "每单积分"
+
+msgid "Đã có tài khoản?"
+msgstr "已有账户？"
+
 msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam."
-msgstr ""
+msgstr "越南领先的可信赖在线超市。"
 
-#: .\templates\base.html:178
 msgid "Liên kết"
-msgstr ""
+msgstr "链接"
 
-#: .\templates\base.html:187
 msgid "Kết nối"
-msgstr ""
+msgstr "关注我们"
+
+msgid "Cập nhật những thông tin mới nhất từ GTShop"
+msgstr "GTShop最新资讯"
+
+msgid "Quay lại tin tức"
+msgstr "返回新闻"
+
+msgid "Chưa có bài viết nào"
+msgstr "暂无文章"
+
+msgid "Hãy quay lại sau nhé!"
+msgstr "请稍后再来！"
+
+msgid "Đọc tiếp"
+msgstr "阅读更多"
+
+msgid "Về GTShop"
+msgstr "关于GTShop"
+
+# Dashboard / Statistics
+msgid "Thống kê & Báo cáo"
+msgstr "统计与报告"
+
+msgid "Tổng quan hoạt động kinh doanh GTShop"
+msgstr "GTShop 业务概览"
+
+msgid "DOANH THU THÁNG NÀY"
+msgstr "本月收入"
+
+msgid "so với tháng trước"
+msgstr "较上月"
+
+msgid "ĐƠN HÀNG THÁNG NÀY"
+msgstr "本月订单"
+
+msgid "đơn hàng chờ xử lý"
+msgstr "待处理订单"
+
+msgid "KHÁCH HÀNG MỚI"
+msgstr "新客户"
+
+msgid "tổng khách hàng"
+msgstr "客户总数"
+
+msgid "DOANH THU HÔM NAY"
+msgstr "今日收入"
+
+msgid "đơn hôm nay"
+msgstr "今日订单"
+
+msgid "Doanh thu 7 ngày qua"
+msgstr "过去7天收入"
+
+msgid "Trạng thái đơn hàng"
+msgstr "订单状态"
+
+msgid "Sản phẩm bán chạy"
+msgstr "热销产品"
+
+msgid "Đã bán"
+msgstr "已售"
+
+msgid "Doanh thu"
+msgstr "收入"
+
+msgid "MÃ ĐƠN"
+msgstr "订单号"
+
+msgid "KHÁCH HÀNG"
+msgstr "客户"
+
+msgid "TỔNG TIỀN"
+msgstr "总金额"
+
+msgid "TRẠNG THÁI"
+msgstr "状态"
+
+msgid "NGÀY ĐẶT"
+msgstr "下单日期"
+
+msgid "Đã thanh toán"
+msgstr "已付款"
+
+msgid "Chờ xử lý"
+msgstr "待处理"
+
+msgid "Chưa có dữ liệu"
+msgstr "暂无数据"
+
+msgid "Chưa có đơn hàng"
+msgstr "暂无订单"

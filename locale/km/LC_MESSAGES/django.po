@@ -1,87 +1,496 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# Khmer translation for GTShop
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-27 07:50+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: km\n"
 
-#: .\GTshop\settings.py:77
-msgid "Tiếng Việt"
-msgstr ""
-
-#: .\GTshop\settings.py:78
-msgid "English"
-msgstr ""
-
-#: .\GTshop\settings.py:79
-msgid "中文"
-msgstr ""
-
-#: .\GTshop\settings.py:80
-msgid "日本語"
-msgstr ""
-
-#: .\GTshop\settings.py:81
-msgid "Русский"
-msgstr ""
-
-#: .\GTshop\settings.py:82
-msgid "ភាសាខ្មែរ"
-msgstr ""
-
-#: .\templates\base.html:26 .\templates\base.html:180
 msgid "Trang chủ"
-msgstr ""
+msgstr "ទំព័រដើម"
 
-#: .\templates\base.html:30 .\templates\base.html:181
 msgid "Cửa hàng"
-msgstr ""
+msgstr "ហាង"
 
-#: .\templates\base.html:33 .\templates\base.html:183
 msgid "Tin tức"
-msgstr ""
+msgstr "ព័ត៌មាន"
 
-#: .\templates\base.html:40
 msgid "Tìm kiếm..."
-msgstr ""
+msgstr "ស្វែងរក..."
 
-#: .\templates\base.html:128 .\templates\base.html:182
 msgid "Giỏ hàng"
-msgstr ""
+msgstr "កន្ត្រក"
 
-#: .\templates\base.html:142
-msgid "Đăng xuất"
-msgstr ""
-
-#: .\templates\base.html:146
 msgid "Đăng nhập"
-msgstr ""
+msgstr "ចូល"
 
-#: .\templates\base.html:147
 msgid "Đăng ký"
-msgstr ""
+msgstr "ចុះឈ្មោះ"
 
-#: .\templates\base.html:175
+msgid "Đăng xuất"
+msgstr "ចាកចេញ"
+
+msgid "Thống kê"
+msgstr "ស្ថិតិ"
+
+msgid "Siêu thị trực tuyến #1"
+msgstr "ហាងអនឡាញ #1"
+
+msgid "Chào mừng đến"
+msgstr "សូមស្វាគមន៍"
+
+msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam"
+msgstr "ហាងអនឡាញល្បីបំផុតនៅវៀតណាម"
+
+msgid "Mua sắm ngay"
+msgstr "ទិញឥឡូវ"
+
+msgid "Sản phẩm"
+msgstr "ផលិតផល"
+
+msgid "Khách hàng"
+msgstr "អតិថិជន"
+
+msgid "Hài lòng"
+msgstr "ពេញចិត្ត"
+
+msgid "Giao nhanh 2h"
+msgstr "ដឹក 2 ម៉ោង"
+
+msgid "Bảo mật 100%"
+msgstr "សុវត្ថិភាព 100%"
+
+msgid "Miễn phí vận chuyển"
+msgstr "ដឹកជញ្ជូនឥតគិតថ្លៃ"
+
+msgid "Đơn hàng trên 500K"
+msgstr "ការបញ្ជាទិញលើស 500K"
+
+msgid "Đổi trả dễ dàng"
+msgstr "ប្ដូរ-ប្រគល់ងាយ"
+
+msgid "30 ngày miễn phí"
+msgstr "30 ថ្ងៃឥតគិតថ្លៃ"
+
+msgid "Thanh toán an toàn"
+msgstr "ការទូទាត់ដោយសុវត្ថិភាព"
+
+msgid "Mã hoá SSL 256-bit"
+msgstr "SSL 256-bit Encryption"
+
+msgid "Hỗ trợ 24/7"
+msgstr "ជំនួយ 24/7"
+
+msgid "Luôn sẵn sàng phục vụ"
+msgstr "តែងតែត្រៀមជួយ"
+
+msgid "Khám phá"
+msgstr "រុករក"
+
+msgid "Danh mục nổi bật"
+msgstr "ប្រភេទពេញនិយម"
+
+msgid "Xem tất cả"
+msgstr "មើលទាំងអស់"
+
+msgid "sản phẩm"
+msgstr "ផលិតផល"
+
+msgid "Giảm đến"
+msgstr "បញ្ចុះតម្លៃដល់"
+
+msgid "Ưu đãi có hạn — Nhanh tay kẻo lỡ!"
+msgstr "ការផ្តល់ជូនមានកំណត់!"
+
+msgid "Mua ngay"
+msgstr "ទិញឥឡូវ"
+
+msgid "Sản phẩm hot"
+msgstr "ផលិតផលពេញនិយម"
+
+msgid "Chi tiết"
+msgstr "លម្អិត"
+
+msgid "Thêm"
+msgstr "បន្ថែម"
+
+msgid "Chưa có sản phẩm."
+msgstr "មិនទាន់មានផលិតផល។"
+
+msgid "Tại sao chọn"
+msgstr "ហេតុអ្វីបានជាជ្រើស"
+
+msgid "Chúng tôi cam kết mang đến trải nghiệm mua sắm tốt nhất."
+msgstr "យើងប្តេជ្ញាផ្ដល់បទពិសោធន៍ល្អបំផុត។"
+
+msgid "Chất lượng hàng đầu"
+msgstr "គុណភាពកំពូល"
+
+msgid "100% hàng chính hãng, kiểm định kỹ lưỡng"
+msgstr "100% ក្ដារពិត ត្រួតពិនិត្យយ៉ាងល្អ"
+
+msgid "Giá tốt nhất"
+msgstr "តម្លៃល្អបំផុត"
+
+msgid "Cam kết giá cạnh tranh, hoàn tiền nếu rẻ hơn"
+msgstr "ធានាតម្លៃប្រណាំង"
+
+msgid "Giao hàng siêu tốc"
+msgstr "ដឹកជញ្ជូនលឿន"
+
+msgid "Giao trong 2 giờ tại nội thành"
+msgstr "ដឹករៀចរាល់ក្នុង 2 ម៉ោង"
+
+msgid "Ưu đãi thành viên"
+msgstr "ពិន្ទុសមាជិក"
+
+msgid "Tích điểm, nhận quà, giảm giá độc quyền"
+msgstr "ប្រមូលពិន្ទុ ទទួលបានអំណោយ"
+
+msgid "Khám phá hàng ngàn sản phẩm chất lượng"
+msgstr "រុករកផលិតផលជាច្រើនពាន់"
+
+msgid "Tìm kiếm sản phẩm..."
+msgstr "ស្វែងរកផលិតផល..."
+
+msgid "Tìm"
+msgstr "ស្វែងរក"
+
+msgid "Không tìm thấy sản phẩm"
+msgstr "រកមិនឃើញផលិតផល"
+
+msgid "Thử tìm với từ khoá khác nhé!"
+msgstr "សាកល្បងពាក្យគន្លឹះផ្សេង!"
+
+msgid "Mô tả"
+msgstr "ការពិពណ៌នា"
+
+msgid "Thông tin"
+msgstr "ព័ត៌មាន"
+
+msgid "Danh mục"
+msgstr "ប្រភេទ"
+
+msgid "Ngày đăng"
+msgstr "ថ្ងៃប្រកាស"
+
+msgid "Tình trạng"
+msgstr "ស្ថានភាព"
+
+msgid "Trọng lượng"
+msgstr "ទម្ងន់"
+
+msgid "Còn hàng"
+msgstr "មានស្តុក"
+
+msgid "Hết hàng"
+msgstr "អស់ស្តុក"
+
+msgid "Số lượng"
+msgstr "បរិមាណ"
+
+msgid "Thêm vào giỏ"
+msgstr "បន្ថែមទៅកន្ត្រក"
+
+msgid "Sản phẩm hiện đã hết hàng."
+msgstr "ផលិតផលនេះអស់ស្តុក។"
+
+msgid "Đổi trả 30 ngày"
+msgstr "ប្ដូរ 30 ថ្ងៃ"
+
+msgid "Bảo mật SSL"
+msgstr "SSL Security"
+
+msgid "Chọn phân loại:"
+msgstr "ជ្រើសប្រភេទ:"
+
+msgid "đánh giá"
+msgstr "ការវាយតម្លៃ"
+
+msgid "Tiết kiệm"
+msgstr "សន្សំ"
+
+msgid "Giỏ hàng của bạn"
+msgstr "កន្ត្រកទំនិញរបស់អ្នក"
+
+msgid "Đơn giá"
+msgstr "តម្លៃ"
+
+msgid "Thành tiền"
+msgstr "សរុបរង"
+
+msgid "Cập nhật lựa chọn"
+msgstr "ធ្វើបច្ចុប្បន្នភាព"
+
+msgid "Xóa đã chọn"
+msgstr "លុបការជ្រើស"
+
+msgid "Tổng giỏ hàng"
+msgstr "សរុបកន្ត្រក"
+
+msgid "Tạm tính"
+msgstr "សរុបរង"
+
+msgid "Phí vận chuyển"
+msgstr "ថ្លៃដឹក"
+
+msgid "Miễn phí"
+msgstr "ឥតគិតថ្លៃ"
+
+msgid "Tổng cộng"
+msgstr "សរុប"
+
+msgid "Tiến hành thanh toán"
+msgstr "បន្តទូទាត់"
+
+msgid "Tiếp tục mua sắm"
+msgstr "ទិញបន្ត"
+
+msgid "Thanh toán bảo mật"
+msgstr "ការទូទាត់ដោយសុវត្ថិភាព"
+
+msgid "Miễn phí từ 500K"
+msgstr "ឥតគិតថ្លៃចាប់ 500K"
+
+msgid "Giỏ hàng trống"
+msgstr "កន្ត្រកទំនិញទទេ"
+
+msgid "Hãy thêm sản phẩm để tiếp tục mua sắm nhé!"
+msgstr "បន្ថែមផលិតផលដើម្បីទិញបន្ត!"
+
+msgid "Khám phá cửa hàng"
+msgstr "រុករកហាង"
+
+msgid "Vui lòng chọn ít nhất một sản phẩm."
+msgstr "សូមជ្រើសយ៉ាងហោចណាស់ 1 ផលិតផល។"
+
+msgid "Bạn có chắc muốn xóa các sản phẩm đã chọn?"
+msgstr "តើអ្នកចង់លុបចោល?"
+
+msgid "Thanh toán đơn hàng"
+msgstr "ការទូទាត់ការបញ្ជាទិញ"
+
+msgid "Hoàn tất"
+msgstr "បញ្ចប់"
+
+msgid "Thông tin giao hàng"
+msgstr "ព័ត៌មានដឹក"
+
+msgid "Họ tên người nhận"
+msgstr "ឈ្មោះពេញ"
+
+msgid "Nguyễn Văn A"
+msgstr "សម្ភស្ស"
+
+msgid "Số điện thoại"
+msgstr "លេខទូរស័ព្ទ"
+
+msgid "Địa chỉ giao hàng"
+msgstr "អាសយដ្ឋានដឹក"
+
+msgid "Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
+msgstr "ផ្ទះ ផ្លូវ ភូមិ ស្រុក ខេត្ត"
+
+msgid "Ghi chú"
+msgstr "កំណត់ចំណាំ"
+
+msgid "Ghi chú thêm cho đơn hàng (không bắt buộc)"
+msgstr "កំណត់ចំណាំបន្ថែម (មិនចាំបាច់)"
+
+msgid "Phương thức thanh toán"
+msgstr "វិធីទូទាត់"
+
+msgid "Thanh toán khi nhận hàng"
+msgstr "ទូទាត់នៅពេលទទួលទំនិញ"
+
+msgid "Chuyển khoản ngân hàng"
+msgstr "ផ្ទេរប្រាក់ធនាគារ"
+
+msgid "Đặt hàng ngay"
+msgstr "ការបញ្ជាទិញ"
+
+msgid "Đơn hàng của bạn"
+msgstr "ការបញ្ជាទិញរបស់អ្នក"
+
+msgid "Thanh toán bảo mật SSL"
+msgstr "ការទូទាត់ SSL"
+
+msgid "Đảm bảo hoàn tiền 100%"
+msgstr "ធានា 100% ប្រាក់ត្រឡប់"
+
+msgid "Thông tin chuyển khoản"
+msgstr "ព័ត៌មានផ្ទេរ"
+
+msgid "Quét mã bằng app ngân hàng"
+msgstr "ស្កែនដោយ app ធនាគារ"
+
+msgid "Ngân hàng"
+msgstr "ធនាគារ"
+
+msgid "Số tài khoản"
+msgstr "លេខគណនី"
+
+msgid "Chủ tài khoản"
+msgstr "ម្ចាស់គណនី"
+
+msgid "Số tiền"
+msgstr "ចំនួនទឹកប្រាក់"
+
+msgid "Nội dung CK"
+msgstr "កំណត់ចំណាំផ្ទេរ"
+
+msgid "Đơn hàng sẽ được xử lý sau khi chúng tôi xác nhận thanh toán (trong vòng 1-2 giờ)."
+msgstr "ការបញ្ជាទិញនឹងត្រូវបំពេញក្រោយពីបញ្ជាក់ការទូទាត់។"
+
+msgid "Nhập thông tin tài khoản của bạn"
+msgstr "បញ្ចូលព័ត៌មានគណនី"
+
+msgid "Chào mừng trở lại!"
+msgstr "សូមស្វាគមន៍ត្រឡប់មក!"
+
+msgid "Đăng nhập để trải nghiệm mua sắm tuyệt vời cùng GTShop."
+msgstr "ចូលដើម្បីរីករាយជាមួយការទិញដូច"
+
+msgid "Ưu đãi độc quyền cho thành viên"
+msgstr "ការផ្ដល់ជូនពិសេសសម្រាប់សមាជិក"
+
+msgid "Theo dõi đơn hàng dễ dàng"
+msgstr "តាមដានការបញ្ជាទិញបានងាយ"
+
+msgid "Tích điểm đổi quà hấp dẫn"
+msgstr "ប្រមូលពិន្ទុដើម្បីទទួលបានរង្វាន់"
+
+msgid "Chưa có tài khoản?"
+msgstr "មិនទាន់មានគណនី?"
+
+msgid "Đăng ký ngay"
+msgstr "ចុះឈ្មោះឥឡូវ"
+
+msgid "hoặc"
+msgstr "ឬ"
+
+msgid "Tạo tài khoản"
+msgstr "បង្កើតគណនី"
+
+msgid "Điền thông tin để bắt đầu mua sắm"
+msgstr "បំពេញព័ត៌មានដើម្បីចាប់ផ្ដើម"
+
+msgid "Tham gia GTShop!"
+msgstr "ចូលរួម GTShop!"
+
+msgid "Tạo tài khoản miễn phí và bắt đầu trải nghiệm mua sắm thông minh."
+msgstr "បង្កើតគណនីឥតគិតថ្លៃ"
+
+msgid "Đăng ký miễn phí, không ràng buộc"
+msgstr "ចុះឈ្មោះឥតគិតថ្លៃ"
+
+msgid "Voucher 50K cho đơn hàng đầu tiên"
+msgstr "គូប៉ុង 50K សម្រាប់ការបញ្ជាទិញដំបូង"
+
+msgid "Nhận thông báo ưu đãi sớm nhất"
+msgstr "ទទួលការជូនដំណឹងពីការផ្ដល់ជូន"
+
+msgid "Tích điểm mỗi đơn hàng"
+msgstr "ប្រមូលពិន្ទុរាល់ការបញ្ជាទិញ"
+
+msgid "Đã có tài khoản?"
+msgstr "មានគណនីរួចហើយ?"
+
 msgid "Siêu thị trực tuyến uy tín hàng đầu Việt Nam."
-msgstr ""
+msgstr "ហាងអនឡាញល្បីបំផុតនៅវៀតណាម។"
 
-#: .\templates\base.html:178
 msgid "Liên kết"
-msgstr ""
+msgstr "តំណភ្ជាប់"
 
-#: .\templates\base.html:187
 msgid "Kết nối"
-msgstr ""
+msgstr "តាមដានយើង"
+
+msgid "Cập nhật những thông tin mới nhất từ GTShop"
+msgstr "ព័ត៌មានថ្មីបំផុតពី GTShop"
+
+msgid "Quay lại tin tức"
+msgstr "ត្រឡប់ទៅព័ត៌មានវិញ"
+
+msgid "Chưa có bài viết nào"
+msgstr "មិនទាន់មានអត្ថបទ"
+
+msgid "Hãy quay lại sau nhé!"
+msgstr "សូមត្រឡប់មកក្រោយ!"
+
+msgid "Đọc tiếp"
+msgstr "អានបន្ត"
+
+msgid "Về GTShop"
+msgstr "អំពី GTShop"
+
+# Dashboard / Statistics
+msgid "Thống kê & Báo cáo"
+msgstr "ស្ថិតិ និងរបាយការណ៍"
+
+msgid "Tổng quan hoạt động kinh doanh GTShop"
+msgstr "ទិដ្ឋភាពទូទៅនៃប្រតិបត្តិការ GTShop"
+
+msgid "DOANH THU THÁNG NÀY"
+msgstr "ចំណូលប្រចាំខែនេះ"
+
+msgid "so với tháng trước"
+msgstr "ធៀបនឹងខែមុន"
+
+msgid "ĐƠN HÀNG THÁNG NÀY"
+msgstr "ការបញ្ជាទិញប្រចាំខែនេះ"
+
+msgid "đơn hàng chờ xử lý"
+msgstr "ការបញ្ជាទិញកំពុងរង់ចាំ"
+
+msgid "KHÁCH HÀNG MỚI"
+msgstr "អតិថិជនថ្មី"
+
+msgid "tổng khách hàng"
+msgstr "អតិថិជនសរុប"
+
+msgid "DOANH THU HÔM NAY"
+msgstr "ចំណូលថ្ងៃនេះ"
+
+msgid "đơn hôm nay"
+msgstr "ការបញ្ជាទិញថ្ងៃនេះ"
+
+msgid "Doanh thu 7 ngày qua"
+msgstr "ចំណូល ៧ ថ្ងៃកន្លងមក"
+
+msgid "Trạng thái đơn hàng"
+msgstr "ស្ថានភាពការបញ្ជាទិញ"
+
+msgid "Sản phẩm bán chạy"
+msgstr "ផលិតផលលក់ដាច់"
+
+msgid "Đã bán"
+msgstr "បានលក់"
+
+msgid "Doanh thu"
+msgstr "ចំណូល"
+
+msgid "MÃ ĐƠN"
+msgstr "លេខកូដការបញ្ជាទិញ"
+
+msgid "KHÁCH HÀNG"
+msgstr "អតិថិជន"
+
+msgid "TỔNG TIỀN"
+msgstr "សរុប"
+
+msgid "TRẠNG THÁI"
+msgstr "ស្ថានភាព"
+
+msgid "NGÀY ĐẶT"
+msgstr "ថ្ងៃបញ្ជា"
+
+msgid "Đã thanh toán"
+msgstr "បានបង់ប្រាក់"
+
+msgid "Chờ xử lý"
+msgstr "កំពុងរង់ចាំ"
+
+msgid "Chưa có dữ liệu"
+msgstr "មិនទាន់មានទិន្នន័យ"
+
+msgid "Chưa có đơn hàng"
+msgstr "មិនទាន់មានការបញ្ជាទិញ"

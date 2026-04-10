@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Thống kê" %} — GTShop{% endblock %}
+
+{% block content %}
+
+{# ═══ PAGE HEADER ═══ #}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">{% trans "Admin" %}</p>
+    <h1 class="page-header-title">📊 {% trans "Thống kê & Báo cáo" %}</h1>
+    <p class="page-header-subtitle">{% trans "Tổng quan hoạt động kinh doanh GTShop" %}</p>
+  </div>
+</div>
+
+<div class="container stats-container">
+
+  {# ═══ KPI CARDS ═══ #}
+  <div class="stats-kpi-grid">
+    <div class="kpi-card kpi-card--pink">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-body">
+        <span class="kpi-label">{% trans "Doanh thu tháng này" %}</span>
+        <span class="kpi-value">{{ revenue_month|floatformat:0 }}₫</span>
+        <span class="kpi-sub {% if revenue_growth >= 0 %}kpi-sub--up{% else %}kpi-sub--down{% endif %}">
+          {% if revenue_growth >= 0 %}↑{% else %}↓{% endif %}
+          {{ revenue_growth|floatformat:1 }}% {% trans "so với tháng trước" %}
+        </span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card--orange">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-body">
+        <span class="kpi-label">{% trans "Đơn hàng tháng này" %}</span>
+        <span class="kpi-value">{{ orders_month }}</span>
+        <span class="kpi-sub">{{ orders_pending }} {% trans "đơn đang chờ xử lý" %}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card--green">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-body">
+        <span class="kpi-label">{% trans "Khách hàng mới" %}</span>
+        <span class="kpi-value">{{ new_users_month }}</span>
+        <span class="kpi-sub">{{ total_users }} {% trans "tổng khách hàng" %}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card--purple">
+      <div class="kpi-icon">🏆</div>
+      <div class="kpi-body">
+        <span class="kpi-label">{% trans "Doanh thu hôm nay" %}</span>
+        <span class="kpi-value">{{ revenue_today|floatformat:0 }}₫</span>
+        <span class="kpi-sub">{{ orders_today }} {% trans "đơn hôm nay" %}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-main-grid">
+
+    {# ═══ REVENUE CHART ═══ #}
+    <div class="stats-card stats-card--wide">
+      <div class="stats-card-header">
+        <h3 class="stats-card-title">📈 {% trans "Doanh thu 7 ngày qua" %}</h3>
+      </div>
+      <div class="stats-card-body">
+        <canvas id="revenueChart" height="80"></canvas>
+      </div>
+    </div>
+
+    {# ═══ ORDER STATUS PIE ═══ #}
+    <div class="stats-card">
+      <div class="stats-card-header">
+        <h3 class="stats-card-title">🍩 {% trans "Trạng thái đơn hàng" %}</h3>
+      </div>
+      <div class="stats-card-body">
+        <canvas id="statusChart" height="180"></canvas>
+        <div class="pie-legend">
+          <div class="pie-legend-item">
+            <span class="pie-dot pie-dot--paid"></span> {% trans "Đã thanh toán" %} ({{ orders_paid }})
+          </div>
+          <div class="pie-legend-item">
+            <span class="pie-dot pie-dot--pending"></span> {% trans "Chờ xử lý" %} ({{ orders_pending }})
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# ═══ TOP PRODUCTS ═══ #}
+    <div class="stats-card">
+      <div class="stats-card-header">
+        <h3 class="stats-card-title">🔥 {% trans "Sản phẩm bán chạy" %}</h3>
+      </div>
+      <div class="stats-card-body">
+        {% for item in top_products %}
+        <div class="top-product-row">
+          <span class="top-product-rank">{{ forloop.counter }}</span>
+          <div class="top-product-info">
+            <span class="top-product-name">{{ item.product__name|truncatechars:30 }}</span>
+            <span class="top-product-qty">{{ item.total_qty }} {% trans "đã bán" %}</span>
+          </div>
+          <span class="top-product-revenue">{{ item.total_revenue|floatformat:0 }}₫</span>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center py-3">{% trans "Chưa có dữ liệu" %}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ═══ RECENT ORDERS ═══ #}
+    <div class="stats-card stats-card--wide">
+      <div class="stats-card-header">
+        <h3 class="stats-card-title">🧾 {% trans "Đơn hàng gần đây" %}</h3>
+        <a href="/admin/carts/order/" class="stats-card-link">{% trans "Xem tất cả" %} →</a>
+      </div>
+      <div class="stats-card-body">
+        <div class="stats-table-wrap">
+          <table class="stats-table">
+            <thead>
+              <tr>
+                <th>{% trans "MÃ ĐƠN" %}</th>
+                <th>{% trans "KHÁCH HÀNG" %}</th>
+                <th>{% trans "TỔNG TIỀN" %}</th>
+                <th>{% trans "TRẠNG THÁI" %}</th>
+                <th>{% trans "NGÀY ĐẶT" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+              <tr>
+                <td><span class="order-id">#{{ order.id }}</span></td>
+                <td>{{ order.user.username }}</td>
+                <td class="order-amount">{{ order.total|floatformat:0 }}₫</td>
+                <td>
+                  {% if order.paid %}
+                    <span class="status-badge status-badge--paid">✓ {% trans "Đã thanh toán" %}</span>
+                  {% else %}
+                    <span class="status-badge status-badge--pending">⏳ {% trans "Chờ xử lý" %}</span>
+                  {% endif %}
+                </td>
+                <td class="order-date">{{ order.created|date:"d/m/Y H:i" }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" class="text-center text-muted py-3">{% trans "Chưa có đơn hàng" %}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const revenueLabels = {{ revenue_labels|safe }};
+const revenueData   = {{ revenue_data|safe }};
+
+if (document.getElementById('revenueChart')) {
+  new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+      labels: revenueLabels,
+      datasets: [{
+        label: '{% trans "Doanh thu" %} (₫)',
+        data: revenueData,
+        borderColor: '#ff6b6b',
+        backgroundColor: 'rgba(255,107,107,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#ff6b6b',
+        pointRadius: 4,
+        tension: 0.4,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: v => v.toLocaleString('vi-VN') + '₫',
+            font: { family: 'Inter', size: 11 }
+          },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        x: {
+          ticks: { font: { family: 'Inter', size: 11 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+if (document.getElementById('statusChart')) {
+  new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['{% trans "Đã thanh toán" %}', '{% trans "Chờ xử lý" %}'],
+      datasets: [{
+        data: [{{ orders_paid }}, {{ orders_pending }}],
+        backgroundColor: ['#ff6b6b', '#ffb3b3'],
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '70%',
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+</script>
+{% endblock %}
