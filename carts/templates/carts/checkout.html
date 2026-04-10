@@ -7,7 +7,6 @@
 
 {% block content %}
 
-{# ═══ PAGE HEADER WITH STEPS ═══ #}
 <div class="page-header">
   <div class="container">
     <p class="page-header-eyebrow">GTShop</p>
@@ -25,7 +24,6 @@
 <div class="container checkout-container">
   <div class="checkout-layout">
 
-    {# ═══ LEFT: SHIPPING FORM ═══ #}
     <div class="checkout-form-column">
       <div class="checkout-form-card">
         <h3 class="checkout-form-title">
@@ -35,7 +33,6 @@
         <form method="post" class="checkout-form">
           {% csrf_token %}
 
-          {# Full name #}
           <div class="form-field">
             <label class="form-field-label">
               {% trans "Họ tên người nhận" %} <span class="form-field-required">*</span>
@@ -47,7 +44,6 @@
             </div>
           </div>
 
-          {# Phone + Email row #}
           <div class="form-two-columns">
             <div class="form-field">
               <label class="form-field-label">
@@ -69,7 +65,6 @@
             </div>
           </div>
 
-          {# Address #}
           <div class="form-field">
             <label class="form-field-label">
               {% trans "Địa chỉ giao hàng" %} <span class="form-field-required">*</span>
@@ -82,7 +77,6 @@
             </div>
           </div>
 
-          {# Note #}
           <div class="form-field">
             <label class="form-field-label">{% trans "Ghi chú" %}</label>
             <div class="form-input-wrap">
@@ -92,7 +86,6 @@
             </div>
           </div>
 
-          {# Payment method #}
           <div class="form-field">
             <label class="form-field-label">{% trans "Phương thức thanh toán" %}</label>
             <div class="payment-options">
@@ -117,6 +110,56 @@
             </div>
           </div>
 
+          <div class="bank-qr-panel" id="bank-qr-panel">
+            <div class="bank-qr-header">
+              <i class="fas fa-qrcode"></i>
+              <span>{% trans "Thông tin chuyển khoản" %}</span>
+            </div>
+            <div class="bank-qr-body">
+              <div class="bank-qr-image">
+                <img id="bank-qr-img"
+                     src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=BANK:VIETCOMBANK%7CSTK:1234567890%7CTEN:GTSHOP%7CSO_TIEN:{{ grand_total }}"
+                     alt="QR Chuyển khoản">
+                <p class="bank-qr-scan-hint">
+                  <i class="fas fa-mobile-alt"></i>
+                  {% trans "Quét mã bằng app ngân hàng" %}
+                </p>
+              </div>
+              <div class="bank-qr-info">
+                <div class="bank-info-row">
+                  <span class="bank-info-label">{% trans "Ngân hàng" %}</span>
+                  <span class="bank-info-value">Vietcombank</span>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">{% trans "Số tài khoản" %}</span>
+                  <span class="bank-info-value bank-info-highlight" id="bank-stk">1234567890</span>
+                  <button type="button" class="btn-copy-bank" onclick="copyBankInfo('bank-stk')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">{% trans "Chủ tài khoản" %}</span>
+                  <span class="bank-info-value">NGUYEN VAN A (GTSHOP)</span>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">{% trans "Số tiền" %}</span>
+                  <span class="bank-info-value bank-info-amount">{{ grand_total|currency }}</span>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">{% trans "Nội dung CK" %}</span>
+                  <span class="bank-info-value bank-info-highlight" id="bank-nd">GTSHOP THANH TOAN DON HANG</span>
+                  <button type="button" class="btn-copy-bank" onclick="copyBankInfo('bank-nd')">
+                    <i class="fas fa-copy"></i>
+                  </button>
+                </div>
+                <div class="bank-qr-note">
+                  <i class="fas fa-info-circle"></i>
+                  {% trans "Đơn hàng sẽ được xử lý sau khi chúng tôi xác nhận thanh toán (trong vòng 1-2 giờ)." %}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <button type="submit" class="btn-place-order">
             <i class="fas fa-check-circle"></i> {% trans "Đặt hàng ngay" %}
           </button>
@@ -124,14 +167,12 @@
       </div>
     </div>
 
-    {# ═══ RIGHT: ORDER SUMMARY ═══ #}
     <div class="checkout-summary-column">
       <div class="checkout-summary-box">
         <h3 class="checkout-summary-title">
           <span>🛒</span> {% trans "Đơn hàng của bạn" %}
         </h3>
 
-        {# Item list #}
         <div class="checkout-item-list">
           {% for item in cart_items %}
           <div class="checkout-item">
@@ -154,7 +195,6 @@
           {% endfor %}
         </div>
 
-        {# Price breakdown #}
         <div class="checkout-price-breakdown">
           <div class="checkout-price-row">
             <span>{% trans "Tạm tính" %}</span>
@@ -177,7 +217,6 @@
           <span class="checkout-grand-total-amount">{{ grand_total|currency }}</span>
         </div>
 
-        {# Security badges #}
         <div class="checkout-security-badges">
           <div class="security-badge"><i class="fas fa-lock"></i> {% trans "Thanh toán bảo mật SSL" %}</div>
           <div class="security-badge"><i class="fas fa-shield-alt"></i> {% trans "Đảm bảo hoàn tiền 100%" %}</div>
@@ -198,7 +237,27 @@ document.querySelectorAll('.payment-option input').forEach(radio => {
       opt.classList.remove('payment-option--selected');
     });
     radio.closest('.payment-option').classList.add('payment-option--selected');
+    const panel = document.getElementById('bank-qr-panel');
+    if (panel) {
+      panel.style.display = radio.value === 'bank' ? 'block' : 'none';
+    }
   });
 });
+document.addEventListener('DOMContentLoaded', () => {
+  const panel = document.getElementById('bank-qr-panel');
+  if (panel) panel.style.display = 'none';
+});
+function copyBankInfo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+    const btn = el.nextElementSibling;
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-check"></i>';
+      btn.style.color = '#38a169';
+      setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; btn.style.color = ''; }, 2000);
+    }
+  });
+}
 </script>
 {% endblock %}
