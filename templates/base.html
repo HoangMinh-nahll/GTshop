@@ -7,21 +7,19 @@
   <title>{% block title %}GTShop{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-<!-- Navbar -->
+{# ═══ NAVBAR ═══ #}
 <nav class="navbar navbar-expand-lg fixed-top">
   <div class="container">
     <a class="navbar-brand fw-bold" href="{% url 'store:home' %}">GTShop</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Nav links -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link {% if request.path == '/' %}active{% endif %}"
@@ -36,18 +34,15 @@
         </li>
       </ul>
 
-      <!-- Tìm kiếm -->
-      <form class="d-flex search-form me-3" action="{% url 'store:shop' %}" method="get">
+      <form class="d-flex search-form me-2" action="{% url 'store:shop' %}" method="get">
         <input name="q" class="form-control" type="search"
-               placeholder="{% trans 'Tìm kiếm...' %}"
-               value="{{ request.GET.q }}">
+               placeholder="{% trans 'Tìm kiếm...' %}" value="{{ request.GET.q }}">
         <button class="btn" type="submit"><i class="fas fa-search"></i></button>
       </form>
 
-      <!-- Khu vực bên phải -->
       <div class="d-flex align-items-center gap-2">
 
-        <!-- 🌐 Dropdown đổi ngôn ngữ -->
+        {# ── Language dropdown ── #}
         <div class="dropdown lang-dropdown">
           <button class="btn lang-toggle dropdown-toggle" type="button"
                   data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,74 +52,25 @@
             {% elif LANGUAGE_CODE == 'ja' %}🇯🇵 JA
             {% elif LANGUAGE_CODE == 'ru' %}🇷🇺 RU
             {% elif LANGUAGE_CODE == 'km' %}🇰🇭 KM
-            {% else %}🌐 {{ LANGUAGE_CODE|upper }}
-            {% endif %}
+            {% else %}🌐 {{ LANGUAGE_CODE|upper }}{% endif %}
           </button>
           <ul class="dropdown-menu dropdown-menu-end lang-menu">
+            {% for code, flag, label in lang_list %}
             <li>
               <form action="{% url 'set_language' %}" method="post">
                 {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="vi"
-                        class="dropdown-item {% if LANGUAGE_CODE == 'vi' %}active{% endif %}">
-                  🇻🇳 Tiếng Việt
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <button type="submit" name="language" value="{{ code }}"
+                        class="dropdown-item {% if LANGUAGE_CODE == code %}active{% endif %}">
+                  {{ flag }} {{ label }}
                 </button>
               </form>
             </li>
-            <li>
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="en"
-                        class="dropdown-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
-                  🇺🇸 English
-                </button>
-              </form>
-            </li>
-            <li>
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="zh-hans"
-                        class="dropdown-item {% if LANGUAGE_CODE == 'zh-hans' %}active{% endif %}">
-                  🇨🇳 中文
-                </button>
-              </form>
-            </li>
-            <li>
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="ja"
-                        class="dropdown-item {% if LANGUAGE_CODE == 'ja' %}active{% endif %}">
-                  🇯🇵 日本語
-                </button>
-              </form>
-            </li>
-            <li>
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="ru"
-                        class="dropdown-item {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">
-                  🇷🇺 Русский
-                </button>
-              </form>
-            </li>
-            <li>
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <button type="submit" name="language" value="km"
-                        class="dropdown-item {% if LANGUAGE_CODE == 'km' %}active{% endif %}">
-                  🇰🇭 ភាសាខ្មែរ
-                </button>
-              </form>
-            </li>
+            {% endfor %}
           </ul>
         </div>
 
-        <!-- 🛒 Giỏ hàng -->
+        {# ── Cart ── #}
         <a class="nav-link cart-link position-relative {% if '/cart/' in request.path %}active{% endif %}"
            href="{% url 'carts:cart_detail' %}">
           <i class="fas fa-shopping-cart"></i>
@@ -134,18 +80,18 @@
           {% endif %}
         </a>
 
-        <!-- 👤 User menu (đã tích hợp link Thống kê cho staff) -->
+        {# ── User menu ── #}
         <div class="user-menu">
           {% if user.is_authenticated %}
-            <div class="user-avatar">{{ user.username|first|upper }}</div>
-            <span class="username">{{ user.username }}</span>
-
+            <a href="{% url 'my_account' %}" class="user-avatar" title="{{ user.username }}">
+              {{ user.username|first|upper }}
+            </a>
+            <span class="username d-none d-xl-inline">{{ user.username }}</span>
             {% if user.is_staff %}
-              <a href="{% url 'stats_dashboard' %}" class="nav-link">
-                <i class="fas fa-chart-bar"></i> {% trans "Thống kê" %}
-              </a>
+            <a href="{% url 'stats_dashboard' %}" class="nav-link px-1" title="{% trans 'Thống kê' %}">
+              <i class="fas fa-chart-bar"></i>
+            </a>
             {% endif %}
-
             <form method="post" action="{% url 'logout' %}" class="d-inline">
               {% csrf_token %}
               <button type="submit" class="btn btn-outline-light btn-sm">
@@ -158,21 +104,26 @@
           {% endif %}
         </div>
 
-      </div><!-- end bên phải -->
+      </div>
     </div>
   </div>
 </nav>
 
+{# ═══ LOADING SPINNER ═══ #}
+<div class="global-spinner" id="global-spinner">
+  <div class="spinner-ring"></div>
+</div>
+
 <main>
   {% if messages %}
-    <div class="container mt-3">
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-      {% endfor %}
+  <div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+    {% endfor %}
+  </div>
   {% endif %}
   {% block content %}{% endblock %}
 </main>
@@ -191,6 +142,9 @@
           <li><a href="{% url 'store:shop' %}">{% trans "Cửa hàng" %}</a></li>
           <li><a href="{% url 'carts:cart_detail' %}">{% trans "Giỏ hàng" %}</a></li>
           <li><a href="{% url 'blog:article_list' %}">{% trans "Tin tức" %}</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'my_account' %}">{% trans "Tài khoản" %}</a></li>
+          {% endif %}
         </ul>
       </div>
       <div class="col-md-4">
@@ -204,33 +158,187 @@
       </div>
     </div>
     <hr>
-    <div class="text-center">
-      <p>&copy; 2026 GTShop. All rights reserved.</p>
-    </div>
+    <div class="text-center"><p>&copy; 2026 GTShop. All rights reserved.</p></div>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  window.addEventListener('scroll', function() {
-    var navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) navbar.classList.add('navbar-scrolled');
-    else navbar.classList.remove('navbar-scrolled');
-  });
-  window.onscroll = function() {
-    var btn = document.getElementById('backToTop');
-    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200)
-      btn.classList.add('show');
-    else btn.classList.remove('show');
-  };
-  function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-</script>
+{# ═══ CHATBOT ═══ #}
+<button class="chatbot-bubble" id="chatbot-bubble" onclick="toggleChatbot()">
+  <i class="fas fa-comment-dots" id="cb-open"></i>
+  <i class="fas fa-times" id="cb-close" style="display:none"></i>
+  <span class="chatbot-unread" id="cb-unread">1</span>
+</button>
 
+<div class="chatbot-window" id="chatbot-window">
+  <div class="chatbot-header">
+    <div class="chatbot-header-avatar"><i class="fas fa-robot"></i></div>
+    <div class="chatbot-header-info">
+      <span class="chatbot-header-name">GTShop Assistant</span>
+      <span class="chatbot-header-status">
+        <span class="chatbot-online-dot"></span> Online
+      </span>
+    </div>
+    <button class="chatbot-header-close" onclick="toggleChatbot()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="chatbot-messages" id="cb-messages">
+    <div class="chatbot-msg chatbot-msg--bot">
+      <div class="chatbot-msg-avatar"><i class="fas fa-robot"></i></div>
+      <div class="chatbot-msg-bubble">
+        {% trans "Xin chào! Tôi là trợ lý GTShop 🛍️ Tôi có thể giúp bạn về sản phẩm, đơn hàng, vận chuyển, đổi trả!" %}
+      </div>
+    </div>
+    <div class="chatbot-quick-replies" id="cb-quick-replies">
+      <button class="chatbot-quick-btn" onclick="sendQuick('Phí vận chuyển là bao nhiêu?')">🚚 {% trans "Phí ship" %}</button>
+      <button class="chatbot-quick-btn" onclick="sendQuick('Chính sách đổi trả như thế nào?')">🔄 {% trans "Đổi trả" %}</button>
+      <button class="chatbot-quick-btn" onclick="sendQuick('Các phương thức thanh toán?')">💳 {% trans "Thanh toán" %}</button>
+      <button class="chatbot-quick-btn" onclick="sendQuick('GTShop có khuyến mãi gì không?')">🔥 {% trans "Khuyến mãi" %}</button>
+    </div>
+  </div>
+
+  <div class="chatbot-typing" id="cb-typing" style="display:none">
+    <div class="chatbot-msg chatbot-msg--bot">
+      <div class="chatbot-msg-avatar"><i class="fas fa-robot"></i></div>
+      <div class="chatbot-msg-bubble chatbot-typing-bubble">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chatbot-input-area">
+    <input type="text" class="chatbot-input" id="cb-input"
+           placeholder="{% trans 'Nhập tin nhắn...' %}"
+           onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chatbot-send-btn" onclick="sendChat()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
+{# ═══ BACK TO TOP ═══ #}
 <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
   <i class="fas fa-arrow-up"></i>
 </button>
 
+{# ═══ CART TOAST ═══ #}
+<div class="cart-toast" id="cart-toast">
+  <i class="fas fa-check-circle"></i>
+  <span>{% trans "Đã thêm vào giỏ hàng!" %}</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── Navbar scroll ─────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.querySelector('.navbar').classList.toggle('navbar-scrolled', window.scrollY > 50);
+  document.getElementById('backToTop').classList.toggle('show', window.scrollY > 200);
+});
+function scrollToTop() { window.scrollTo({top:0,behavior:'smooth'}); }
+
+// ── Loading spinner trên form submit ──────────────
+document.querySelectorAll('form').forEach(f => {
+  // Bỏ qua form chatbot và form ngôn ngữ (nhỏ, không cần spinner)
+  if (f.closest('.chatbot-input-area') || f.closest('.lang-menu')) return;
+  f.addEventListener('submit', () => {
+    document.getElementById('global-spinner').classList.add('global-spinner--show');
+  });
+});
+
+// ── Chatbot ──────────────────────────────────────
+const chatHistory = [];
+let chatOpen = false;
+
+function toggleChatbot() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatbot-window').classList.toggle('chatbot-window--open', chatOpen);
+  document.getElementById('cb-open').style.display  = chatOpen ? 'none'  : 'block';
+  document.getElementById('cb-close').style.display = chatOpen ? 'block' : 'none';
+  if (chatOpen) {
+    const u = document.getElementById('cb-unread');
+    if (u) u.style.display = 'none';
+    document.getElementById('cb-input').focus();
+  }
+}
+
+function appendMsg(role, html) {
+  // Ẩn quick replies sau tin nhắn đầu
+  const qr = document.getElementById('cb-quick-replies');
+  if (qr) qr.style.display = 'none';
+
+  const msgs = document.getElementById('cb-messages');
+  const div  = document.createElement('div');
+  div.className = `chatbot-msg chatbot-msg--${role === 'user' ? 'user' : 'bot'}`;
+  if (role === 'user') {
+    div.innerHTML = `<div class="chatbot-msg-bubble">${html}</div>`;
+  } else {
+    div.innerHTML = `<div class="chatbot-msg-avatar"><i class="fas fa-robot"></i></div>
+                     <div class="chatbot-msg-bubble">${html}</div>`;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendQuick(text) {
+  document.getElementById('cb-input').value = text;
+  sendChat();
+}
+
+async function sendChat() {
+  const inp = document.getElementById('cb-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+
+  appendMsg('user', msg);
+  chatHistory.push({role:'user', content: msg});
+
+  // Show typing indicator
+  const typing = document.getElementById('cb-typing');
+  typing.style.display = 'block';
+  document.getElementById('cb-messages').scrollTop = 99999;
+
+  try {
+    const resp = await fetch('/api/chat/', {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'X-CSRFToken':   getCookie('csrftoken'),
+      },
+      body: JSON.stringify({
+        message: msg,
+        history: chatHistory.slice(-10),
+      }),
+    });
+
+    const data  = await resp.json();
+    const reply = data.reply || '{% trans "Xin lỗi, tôi không hiểu. Bạn hỏi lại được không?" %}';
+    chatHistory.push({role:'assistant', content: reply});
+    typing.style.display = 'none';
+    appendMsg('bot', reply.replace(/\n/g, '<br>'));
+
+  } catch(e) {
+    typing.style.display = 'none';
+    appendMsg('bot', '{% trans "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau!" %}');
+  }
+}
+
+// ── CSRF helper ───────────────────────────────────
+function getCookie(name) {
+  const v = document.cookie.split(';').find(c => c.trim().startsWith(name+'='));
+  return v ? decodeURIComponent(v.split('=')[1]) : '';
+}
+
+// ── Global cart toast helper ──────────────────────
+function showCartToast() {
+  const t = document.getElementById('cart-toast');
+  if (!t) return;
+  t.classList.add('cart-toast--show');
+  setTimeout(() => t.classList.remove('cart-toast--show'), 3000);
+}
+</script>
+
 {% block extra_js %}{% endblock %}
 </body>
 </html>
-

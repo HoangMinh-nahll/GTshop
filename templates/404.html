@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}404 — {% trans "Không tìm thấy trang" %} | GTShop{% endblock %}
+
+{% block content %}
+<div class="error-page">
+  <div class="error-page-inner">
+    <div class="error-blob error-blob--1"></div>
+    <div class="error-blob error-blob--2"></div>
+    <div class="error-number">404</div>
+    <h1 class="error-title">{% trans "Oops! Trang không tồn tại" %}</h1>
+    <p class="error-subtitle">{% trans "Trang bạn tìm kiếm đã bị xóa, đổi tên hoặc chưa từng tồn tại." %}</p>
+    <div class="error-actions">
+      <a href="{% url 'store:home' %}" class="btn-error-home">
+        <i class="fas fa-home"></i> {% trans "Về trang chủ" %}
+      </a>
+      <a href="{% url 'store:shop' %}" class="btn-error-shop">
+        <i class="fas fa-store"></i> {% trans "Vào cửa hàng" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

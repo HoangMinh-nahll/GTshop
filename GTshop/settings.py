@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'accounts',
     'blog',
-    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +49,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'GTshop.context_processors.cart_count',
+                'GTshop.context_processors.lang_list',
             ],
         },
     },

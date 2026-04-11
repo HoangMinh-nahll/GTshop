@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load store_filters %}
+
+{% block title %}{% trans "Tài khoản của tôi" %} — GTShop{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop</p>
+    <h1 class="page-header-title">{% trans "Tài khoản của tôi" %}</h1>
+  </div>
+</div>
+
+<div class="container account-container">
+  <div class="account-layout">
+
+    {# ── Sidebar ── #}
+    <div class="account-sidebar">
+      <div class="account-avatar-card">
+        <div class="account-avatar-circle">{{ user.username|first|upper }}</div>
+        <h4 class="account-username">{{ user.username }}</h4>
+        <p class="account-email">{{ user.email|default:"—" }}</p>
+      </div>
+      <nav class="account-nav">
+        <a class="account-nav-item {% if tab == 'orders' or not tab %}account-nav-item--active{% endif %}"
+           href="{% url 'my_account' %}?tab=orders"><i class="fas fa-box"></i> {% trans "Đơn hàng của tôi" %}</a>
+        <a class="account-nav-item {% if tab == 'profile' %}account-nav-item--active{% endif %}"
+           href="{% url 'my_account' %}?tab=profile"><i class="fas fa-user-edit"></i> {% trans "Thông tin cá nhân" %}</a>
+        <a class="account-nav-item {% if tab == 'password' %}account-nav-item--active{% endif %}"
+           href="{% url 'my_account' %}?tab=password"><i class="fas fa-lock"></i> {% trans "Đổi mật khẩu" %}</a>
+      </nav>
+    </div>
+
+    {# ── Main ── #}
+    <div class="account-main">
+
+      {# ── Orders Tab ── #}
+      {% if tab == 'orders' or not tab %}
+      <div class="account-card">
+        <h3 class="account-card-title"><i class="fas fa-box"></i> {% trans "Đơn hàng của tôi" %}</h3>
+        {% if orders %}
+        <div class="orders-list">
+          {% for order in orders %}
+          <div class="order-item {% if order.paid %}order-item--paid{% else %}order-item--pending{% endif %}">
+            <div class="order-item-header">
+              <span class="order-item-id">#{{ order.id }}</span>
+              <span class="order-item-date">{{ order.created|date:"d/m/Y H:i" }}</span>
+              {% if order.paid %}
+                <span class="status-badge status-badge--paid">✓ {% trans "Đã thanh toán" %}</span>
+              {% else %}
+                <span class="status-badge status-badge--pending">⏳ {% trans "Chờ xử lý" %}</span>
+              {% endif %}
+            </div>
+            <div class="order-item-products">
+              {% for item in order.items.all %}
+              <div class="order-product-row">
+                <span class="order-product-name">{{ item.product.name|truncatechars:40 }}</span>
+                {% if item.variant %}<span class="order-product-variant">{{ item.variant.name }}</span>{% endif %}
+                <span class="order-product-qty">x{{ item.quantity }}</span>
+                <span class="order-product-price">{{ item.price|currency }}</span>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="order-item-footer">
+              <div class="order-item-totals">
+                <span>{% trans "Phí ship:" %} {{ order.shipping_fee|currency }}</span>
+                <span class="order-item-total">{% trans "Tổng:" %} <b>{{ order.total|currency }}</b></span>
+              </div>
+              <div class="order-item-address">
+                <i class="fas fa-map-marker-alt"></i> {{ order.address|truncatechars:60 }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="account-empty">
+          <div class="account-empty-icon">📦</div>
+          <p>{% trans "Bạn chưa có đơn hàng nào." %}</p>
+          <a href="{% url 'store:shop' %}" class="btn-account-shop">{% trans "Mua sắm ngay" %}</a>
+        </div>
+        {% endif %}
+      </div>
+
+      {# ── Profile Tab ── #}
+      {% elif tab == 'profile' %}
+      <div class="account-card">
+        <h3 class="account-card-title"><i class="fas fa-user-edit"></i> {% trans "Thông tin cá nhân" %}</h3>
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3">
+            {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          {% endfor %}
+        {% endif %}
+        <form method="post" action="{% url 'my_account' %}?tab=profile" class="profile-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update_profile">
+          <div class="profile-field">
+            <label>{% trans "Tên đăng nhập" %}</label>
+            <input type="text" value="{{ user.username }}" disabled class="form-input form-input--disabled">
+          </div>
+          <div class="profile-field">
+            <label>Email</label>
+            <div class="form-input-wrap">
+              <i class="fas fa-envelope form-input-icon"></i>
+              <input type="email" name="email" value="{{ user.email }}" class="form-input">
+            </div>
+          </div>
+          <div class="profile-field">
+            <label>{% trans "Họ tên" %}</label>
+            <div class="form-input-wrap">
+              <i class="fas fa-user form-input-icon"></i>
+              <input type="text" name="first_name" value="{{ user.first_name }}" class="form-input" placeholder="{% trans 'Họ tên' %}">
+            </div>
+          </div>
+          <button type="submit" class="btn-profile-save">
+            <i class="fas fa-save"></i> {% trans "Lưu thay đổi" %}
+          </button>
+        </form>
+      </div>
+
+      {# ── Password Tab ── #}
+      {% elif tab == 'password' %}
+      <div class="account-card">
+        <h3 class="account-card-title"><i class="fas fa-lock"></i> {% trans "Đổi mật khẩu" %}</h3>
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3">
+            {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          {% endfor %}
+        {% endif %}
+        <form method="post" action="{% url 'my_account' %}?tab=password" class="profile-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="change_password">
+          <div class="profile-field">
+            <label>{% trans "Mật khẩu hiện tại" %}</label>
+            <div class="form-input-wrap">
+              <i class="fas fa-lock form-input-icon"></i>
+              <input type="password" name="old_password" class="form-input" required>
+            </div>
+          </div>
+          <div class="profile-field">
+            <label>{% trans "Mật khẩu mới" %}</label>
+            <div class="form-input-wrap">
+              <i class="fas fa-key form-input-icon"></i>
+              <input type="password" name="new_password1" class="form-input" required>
+            </div>
+          </div>
+          <div class="profile-field">
+            <label>{% trans "Xác nhận mật khẩu mới" %}</label>
+            <div class="form-input-wrap">
+              <i class="fas fa-key form-input-icon"></i>
+              <input type="password" name="new_password2" class="form-input" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-profile-save">
+            <i class="fas fa-save"></i> {% trans "Đổi mật khẩu" %}
+          </button>
+        </form>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

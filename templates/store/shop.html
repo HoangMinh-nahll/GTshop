@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load store_filters %}
+{% load i18n %}
+
+{% block title %}{% if category %}{{ category.name }}{% else %}{% trans "Cửa hàng" %}{% endif %} — GTShop{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop</p>
+    <h1 class="page-header-title">
+      {% if category %}{{ category.name }}{% else %}{% trans "Cửa hàng" %}{% endif %}
+    </h1>
+    <p class="page-header-subtitle">{% trans "Khám phá hàng ngàn sản phẩm chất lượng" %}</p>
+  </div>
+</div>
+
+<div class="container shop-container">
+
+  {# ── Toolbar ── #}
+  <div class="shop-toolbar">
+    <form class="shop-search-form" action="." method="get">
+      {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
+      {% if request.GET.min_price %}<input type="hidden" name="min_price" value="{{ request.GET.min_price }}">{% endif %}
+      {% if request.GET.max_price %}<input type="hidden" name="max_price" value="{{ request.GET.max_price }}">{% endif %}
+      <i class="fas fa-search shop-search-icon"></i>
+      <input type="text" name="q" placeholder="{% trans 'Tìm kiếm sản phẩm...' %}" value="{{ request.GET.q }}">
+      <button type="submit">{% trans "Tìm" %}</button>
+    </form>
+    <span class="shop-result-count">{{ page_obj.paginator.count }} {% trans "sản phẩm" %}</span>
+  </div>
+
+  {# ── Filter + Sort ── #}
+  <div class="filter-bar">
+    <div class="filter-bar-left">
+      <span class="filter-label"><i class="fas fa-sort-amount-down"></i> {% trans "Sắp xếp:" %}</span>
+      <div class="sort-options">
+        {% with base="?"|add:request.GET.urlencode %}
+        <a class="sort-btn {% if not request.GET.sort or request.GET.sort == 'default' %}sort-btn--active{% endif %}"
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=default">{% trans "Mặc định" %}</a>
+        <a class="sort-btn {% if request.GET.sort == 'price_asc' %}sort-btn--active{% endif %}"
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=price_asc">💰 {% trans "Giá thấp" %}</a>
+        <a class="sort-btn {% if request.GET.sort == 'price_desc' %}sort-btn--active{% endif %}"
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=price_desc">💎 {% trans "Giá cao" %}</a>
+        <a class="sort-btn {% if request.GET.sort == 'newest' %}sort-btn--active{% endif %}"
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=newest">🆕 {% trans "Mới nhất" %}</a>
+        <a class="sort-btn {% if request.GET.sort == 'sale' %}sort-btn--active{% endif %}"
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=sale">🔥 {% trans "Giảm giá" %}</a>
+        {% endwith %}
+      </div>
+    </div>
+    <form class="price-filter" action="." method="get">
+      {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
+      {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
+      <span class="filter-label"><i class="fas fa-tag"></i> {% trans "Giá:" %}</span>
+      <input type="number" name="min_price" placeholder="{% trans 'Từ' %}" value="{{ request.GET.min_price }}" class="price-input">
+      <span class="price-sep">—</span>
+      <input type="number" name="max_price" placeholder="{% trans 'Đến' %}" value="{{ request.GET.max_price }}" class="price-input">
+      <button type="submit" class="btn-price-filter"><i class="fas fa-filter"></i></button>
+      {% if request.GET.min_price or request.GET.max_price %}
+      <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}{% endif %}" class="btn-clear-filter" title="Xóa bộ lọc"><i class="fas fa-times"></i></a>
+      {% endif %}
+    </form>
+  </div>
+
+  {# ── Product Grid ── #}
+  <div class="row g-4 mt-1">
+    {% for p in page_obj %}
+    <div class="col-lg-3 col-md-4 col-6">
+      <div class="product-card">
+        {% if p.sale_price %}
+          <span class="product-badge product-badge--sale">-{{ p.get_discount_percent }}%</span>
+        {% elif p.is_hot %}
+          <span class="product-badge product-badge--hot">HOT</span>
+        {% endif %}
+        <div class="product-image-wrap">
+          {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}" loading="lazy">
+          {% else %}<div class="product-image-placeholder"><i class="fas fa-image"></i></div>{% endif %}
+          <div class="product-quick-view">
+            <a href="{{ p.get_absolute_url }}" class="btn-quick-view">
+              <i class="fas fa-eye"></i> {% trans "Xem nhanh" %}
+            </a>
+          </div>
+        </div>
+        <div class="product-info">
+          <div class="product-stars">★★★★★</div>
+          <h6 class="product-name"><a href="{{ p.get_absolute_url }}">{{ p.name|truncatechars:45 }}</a></h6>
+          <div class="product-price">
+            {% if p.sale_price %}
+              <span class="price-original">{{ p.price|currency }}</span>
+              <span class="price-sale">{{ p.sale_price|currency }}</span>
+            {% else %}
+              <span class="price-regular">{{ p.price|currency }}</span>
+            {% endif %}
+          </div>
+          <div class="product-actions">
+            <a href="{{ p.get_absolute_url }}" class="btn-product-detail">
+              <i class="fas fa-eye"></i> {% trans "Chi tiết" %}
+            </a>
+            <form method="post" action="{% url 'carts:cart_add' p.id %}" class="d-inline ajax-cart-form">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn-add-to-cart">
+                <i class="fas fa-cart-plus"></i> {% trans "Thêm" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="shop-empty-state">
+        <div class="shop-empty-icon">🔍</div>
+        <h3>{% trans "Không tìm thấy sản phẩm" %}</h3>
+        <p>{% trans "Thử tìm với từ khoá khác nhé!" %}</p>
+        <a href="{% url 'store:shop' %}" class="btn-empty-reset">{% trans "Xem tất cả" %}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {# ── Pagination ── #}
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="pagination-wrap">
+    {% if page_obj.has_previous %}
+      <a class="pagination-btn" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"><i class="fas fa-chevron-left"></i></a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="pagination-btn pagination-btn--active">{{ num }}</span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="pagination-btn" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <a class="pagination-btn" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}"><i class="fas fa-chevron-right"></i></a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+{# ── Toast ── #}
+<div class="cart-toast" id="cart-toast">
+  <i class="fas fa-check-circle"></i>
+  <span>{% trans "Đã thêm vào giỏ hàng!" %}</span>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.ajax-cart-form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type=submit]');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
+
+    fetch(this.action, {
+      method: 'POST', body: new FormData(this),
+      headers: {'X-Requested-With': 'XMLHttpRequest'}
+    }).then(() => {
+      // Cập nhật badge
+      const badge = document.querySelector('.cart-badge');
+      if (badge) badge.textContent = parseInt(badge.textContent||0) + 1;
+      else {
+        const cl = document.querySelector('.cart-link');
+        if (cl) { const b = document.createElement('span'); b.className='cart-badge'; b.textContent='1'; cl.appendChild(b); }
+      }
+      // Toast
+      const t = document.getElementById('cart-toast');
+      if (t) { t.classList.add('cart-toast--show'); setTimeout(()=>t.classList.remove('cart-toast--show'),3000); }
+    }).catch(() => form.submit())
+    .finally(() => { btn.innerHTML = orig; btn.disabled = false; });
+  });
+});
+</script>
+{% endblock %}
