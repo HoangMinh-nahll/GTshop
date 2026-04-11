@@ -41,11 +41,11 @@
         <a class="sort-btn {% if not request.GET.sort or request.GET.sort == 'default' %}sort-btn--active{% endif %}"
            href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=default">{% trans "Mặc định" %}</a>
         <a class="sort-btn {% if request.GET.sort == 'price_asc' %}sort-btn--active{% endif %}"
-           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=price_asc">💰 {% trans "Giá thấp" %}</a>
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=price_asc"> {% trans "Giá thấp" %}</a>
         <a class="sort-btn {% if request.GET.sort == 'price_desc' %}sort-btn--active{% endif %}"
-           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=price_desc">💎 {% trans "Giá cao" %}</a>
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=price_desc"> {% trans "Giá cao" %}</a>
         <a class="sort-btn {% if request.GET.sort == 'newest' %}sort-btn--active{% endif %}"
-           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=newest">🆕 {% trans "Mới nhất" %}</a>
+           href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=newest"> {% trans "Mới nhất" %}</a>
         <a class="sort-btn {% if request.GET.sort == 'sale' %}sort-btn--active{% endif %}"
            href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}sort=sale">🔥 {% trans "Giảm giá" %}</a>
         {% endwith %}

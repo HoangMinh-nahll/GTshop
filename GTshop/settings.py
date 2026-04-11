@@ -114,3 +114,16 @@ LOGIN_REDIRECT_URL = 'store:home'
 LOGOUT_REDIRECT_URL = 'store:home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# ─── Static & Media ───────────────────────────────────────────────────────────
+STATIC_URL = '/static/'
+
+# Thư mục chứa static files gốc (nơi bạn đang để CSS, images)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static_dev'),  # Hoặc 'static' tùy vào thư mục bạn dùng để dev
+]
+
+# Thư mục collectstatic sẽ gom file vào đây (đã có thư mục staticfiles)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
