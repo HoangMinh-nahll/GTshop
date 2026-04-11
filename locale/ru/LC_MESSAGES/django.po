@@ -422,75 +422,72 @@ msgstr "Читать далее"
 msgid "Về GTShop"
 msgstr "О GTShop"
 
-# Dashboard / Statistics
 msgid "Thống kê & Báo cáo"
 msgstr "Статистика и отчёты"
 
 msgid "Tổng quan hoạt động kinh doanh GTShop"
-msgstr "Обзор деятельности GTShop"
+msgstr "Обзор бизнеса GTShop"
 
-msgid "DOANH THU THÁNG NÀY"
-msgstr "ВЫРУЧКА ЗА МЕСЯЦ"
+msgid "Doanh thu tháng này"
+msgstr "Выручка за месяц"
 
 msgid "so với tháng trước"
 msgstr "по сравнению с прошлым месяцем"
 
-msgid "ĐƠN HÀNG THÁNG NÀY"
-msgstr "ЗАКАЗОВ ЗА МЕСЯЦ"
+msgid "Đơn hàng tháng này"
+msgstr "Заказы за месяц"
 
-msgid "đơn hàng chờ xử lý"
-msgstr "заказов в обработке"
+msgid "đơn đang chờ xử lý"
+msgstr "заказов ожидают"
 
-msgid "KHÁCH HÀNG MỚI"
-msgstr "НОВЫХ КЛИЕНТОВ"
+msgid "Khách hàng mới"
+msgstr "Новые клиенты"
 
 msgid "tổng khách hàng"
 msgstr "всего клиентов"
 
-msgid "DOANH THU HÔM NAY"
-msgstr "ВЫРУЧКА ЗА СЕГОДНЯ"
+msgid "Doanh thu hôm nay"
+msgstr "Выручка сегодня"
 
 msgid "đơn hôm nay"
 msgstr "заказов сегодня"
 
 msgid "Doanh thu 7 ngày qua"
-msgstr "Выручка за последние 7 дней"
+msgstr "Выручка за 7 дней"
 
 msgid "Trạng thái đơn hàng"
-msgstr "Статус заказа"
-
-msgid "Sản phẩm bán chạy"
-msgstr "Самые продаваемые товары"
-
-msgid "Đã bán"
-msgstr "Продано"
-
-msgid "Doanh thu"
-msgstr "Выручка"
-
-msgid "MÃ ĐƠN"
-msgstr "НОМЕР ЗАКАЗА"
-
-msgid "KHÁCH HÀNG"
-msgstr "КЛИЕНТ"
-
-msgid "TỔNG TIỀN"
-msgstr "ИТОГО"
-
-msgid "TRẠNG THÁI"
-msgstr "СТАТУС"
-
-msgid "NGÀY ĐẶT"
-msgstr "ДАТА ЗАКАЗА"
+msgstr "Статус заказов"
 
 msgid "Đã thanh toán"
 msgstr "Оплачено"
 
 msgid "Chờ xử lý"
-msgstr "В обработке"
+msgstr "В ожидании"
+
+msgid "Sản phẩm bán chạy"
+msgstr "Популярные товары"
+
+msgid "đã bán"
+msgstr "продано"
 
 msgid "Chưa có dữ liệu"
 msgstr "Нет данных"
 
+msgid "Đơn hàng gần đây"
+msgstr "Последние заказы"
+
+msgid "Mã đơn"
+msgstr "№ заказа"
+
+msgid "Tổng tiền"
+msgstr "Сумма"
+
+msgid "Ngày đặt"
+msgstr "Дата"
+
 msgid "Chưa có đơn hàng"
-msgstr "Нет заказов"
+msgstr "Заказов нет"
+
+msgid "Doanh thu"
+msgstr "Выручка"
+

@@ -422,78 +422,72 @@ msgstr "続きを読む"
 msgid "Về GTShop"
 msgstr "GTShopについて"
 
-# Dashboard / Statistics
 msgid "Thống kê & Báo cáo"
 msgstr "統計とレポート"
 
 msgid "Tổng quan hoạt động kinh doanh GTShop"
-msgstr "GTShop ビジネス概要"
+msgstr "GTShopビジネス概要"
 
-msgid "DOANH THU THÁNG NÀY"
+msgid "Doanh thu tháng này"
 msgstr "今月の売上"
 
 msgid "so với tháng trước"
-msgstr "前月比"
+msgstr "先月比"
 
-msgid "ĐƠN HÀNG THÁNG NÀY"
+msgid "Đơn hàng tháng này"
 msgstr "今月の注文"
 
-msgid "đơn hàng chờ xử lý"
-msgstr "保留中の注文"
+msgid "đơn đang chờ xử lý"
+msgstr "件処理待ち"
 
-msgid "KHÁCH HÀNG MỚI"
+msgid "Khách hàng mới"
 msgstr "新規顧客"
 
 msgid "tổng khách hàng"
-msgstr "総顧客数"
+msgstr "総顧客"
 
-msgid "DOANH THU HÔM NAY"
+msgid "Doanh thu hôm nay"
 msgstr "本日の売上"
 
 msgid "đơn hôm nay"
-msgstr "本日の注文"
+msgstr "件本日の注文"
 
 msgid "Doanh thu 7 ngày qua"
 msgstr "過去7日間の売上"
 
 msgid "Trạng thái đơn hàng"
-msgstr "注文ステータス"
+msgstr "注文状況"
+
+msgid "Đã thanh toán"
+msgstr "支払い済み"
+
+msgid "Chờ xử lý"
+msgstr "処理待ち"
 
 msgid "Sản phẩm bán chạy"
 msgstr "ベストセラー"
 
-msgid "Đã bán"
-msgstr "販売数"
-
-msgid "Doanh thu"
-msgstr "売上"
-
-msgid "MÃ ĐƠN"
-msgstr "注文ID"
-
-msgid "KHÁCH HÀNG"
-msgstr "お客様"
-
-msgid "TỔNG TIỀN"
-msgstr "合計"
-
-msgid "TRẠNG THÁI"
-msgstr "ステータス"
-
-msgid "NGÀY ĐẶT"
-msgstr "注文日"
-
-msgid "Đã thanh toán"
-msgstr "支払済"
-
-msgid "Chờ xử lý"
-msgstr "保留中"
+msgid "đã bán"
+msgstr "個販売済み"
 
 msgid "Chưa có dữ liệu"
 msgstr "データなし"
 
-msgid "Chưa có đơn hàng"
-msgstr "注文はありません"
+msgid "Đơn hàng gần đây"
+msgstr "最近の注文"
 
-msgid "© 2026 GreatShop. All rights reserved."
-msgstr "© 2026 GTShop. 全著作権所有。"
+msgid "Mã đơn"
+msgstr "注文ID"
+
+msgid "Tổng tiền"
+msgstr "合計金額"
+
+msgid "Ngày đặt"
+msgstr "注文日"
+
+msgid "Chưa có đơn hàng"
+msgstr "注文なし"
+
+msgid "Doanh thu"
+msgstr "売上"
+

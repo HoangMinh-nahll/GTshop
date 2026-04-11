@@ -422,66 +422,41 @@ msgstr "阅读更多"
 msgid "Về GTShop"
 msgstr "关于GTShop"
 
-# Dashboard / Statistics
 msgid "Thống kê & Báo cáo"
 msgstr "统计与报告"
 
 msgid "Tổng quan hoạt động kinh doanh GTShop"
-msgstr "GTShop 业务概览"
+msgstr "GTShop业务概览"
 
-msgid "DOANH THU THÁNG NÀY"
-msgstr "本月收入"
+msgid "Doanh thu tháng này"
+msgstr "本月营收"
 
 msgid "so với tháng trước"
-msgstr "较上月"
+msgstr "与上月相比"
 
-msgid "ĐƠN HÀNG THÁNG NÀY"
+msgid "Đơn hàng tháng này"
 msgstr "本月订单"
 
-msgid "đơn hàng chờ xử lý"
-msgstr "待处理订单"
+msgid "đơn đang chờ xử lý"
+msgstr "个订单待处理"
 
-msgid "KHÁCH HÀNG MỚI"
+msgid "Khách hàng mới"
 msgstr "新客户"
 
 msgid "tổng khách hàng"
-msgstr "客户总数"
+msgstr "总客户"
 
-msgid "DOANH THU HÔM NAY"
-msgstr "今日收入"
+msgid "Doanh thu hôm nay"
+msgstr "今日营收"
 
 msgid "đơn hôm nay"
-msgstr "今日订单"
+msgstr "个今日订单"
 
 msgid "Doanh thu 7 ngày qua"
-msgstr "过去7天收入"
+msgstr "最近7天营收"
 
 msgid "Trạng thái đơn hàng"
 msgstr "订单状态"
-
-msgid "Sản phẩm bán chạy"
-msgstr "热销产品"
-
-msgid "Đã bán"
-msgstr "已售"
-
-msgid "Doanh thu"
-msgstr "收入"
-
-msgid "MÃ ĐƠN"
-msgstr "订单号"
-
-msgid "KHÁCH HÀNG"
-msgstr "客户"
-
-msgid "TỔNG TIỀN"
-msgstr "总金额"
-
-msgid "TRẠNG THÁI"
-msgstr "状态"
-
-msgid "NGÀY ĐẶT"
-msgstr "下单日期"
 
 msgid "Đã thanh toán"
 msgstr "已付款"
@@ -489,8 +464,30 @@ msgstr "已付款"
 msgid "Chờ xử lý"
 msgstr "待处理"
 
+msgid "Sản phẩm bán chạy"
+msgstr "热销商品"
+
+msgid "đã bán"
+msgstr "已售"
+
 msgid "Chưa có dữ liệu"
 msgstr "暂无数据"
 
+msgid "Đơn hàng gần đây"
+msgstr "最近订单"
+
+msgid "Mã đơn"
+msgstr "订单号"
+
+msgid "Tổng tiền"
+msgstr "总金额"
+
+msgid "Ngày đặt"
+msgstr "下单日期"
+
 msgid "Chưa có đơn hàng"
 msgstr "暂无订单"
+
+msgid "Doanh thu"
+msgstr "营收"
+

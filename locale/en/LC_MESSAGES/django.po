@@ -422,33 +422,32 @@ msgstr "Read More"
 msgid "Về GTShop"
 msgstr "About GTShop"
 
-# Dashboard / Statistics
 msgid "Thống kê & Báo cáo"
 msgstr "Statistics & Reports"
 
 msgid "Tổng quan hoạt động kinh doanh GTShop"
-msgstr "GTShop Business Performance Overview"
+msgstr "GTShop business overview"
 
-msgid "DOANH THU THÁNG NÀY"
-msgstr "REVENUE THIS MONTH"
+msgid "Doanh thu tháng này"
+msgstr "Revenue this month"
 
 msgid "so với tháng trước"
 msgstr "vs last month"
 
-msgid "ĐƠN HÀNG THÁNG NÀY"
-msgstr "ORDERS THIS MONTH"
+msgid "Đơn hàng tháng này"
+msgstr "Orders this month"
 
-msgid "đơn hàng chờ xử lý"
-msgstr "pending orders"
+msgid "đơn đang chờ xử lý"
+msgstr "orders pending"
 
-msgid "KHÁCH HÀNG MỚI"
-msgstr "NEW CUSTOMERS"
+msgid "Khách hàng mới"
+msgstr "New Customers"
 
 msgid "tổng khách hàng"
 msgstr "total customers"
 
-msgid "DOANH THU HÔM NAY"
-msgstr "TODAY'S REVENUE"
+msgid "Doanh thu hôm nay"
+msgstr "Today's Revenue"
 
 msgid "đơn hôm nay"
 msgstr "orders today"
@@ -457,31 +456,7 @@ msgid "Doanh thu 7 ngày qua"
 msgstr "Revenue last 7 days"
 
 msgid "Trạng thái đơn hàng"
-msgstr "Order status"
-
-msgid "Sản phẩm bán chạy"
-msgstr "Best selling products"
-
-msgid "Đã bán"
-msgstr "Sold"
-
-msgid "Doanh thu"
-msgstr "Revenue"
-
-msgid "MÃ ĐƠN"
-msgstr "ORDER ID"
-
-msgid "KHÁCH HÀNG"
-msgstr "CUSTOMER"
-
-msgid "TỔNG TIỀN"
-msgstr "TOTAL"
-
-msgid "TRẠNG THÁI"
-msgstr "STATUS"
-
-msgid "NGÀY ĐẶT"
-msgstr "ORDER DATE"
+msgstr "Order Status"
 
 msgid "Đã thanh toán"
 msgstr "Paid"
@@ -489,9 +464,30 @@ msgstr "Paid"
 msgid "Chờ xử lý"
 msgstr "Pending"
 
+msgid "Sản phẩm bán chạy"
+msgstr "Best Sellers"
+
+msgid "đã bán"
+msgstr "sold"
+
 msgid "Chưa có dữ liệu"
-msgstr "No data"
+msgstr "No data yet"
+
+msgid "Đơn hàng gần đây"
+msgstr "Recent Orders"
+
+msgid "Mã đơn"
+msgstr "Order ID"
+
+msgid "Tổng tiền"
+msgstr "Total"
+
+msgid "Ngày đặt"
+msgstr "Date"
 
 msgid "Chưa có đơn hàng"
-msgstr "No orders"
+msgstr "No orders yet"
+
+msgid "Doanh thu"
+msgstr "Revenue"
 
