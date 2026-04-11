@@ -71,7 +71,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ─── Ngôn ngữ ─────────────────────────────────────────────────────────────────
+# Ngôn ngữ
 LANGUAGE_CODE = 'vi'
 
 LANGUAGES = [
@@ -90,40 +90,27 @@ TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
-# ── Language cookie: LocaleMiddleware đọc cookie thay vì URL prefix ──
-LANGUAGE_COOKIE_NAME     = 'django_language'
-LANGUAGE_COOKIE_AGE      = 365 * 24 * 60 * 60   # 1 năm
+LANGUAGE_COOKIE_NAME = 'django_language'
+LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60
 LANGUAGE_COOKIE_HTTPONLY = False
 LANGUAGE_COOKIE_SAMESITE = 'Lax'
 
-# Cookie ngôn ngữ
-LANGUAGE_COOKIE_NAME = 'django_language'
-LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60  # 1 năm
-LANGUAGE_COOKIE_SAMESITE = 'Lax'
-
-# ─── Static & Media ───────────────────────────────────────────────────────────
+# Static & Media - CẤU HÌNH ĐÚNG
 STATIC_URL = '/static/'
+
+# Nếu bạn có thư mục static (chứa css, js, images) ngang hàng với manage.py
+# Ví dụ: D:\Project2\GTshop\static\css\style.css
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Thư mục để gom file tĩnh khi chạy collectstatic (dùng khi DEBUG=False)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ─── Auth ─────────────────────────────────────────────────────────────────────
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Auth
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'store:home'
 LOGOUT_REDIRECT_URL = 'store:home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# ─── Static & Media ───────────────────────────────────────────────────────────
-STATIC_URL = '/static/'
-
-# Thư mục chứa static files gốc (nơi bạn đang để CSS, images)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_dev'),  # Hoặc 'static' tùy vào thư mục bạn dùng để dev
-]
-
-# Thư mục collectstatic sẽ gom file vào đây (đã có thư mục staticfiles)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
