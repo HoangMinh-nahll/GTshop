@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, ProductVariant
+from .review_models import ProductReview
 
 
 # ===================== INLINE CHO BIẾN THỂ SẢN PHẨM =====================
@@ -48,3 +49,12 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_featured')          # hiển thị tên và trạng thái nổi bật
     list_filter = ('is_featured',)                 # bộ lọc theo trạng thái nổi bật
     search_fields = ('name',)                      # tìm kiếm theo tên
+
+    from store.review_models import ProductReview
+
+@admin.register(ProductReview)
+class ProductReviewAdmin(admin.ModelAdmin):
+      list_display  = ['product', 'user', 'rating', 'is_verified_purchase', 'created']
+      list_filter   = ['rating', 'is_verified_purchase']
+      search_fields = ['product__name', 'user__username', 'comment']
+      readonly_fields = ['created', 'updated']

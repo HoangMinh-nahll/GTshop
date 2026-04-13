@@ -491,3 +491,96 @@ msgstr "មិនទាន់មានការបញ្ជាទិញ"
 msgid "Doanh thu"
 msgstr "ចំណូល"
 
+msgid "Tài khoản của tôi"
+msgstr "គណនីរបស់ខ្ញុំ"
+
+msgid "Đơn hàng của tôi"
+msgstr "ការបញ្ជាទិញរបស់ខ្ញុំ"
+
+msgid "Thông tin cá nhân"
+msgstr "ព័ត៌មានផ្ទាល់ខ្លួន"
+
+msgid "Đổi mật khẩu"
+msgstr "ប្ដូរពាក្យសម្ងាត់"
+
+msgid "Lưu thay đổi"
+msgstr "រក្សាទុកការផ្លាស់ប្ដូរ"
+
+msgid "Bạn chưa có đơn hàng nào."
+msgstr "អ្នកមិនទាន់មានការបញ្ជាទិញ។"
+
+msgid "Họ tên"
+msgstr "ឈ្មោះពេញ"
+
+msgid "Phí ship:"
+msgstr "ថ្លៃដឹក:"
+
+msgid "Tổng:"
+msgstr "សរុប:"
+
+msgid "Xác nhận mật khẩu mới"
+msgstr "បញ្ជាក់ពាក្យសម្ងាត់ថ្មី"
+
+msgid "Mật khẩu hiện tại"
+msgstr "ពាក្យសម្ងាត់បច្ចុប្បន្ន"
+
+msgid "Mật khẩu mới"
+msgstr "ពាក្យសម្ងាត់ថ្មី"
+
+msgid "Xin chào! Tôi là trợ lý GTShop 🛍️ Tôi có thể giúp bạn về sản phẩm, đơn hàng, vận chuyển, đổi trả!"
+msgstr "សួស្ដី! ខ្ញុំជាជំនួយការ GTShop 🛍️ ខ្ញុំអាចជួយអ្នកអំពីផលិតផល ការបញ្ជាទិញ ការដឹក ការប្ដូរ!"
+
+msgid "Nhập tin nhắn..."
+msgstr "វាយសារ..."
+
+msgid "Đã thêm vào giỏ hàng!"
+msgstr "បានបន្ថែមទៅកន្ត្រក!"
+
+msgid "Xin lỗi, tôi không hiểu. Bạn hỏi lại được không?"
+msgstr "សូមទោស ខ្ញុំមិនយល់។ អ្នកអាចសួរម្ដងទៀតបានទេ?"
+
+msgid "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau!"
+msgstr "សូមទោស ខ្ញុំមានបញ្ហា។ សូមព្យាយាមម្ដងទៀតពេលក្រោយ!"
+
+msgid "Sắp xếp:"
+msgstr "តម្រៀប:"
+
+msgid "Mặc định"
+msgstr "លំនាំដើម"
+
+msgid "Giá thấp"
+msgstr "តម្លៃទាប"
+
+msgid "Giá cao"
+msgstr "តម្លៃខ្ពស់"
+
+msgid "Mới nhất"
+msgstr "ថ្មីបំផុត"
+
+msgid "Giảm giá"
+msgstr "បញ្ចុះតម្លៃ"
+
+msgid "Giá:"
+msgstr "តម្លៃ:"
+
+msgid "Từ"
+msgstr "ចាប់ពី"
+
+msgid "Đến"
+msgstr "ដល់"
+
+msgid "Oops! Trang không tồn tại"
+msgstr "រកមិនឃើញទំព័រ"
+
+msgid "Trang bạn tìm kiếm đã bị xóa, đổi tên hoặc chưa từng tồn tại."
+msgstr "ទំព័រដែលអ្នករកបានត្រូវលុប ឬផ្លាស់ប្ដូរឈ្មោះ ឬមិនដែលមានទេ។"
+
+msgid "Về trang chủ"
+msgstr "ទៅទំព័រដើម"
+
+msgid "Vào cửa hàng"
+msgstr "ចូលហាង"
+
+msgid "Tài khoản"
+msgstr "គណនី"
+

@@ -491,3 +491,96 @@ msgstr "No orders yet"
 msgid "Doanh thu"
 msgstr "Revenue"
 
+msgid "Tài khoản của tôi"
+msgstr "My Account"
+
+msgid "Đơn hàng của tôi"
+msgstr "My Orders"
+
+msgid "Thông tin cá nhân"
+msgstr "Personal Info"
+
+msgid "Đổi mật khẩu"
+msgstr "Change Password"
+
+msgid "Lưu thay đổi"
+msgstr "Save Changes"
+
+msgid "Bạn chưa có đơn hàng nào."
+msgstr "You have no orders yet."
+
+msgid "Họ tên"
+msgstr "Full Name"
+
+msgid "Phí ship:"
+msgstr "Shipping:"
+
+msgid "Tổng:"
+msgstr "Total:"
+
+msgid "Xác nhận mật khẩu mới"
+msgstr "Confirm New Password"
+
+msgid "Mật khẩu hiện tại"
+msgstr "Current Password"
+
+msgid "Mật khẩu mới"
+msgstr "New Password"
+
+msgid "Xin chào! Tôi là trợ lý GTShop 🛍️ Tôi có thể giúp bạn về sản phẩm, đơn hàng, vận chuyển, đổi trả!"
+msgstr "Hello! I'm GTShop Assistant 🛍️ I can help with products, orders, shipping, returns!"
+
+msgid "Nhập tin nhắn..."
+msgstr "Type a message..."
+
+msgid "Đã thêm vào giỏ hàng!"
+msgstr "Added to cart!"
+
+msgid "Xin lỗi, tôi không hiểu. Bạn hỏi lại được không?"
+msgstr "Sorry, I don't understand. Could you ask again?"
+
+msgid "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau!"
+msgstr "Sorry, I'm having trouble. Please try again later!"
+
+msgid "Sắp xếp:"
+msgstr "Sort by:"
+
+msgid "Mặc định"
+msgstr "Default"
+
+msgid "Giá thấp"
+msgstr "Price ↑"
+
+msgid "Giá cao"
+msgstr "Price ↓"
+
+msgid "Mới nhất"
+msgstr "Newest"
+
+msgid "Giảm giá"
+msgstr "On Sale"
+
+msgid "Giá:"
+msgstr "Price:"
+
+msgid "Từ"
+msgstr "From"
+
+msgid "Đến"
+msgstr "To"
+
+msgid "Oops! Trang không tồn tại"
+msgstr "Oops! Page not found"
+
+msgid "Trang bạn tìm kiếm đã bị xóa, đổi tên hoặc chưa từng tồn tại."
+msgstr "The page you're looking for was removed, renamed or never existed."
+
+msgid "Về trang chủ"
+msgstr "Go Home"
+
+msgid "Vào cửa hàng"
+msgstr "Visit Shop"
+
+msgid "Tài khoản"
+msgstr "Account"
+

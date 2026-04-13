@@ -491,3 +491,96 @@ msgstr "Заказов нет"
 msgid "Doanh thu"
 msgstr "Выручка"
 
+msgid "Tài khoản của tôi"
+msgstr "Мой аккаунт"
+
+msgid "Đơn hàng của tôi"
+msgstr "Мои заказы"
+
+msgid "Thông tin cá nhân"
+msgstr "Личные данные"
+
+msgid "Đổi mật khẩu"
+msgstr "Смена пароля"
+
+msgid "Lưu thay đổi"
+msgstr "Сохранить изменения"
+
+msgid "Bạn chưa có đơn hàng nào."
+msgstr "У вас нет заказов."
+
+msgid "Họ tên"
+msgstr "Полное имя"
+
+msgid "Phí ship:"
+msgstr "Доставка:"
+
+msgid "Tổng:"
+msgstr "Итого:"
+
+msgid "Xác nhận mật khẩu mới"
+msgstr "Подтвердите новый пароль"
+
+msgid "Mật khẩu hiện tại"
+msgstr "Текущий пароль"
+
+msgid "Mật khẩu mới"
+msgstr "Новый пароль"
+
+msgid "Xin chào! Tôi là trợ lý GTShop 🛍️ Tôi có thể giúp bạn về sản phẩm, đơn hàng, vận chuyển, đổi trả!"
+msgstr "Привет! Я помощник GTShop 🛍️ Помогу с товарами, заказами, доставкой, возвратом!"
+
+msgid "Nhập tin nhắn..."
+msgstr "Введите сообщение..."
+
+msgid "Đã thêm vào giỏ hàng!"
+msgstr "Добавлено в корзину!"
+
+msgid "Xin lỗi, tôi không hiểu. Bạn hỏi lại được không?"
+msgstr "Извините, я не понял. Не могли бы вы спросить снова?"
+
+msgid "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau!"
+msgstr "Извините, у меня проблемы. Пожалуйста, попробуйте позже!"
+
+msgid "Sắp xếp:"
+msgstr "Сортировать:"
+
+msgid "Mặc định"
+msgstr "По умолчанию"
+
+msgid "Giá thấp"
+msgstr "Цена ↑"
+
+msgid "Giá cao"
+msgstr "Цена ↓"
+
+msgid "Mới nhất"
+msgstr "Новинки"
+
+msgid "Giảm giá"
+msgstr "Скидка"
+
+msgid "Giá:"
+msgstr "Цена:"
+
+msgid "Từ"
+msgstr "От"
+
+msgid "Đến"
+msgstr "До"
+
+msgid "Oops! Trang không tồn tại"
+msgstr "Страница не найдена"
+
+msgid "Trang bạn tìm kiếm đã bị xóa, đổi tên hoặc chưa từng tồn tại."
+msgstr "Страница была удалена, переименована или никогда не существовала."
+
+msgid "Về trang chủ"
+msgstr "На главную"
+
+msgid "Vào cửa hàng"
+msgstr "В магазин"
+
+msgid "Tài khoản"
+msgstr "Аккаунт"
+

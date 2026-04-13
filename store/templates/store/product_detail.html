@@ -1,372 +1,697 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load store_filters %}
-{% load i18n %}
-
+{% load static store_filters i18n %}
 {% block title %}{{ product.name }} — GTShop{% endblock %}
-
 {% block content %}
 <div class="container product-detail-container">
 
-  {# ═══ BREADCRUMB ═══ #}
   <nav class="breadcrumb-nav">
-    <a href="{% url 'store:home' %}">{% trans "Trang chủ" %}</a>
-    <span>/</span>
+    <a href="{% url 'store:home' %}">{% trans "Trang chủ" %}</a><span>/</span>
     <a href="{% url 'store:shop' %}">{% trans "Cửa hàng" %}</a>
-    {% if product.category %}
-    <span>/</span>
-    <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
-    {% endif %}
-    <span>/</span>
-    <span class="breadcrumb-current">{{ product.name|truncatechars:40 }}</span>
+    {% if product.category %}<span>/</span><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>{% endif %}
+    <span>/</span><span class="breadcrumb-current">{{ product.name|truncatechars:40 }}</span>
   </nav>
 
   <div class="row g-5">
-
-    {# ═══ LEFT: PRODUCT IMAGE ═══ #}
+    {# LEFT: Image #}
     <div class="col-lg-6">
       <div class="product-gallery">
-        {# Ảnh chính — sẽ được đổi bằng JS khi chọn biến thể #}
         {% if product.image %}
-          <img id="main-product-image"
-               src="{{ product.image.url }}"
-               alt="{{ product.name }}"
-               class="product-gallery-image">
+          <img id="main-product-image" src="{{ product.image.url }}" alt="{{ product.name }}" class="product-gallery-image" style="transition:opacity .15s">
         {% else %}
-          <div class="product-gallery-placeholder">
-            <i class="fas fa-image"></i>
-          </div>
+          <div class="product-gallery-placeholder"><i class="fas fa-image"></i></div>
         {% endif %}
-
-        {% if product.sale_price %}
-          <span class="product-gallery-badge" id="discount-badge">
-            -{{ product.get_discount_percent }}%
-          </span>
-        {% endif %}
+        {% if product.sale_price %}<span class="product-gallery-badge">-{{ product.get_discount_percent }}%</span>{% endif %}
       </div>
-
-      {# Thumbnail variants ở dưới ảnh chính #}
       {% if product.variants.exists %}
-      <div class="variant-thumbnails">
-        {# Ảnh gốc sản phẩm #}
+      <div class="variant-thumbnails mt-3">
         {% if product.image %}
-        <button type="button"
-                class="variant-thumb variant-thumb--active"
-                onclick="selectVariantThumb(this, '{{ product.image.url }}', null)">
-          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        <button type="button" class="variant-thumb variant-thumb--active" onclick="selectVariantThumb(this,'{{ product.image.url }}',null)">
+          <img src="{{ product.image.url }}" alt="default">
         </button>
         {% endif %}
-        {# Ảnh từng biến thể #}
-        {% for variant in product.variants.all %}
-          {% if variant.image %}
-          <button type="button"
-                  class="variant-thumb"
-                  onclick="selectVariantThumb(this, '{{ variant.image.url }}', {{ variant.id }})">
-            <img src="{{ variant.image.url }}" alt="{{ variant.name }}">
-          </button>
-          {% endif %}
-        {% endfor %}
+        {% for v in product.variants.all %}{% if v.image %}
+        <button type="button" class="variant-thumb" onclick="selectVariantThumb(this,'{{ v.image.url }}',{{ v.id }})">
+          <img src="{{ v.image.url }}" alt="{{ v.name }}">
+        </button>
+        {% endif %}{% endfor %}
+      </div>
+      {% endif %}
+
+      {# Rating summary bar #}
+      {% if review_count > 0 %}
+      <div class="rating-summary">
+        <div class="rating-summary-score">{{ avg_rating|floatformat:1 }}</div>
+        <div class="rating-summary-right">
+          <div class="rating-stars-big">
+            {% for i in "12345" %}<i class="fas fa-star {% if forloop.counter <= avg_rating %}star-filled{% else %}star-empty{% endif %}"></i>{% endfor %}
+          </div>
+          <div class="rating-summary-count">{{ review_count }} {% trans "đánh giá" %}</div>
+          {% for bar in rating_bars %}
+          <div class="rating-bar-row">
+            <span>{{ bar.star }}★</span>
+            <div class="rating-bar-track"><div class="rating-bar-fill" style="width:{{ bar.pct }}%"></div></div>
+            <span>{{ bar.count }}</span>
+          </div>
+          {% endfor %}
+        </div>
       </div>
       {% endif %}
     </div>
 
-    {# ═══ RIGHT: PRODUCT INFO ═══ #}
+    {# RIGHT: Info #}
     <div class="col-lg-6">
       <div class="product-detail-info">
-
         {% if product.category %}
-        <a href="{{ product.category.get_absolute_url }}" class="product-category-tag">
-          <i class="fas fa-tag"></i> {{ product.category.name }}
-        </a>
+        <a href="{{ product.category.get_absolute_url }}" class="product-category-tag"><i class="fas fa-tag"></i> {{ product.category.name }}</a>
         {% endif %}
-
         <h1 class="product-detail-title">{{ product.name }}</h1>
-
         <div class="product-rating-row">
-          <span class="product-stars">★★★★★</span>
-          <span class="product-rating-text">(4.9) · 128 {% trans "đánh giá" %}</span>
+          <div class="inline-stars">
+            {% for i in "12345" %}<i class="fas fa-star {% if forloop.counter <= avg_rating %}star-filled{% else %}star-empty{% endif %}"></i>{% endfor %}
+          </div>
+          <span class="product-rating-text">
+            {% if review_count > 0 %}{{ avg_rating|floatformat:1 }} · {{ review_count }} {% trans "đánh giá" %}
+            {% else %}{% trans "Chưa có đánh giá" %}{% endif %}
+          </span>
+          <a href="#reviews" class="review-jump-link">{% trans "Xem đánh giá" %} ↓</a>
         </div>
-
-        {# Price — cập nhật bằng JS khi chọn biến thể #}
-        <div class="product-detail-price" id="price-block">
+        <div class="product-detail-price">
           {% if product.sale_price %}
             <span class="price-sale-large" id="price-display">{{ product.sale_price|currency }}</span>
-            <span class="price-original-large" id="price-original-display">{{ product.price|currency }}</span>
-            <span class="price-save-badge" id="discount-pct-badge">
-              -{{ product.get_discount_percent }}%
-            </span>
+            <span class="price-original-large">{{ product.price|currency }}</span>
+            <span class="price-save-badge">{% trans "Tiết kiệm" %} {{ product.get_discount_percent }}%</span>
           {% else %}
             <span class="price-sale-large" id="price-display">{{ product.price|currency }}</span>
           {% endif %}
         </div>
-
-        {# Stock #}
         <div class="product-stock-status" id="stock-status">
           {% if product.stock > 0 %}
-            <span class="stock-in">
-              <i class="fas fa-check-circle"></i> {% trans "Còn hàng" %} ({{ product.stock }})
-            </span>
+            <span class="stock-in"><i class="fas fa-check-circle"></i> {% trans "Còn hàng" %} ({{ product.stock }})</span>
           {% else %}
-            <span class="stock-out">
-              <i class="fas fa-times-circle"></i> {% trans "Hết hàng" %}
-            </span>
+            <span class="stock-out"><i class="fas fa-times-circle"></i> {% trans "Hết hàng" %}</span>
           {% endif %}
         </div>
 
-        {# ═══ VARIANT SELECTOR ═══ #}
         {% if product.variants.exists %}
         <div class="variant-selector">
           <p class="variant-selector-label">{% trans "Chọn phân loại:" %}</p>
-          <div class="variant-options" id="variant-options">
+          <div class="variant-options">
             {% for variant in product.variants.all %}
-            <button type="button"
-                    class="variant-option-btn"
+            <button type="button" class="variant-option-btn"
                     data-variant-id="{{ variant.id }}"
-                    data-variant-name="{{ variant.name }}"
                     data-variant-price="{{ variant.price|default:product.price }}"
                     data-variant-stock="{{ variant.stock }}"
                     data-variant-image="{% if variant.image %}{{ variant.image.url }}{% else %}{{ product.image.url }}{% endif %}"
                     onclick="selectVariant(this)">
               <span class="variant-btn-name">{{ variant.name }}</span>
-              <span class="variant-btn-price">
-                {{ variant.price|default:product.price|currency }}
-              </span>
+              <span class="variant-btn-price">{{ variant.price|default:product.price|currency }}</span>
             </button>
             {% endfor %}
           </div>
         </div>
         {% endif %}
 
-        {# Tabs #}
         <div class="detail-tabs">
-          <button class="detail-tab detail-tab--active"
-                  onclick="switchDetailTab(this, 'tab-description')">
-            {% trans "Mô tả" %}
-          </button>
-          <button class="detail-tab"
-                  onclick="switchDetailTab(this, 'tab-specs')">
-            {% trans "Thông tin" %}
-          </button>
+          <button class="detail-tab detail-tab--active" onclick="switchDetailTab(this,'tab-desc')">{% trans "Mô tả" %}</button>
+          <button class="detail-tab" onclick="switchDetailTab(this,'tab-specs')">{% trans "Thông tin" %}</button>
         </div>
-
-        <div class="detail-tab-panel" id="tab-description">
+        <div class="detail-tab-panel" id="tab-desc">
           <div class="product-description">{{ product.description|linebreaks }}</div>
         </div>
         <div class="detail-tab-panel detail-tab-panel--hidden" id="tab-specs">
           <table class="product-specs-table">
             <tr><td>{% trans "Danh mục" %}</td><td>{{ product.category.name }}</td></tr>
             <tr><td>{% trans "Ngày đăng" %}</td><td>{{ product.created|date:"d/m/Y" }}</td></tr>
-            <tr>
-              <td>{% trans "Tình trạng" %}</td>
-              <td>{% if product.stock > 0 %}{% trans "Còn hàng" %}{% else %}{% trans "Hết hàng" %}{% endif %}</td>
-            </tr>
-            {% if product.weight %}
-            <tr><td>{% trans "Trọng lượng" %}</td><td>{{ product.weight }}g</td></tr>
-            {% endif %}
-          </table>
+            <tr><td>{% trans "Tình trạng" %}</td><td>{% if product.stock > 0 %}{% trans "Còn hàng" %}{% else %}{% trans "Hết hàng" %}{% endif %}</td></tr>
+            {% if product.weight %}><td>{% trans "Trọng lượng" %}</td><td>{{ product.weight }}g</td>{% endif %}
+           </table>
         </div>
 
-        {# Add to cart #}
-        <form method="post"
-              action="{% url 'carts:cart_add' product.id %}"
-              class="add-to-cart-form"
-              id="add-to-cart-form">
+        {% if product.stock > 0 %}
+        <form method="post" action="{% url 'carts:cart_add' product.id %}" class="add-to-cart-form ajax-cart-form">
           {% csrf_token %}
-          {# Hidden: gửi variant_id đã chọn #}
           <input type="hidden" name="variant_id" id="selected-variant-id" value="">
-
           <div class="quantity-selector">
             <span class="quantity-label">{% trans "Số lượng" %}</span>
             <div class="quantity-controls">
               <button type="button" onclick="changeProductQty(-1)" class="quantity-btn">−</button>
-              <input type="number" name="quantity" id="quantity"
-                     value="1" min="1" max="{{ product.stock }}"
-                     class="quantity-input">
+              <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock }}" class="quantity-input">
               <button type="button" onclick="changeProductQty(1)" class="quantity-btn">+</button>
             </div>
           </div>
-
           <div class="add-to-cart-buttons">
             <button type="submit" class="btn-add-to-cart-large" id="btn-add-cart">
               <i class="fas fa-cart-plus"></i> {% trans "Thêm vào giỏ" %}
             </button>
-            <a href="{% url 'store:shop' %}" class="btn-back-to-shop">
-              <i class="fas fa-arrow-left"></i>
-            </a>
+            <a href="{% url 'store:shop' %}" class="btn-back-to-shop"><i class="fas fa-arrow-left"></i></a>
           </div>
         </form>
+        {% else %}
+        <div class="out-of-stock-notice"><i class="fas fa-exclamation-circle"></i> {% trans "Sản phẩm hiện đã hết hàng." %}</div>
+        {% endif %}
 
-        {# Trust badges #}
         <div class="product-trust-badges">
           <div class="trust-badge"><span>🚚</span> {% trans "Giao nhanh 2h" %}</div>
           <div class="trust-badge"><span>🔄</span> {% trans "Đổi trả 30 ngày" %}</div>
           <div class="trust-badge"><span>🔒</span> {% trans "Bảo mật SSL" %}</div>
         </div>
-
       </div>
     </div>
   </div>
+
+  {# ═══ REVIEWS ═══ #}
+  <div id="reviews" class="reviews-section">
+    <h2 class="reviews-title">
+      <i class="fas fa-star"></i> {% trans "Đánh giá & Bình luận" %}
+      {% if review_count > 0 %}<span class="reviews-count-badge">{{ review_count }}</span>{% endif %}
+    </h2>
+
+    {# Form đánh giá #}
+    {% if user.is_authenticated %}
+    <div class="review-form-card">
+      <h4 class="review-form-title">{% if user_review %}{% trans "Sửa đánh giá" %}{% else %}{% trans "Viết đánh giá" %}{% endif %}</h4>
+      <form method="post" action="{% url 'submit_review' product.id %}" enctype="multipart/form-data" class="review-form">
+        {% csrf_token %}
+        <div class="star-picker">
+          <span class="star-picker-label">{% trans "Đánh giá:" %}</span>
+          <div class="star-picker-stars">
+            {% for i in "54321" %}
+            <input type="radio" name="rating" id="star{{ forloop.revcounter }}" value="{{ forloop.revcounter }}"
+                   {% if user_review and user_review.rating == forloop.revcounter %}checked{% endif %}
+                   {% if not user_review and forloop.revcounter == 5 %}checked{% endif %}>
+            <label for="star{{ forloop.revcounter }}"><i class="fas fa-star"></i></label>
+            {% endfor %}
+          </div>
+          <span class="star-picker-hint" id="star-hint">{% if user_review %}{{ user_review.rating }} ★{% else %}5 ★ — Tuyệt vời{% endif %}</span>
+        </div>
+        <div class="review-comment-field">
+          <textarea name="comment" rows="3" class="review-textarea"
+                    placeholder="{% trans 'Chia sẻ trải nghiệm của bạn về sản phẩm này...' %}">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+        </div>
+        <div class="review-image-field">
+          <label class="review-img-label">
+            <i class="fas fa-camera"></i> {% trans "Thêm ảnh (không bắt buộc)" %}
+            <input type="file" name="image" accept="image/*" class="review-img-input" onchange="previewReviewImg(this)">
+          </label>
+          {% if user_review and user_review.image %}
+            <img src="{{ user_review.image.url }}" class="review-img-preview" id="review-img-preview" alt="">
+          {% else %}
+            <img id="review-img-preview" class="review-img-preview" style="display:none" alt="">
+          {% endif %}
+        </div>
+        <div class="review-form-actions">
+          <button type="submit" class="btn-submit-review">
+            <i class="fas fa-paper-plane"></i>
+            {% if user_review %}{% trans "Cập nhật đánh giá" %}{% else %}{% trans "Gửi đánh giá" %}{% endif %}
+          </button>
+          {% if user_review %}
+          <form method="post" action="{% url 'delete_review' user_review.id %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete-review"
+                    onclick="return confirm('{% trans 'Xóa đánh giá này?' %}')">
+              <i class="fas fa-trash"></i> {% trans "Xóa" %}
+            </button>
+          </form>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+    {% else %}
+    <div class="review-login-prompt">
+      <i class="fas fa-user-circle"></i>
+      {% trans "Vui lòng" %} <a href="{% url 'login' %}?next={{ request.path }}">{% trans "đăng nhập" %}</a> {% trans "để đánh giá sản phẩm" %}
+    </div>
+    {% endif %}
+
+    {# List đánh giá #}
+    {% if reviews %}
+    <div class="review-list">
+      {% for review in reviews %}
+      <div class="review-item">
+        <div class="review-item-header">
+          <div class="review-item-avatar">{{ review.user.username|first|upper }}</div>
+          <div class="review-item-meta">
+            <span class="review-item-user">{{ review.user.username }}</span>
+            <div class="review-item-stars">
+              {% for i in "12345" %}<i class="fas fa-star {% if forloop.counter <= review.rating %}star-filled{% else %}star-empty{% endif %}"></i>{% endfor %}
+            </div>
+          </div>
+          <span class="review-item-date">{{ review.created|date:"d/m/Y" }}</span>
+        </div>
+        {% if review.comment %}<p class="review-item-comment">{{ review.comment }}</p>{% endif %}
+        {% if review.image %}
+        <img src="{{ review.image.url }}" class="review-item-img" alt=""
+             onclick="this.classList.toggle('review-item-img--zoom')">
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="reviews-empty">
+      <i class="fas fa-comment-slash"></i>
+      <p>{% trans "Chưa có đánh giá nào. Hãy là người đầu tiên!" %}</p>
+    </div>
+    {% endif %}
+  </div>
+
 </div>
+
+{# ═══ REVIEW SECTION ═══ #}
+<div class="container review-container" id="reviews">
+  <div class="review-layout">
+
+    {# ── Summary ── #}
+    <div class="review-summary">
+      <div class="review-avg-score" id="avg-score">{{ avg_rating }}</div>
+      <div class="review-avg-stars" id="avg-stars">
+        {% for i in "12345" %}
+          <i class="fas fa-star {% if forloop.counter <= avg_rating|floatformat:0|add:0 %}review-star--filled{% else %}review-star--empty{% endif %}"></i>
+        {% endfor %}
+      </div>
+      <div class="review-avg-count" id="avg-count">{{ total_reviews }} {% trans "đánh giá" %}</div>
+
+      {# Phân bổ sao #}
+      <div class="review-dist" id="review-dist">
+        {% for star in "54321" %}
+        {% with dist=star_dist|get_item:star %}
+        <div class="review-dist-row">
+          <span class="review-dist-label">{{ star }}★</span>
+          <div class="review-dist-bar-wrap">
+            <div class="review-dist-bar" style="width:{{ dist.pct }}%"></div>
+          </div>
+          <span class="review-dist-count">{{ dist.count }}</span>
+        </div>
+        {% endwith %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ── Form + List ── #}
+    <div class="review-main">
+
+      {# ── Write Review Form ── #}
+      {% if user.is_authenticated %}
+      <div class="review-form-card" id="review-form-card">
+        <h4 class="review-form-title">
+          {% if user_review %}✏️ {% trans "Sửa đánh giá của bạn" %}
+          {% else %}✍️ {% trans "Viết đánh giá" %}{% endif %}
+        </h4>
+
+        {% if not has_purchased and not user_review %}
+        <div class="review-not-purchased">
+          <i class="fas fa-info-circle"></i>
+          {% trans "Bạn cần mua sản phẩm này để có thể đánh giá." %}
+        </div>
+        {% else %}
+        <form id="review-form" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {# Star selector #}
+          <div class="review-star-input" id="star-input">
+            <span class="review-star-label">{% trans "Chọn số sao:" %}</span>
+            <div class="star-picker">
+              {% for i in "12345" %}
+              <button type="button" class="star-pick-btn {% if user_review and forloop.counter <= user_review.rating %}star-pick-btn--active{% endif %}"
+                      data-val="{{ forloop.counter }}"
+                      onclick="pickStar({{ forloop.counter }})">
+                <i class="fas fa-star"></i>
+              </button>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="rating" id="rating-input"
+                   value="{% if user_review %}{{ user_review.rating }}{% else %}0{% endif %}">
+          </div>
+
+          {# Title #}
+          <div class="review-field">
+            <label>{% trans "Tiêu đề (không bắt buộc)" %}</label>
+            <input type="text" name="title" class="review-input"
+                   maxlength="100"
+                   placeholder="{% trans 'Tóm tắt đánh giá của bạn...' %}"
+                   value="{% if user_review %}{{ user_review.title }}{% endif %}">
+          </div>
+
+          {# Comment #}
+          <div class="review-field">
+            <label>{% trans "Nội dung đánh giá" %} <span class="review-required">*</span></label>
+            <textarea name="comment" class="review-textarea" rows="4"
+                      placeholder="{% trans 'Chia sẻ trải nghiệm của bạn về sản phẩm...' %}"
+                      required>{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+          </div>
+
+          {# Image upload #}
+          <div class="review-field">
+            <label>{% trans "Ảnh đính kèm (không bắt buộc)" %}</label>
+            <div class="review-upload-area" id="upload-area"
+                 onclick="document.getElementById('review-img-input').click()">
+              <i class="fas fa-camera"></i>
+              <span>{% trans "Nhấp để chọn ảnh" %}</span>
+            </div>
+            <input type="file" name="image" id="review-img-input"
+                   accept="image/*" style="display:none"
+                   onchange="previewImage(this)">
+            <div id="img-preview" class="review-img-preview"></div>
+          </div>
+
+          <div id="review-error" class="review-error-msg" style="display:none"></div>
+
+          <div class="review-form-actions">
+            <button type="submit" class="btn-submit-review">
+              <i class="fas fa-paper-plane"></i>
+              {% if user_review %}{% trans "Cập nhật đánh giá" %}
+              {% else %}{% trans "Gửi đánh giá" %}{% endif %}
+            </button>
+            {% if user_review %}
+            <button type="button" class="btn-delete-review"
+                    onclick="deleteReview({{ user_review.id }})">
+              <i class="fas fa-trash-alt"></i> {% trans "Xóa" %}
+            </button>
+            {% endif %}
+          </div>
+        </form>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="review-login-prompt">
+        <i class="fas fa-user-circle"></i>
+        <span>{% trans "Vui lòng" %} <a href="{% url 'login' %}">{% trans "đăng nhập" %}</a> {% trans "để viết đánh giá." %}</span>
+      </div>
+      {% endif %}
+
+      {# ── Review List ── #}
+      <div class="review-list" id="review-list">
+        {% for review in reviews %}
+        <div class="review-item" id="review-{{ review.id }}">
+          <div class="review-item-header">
+            <div class="review-user-avatar">{{ review.user.username|first|upper }}</div>
+            <div class="review-user-info">
+              <span class="review-username">{{ review.user.username }}</span>
+              {% if review.is_verified_purchase %}
+              <span class="review-verified">✓ {% trans "Đã mua hàng" %}</span>
+              {% endif %}
+            </div>
+            <div class="review-item-stars">
+              {% for i in "12345" %}
+              <i class="fas fa-star {% if forloop.counter <= review.rating %}review-star--filled{% else %}review-star--empty{% endif %}"></i>
+              {% endfor %}
+            </div>
+            <span class="review-date">{{ review.created|date:"d/m/Y" }}</span>
+          </div>
+          {% if review.title %}
+          <h5 class="review-item-title">{{ review.title }}</h5>
+          {% endif %}
+          <p class="review-item-comment">{{ review.comment }}</p>
+          {% if review.image %}
+          <img src="{{ review.image.url }}" class="review-item-image"
+               alt="review image" onclick="this.classList.toggle('review-item-image--full')">
+          {% endif %}
+        </div>
+        {% empty %}
+        <div class="review-empty" id="review-empty">
+          <div class="review-empty-icon">💬</div>
+          <p>{% trans "Chưa có đánh giá nào. Hãy là người đầu tiên!" %}</p>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <style>
-/* ── Variant thumbnails ──────────────────────────── */
-.variant-thumbnails {
-  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
-}
-.variant-thumb {
-  width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
-  border: 2px solid var(--border); cursor: pointer; padding: 0;
-  background: #f8f8f8; transition: all .2s; flex-shrink: 0;
-}
-.variant-thumb img { width:100%;height:100%;object-fit:cover; }
-.variant-thumb:hover { border-color: var(--pink); }
-.variant-thumb--active { border-color: var(--pink); box-shadow: 0 0 0 2px rgba(255,107,107,.25); }
-
-/* ── Variant option buttons ──────────────────────── */
-.variant-selector { margin-bottom: 1.2rem; }
-.variant-selector-label {
-  font-size: .82rem; font-weight: 800; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .05em; margin-bottom: .6rem;
-}
-.variant-options { display: flex; gap: 8px; flex-wrap: wrap; }
-.variant-option-btn {
-  display: flex; flex-direction: column; align-items: center;
-  padding: .5rem .9rem; border: 1.5px solid var(--border);
-  border-radius: var(--r-md); background: var(--white);
-  cursor: pointer; transition: all .2s; min-width: 72px;
-}
-.variant-option-btn:hover {
-  border-color: var(--pink); background: var(--pink-soft);
-}
-.variant-option-btn.active {
-  border-color: var(--pink); background: var(--pink);
-  box-shadow: 0 4px 12px rgba(255,107,107,.3);
-}
-.variant-option-btn.active .variant-btn-name,
-.variant-option-btn.active .variant-btn-price { color: #fff; }
-.variant-option-btn.out-of-stock {
-  opacity: .45; cursor: not-allowed; text-decoration: line-through;
-}
-.variant-btn-name  { font-size: .88rem; font-weight: 700; color: var(--heading); }
-.variant-btn-price { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+.variant-thumbnails{display:flex;gap:8px;flex-wrap:wrap}
+.variant-thumb{width:64px;height:64px;border-radius:10px;overflow:hidden;border:2px solid var(--border);cursor:pointer;padding:0;background:#f8f8f8;flex-shrink:0;transition:all .2s}
+.variant-thumb img{width:100%;height:100%;object-fit:cover}
+.variant-thumb:hover,.variant-thumb--active{border-color:var(--pink);box-shadow:0 0 0 2px rgba(255,107,107,.2)}
+.variant-selector{margin-bottom:1.2rem}
+.variant-selector-label{font-size:.82rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem}
+.variant-options{display:flex;gap:8px;flex-wrap:wrap}
+.variant-option-btn{display:flex;flex-direction:column;align-items:center;padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:var(--r-md);background:var(--white);cursor:pointer;transition:all .2s;min-width:72px}
+.variant-option-btn:hover{border-color:var(--pink);background:var(--pink-soft)}
+.variant-option-btn.active{border-color:var(--pink);background:var(--pink)}
+.variant-option-btn.active .variant-btn-name,.variant-option-btn.active .variant-btn-price{color:#fff}
+.variant-btn-name{font-size:.88rem;font-weight:700;color:var(--heading)}
+.variant-btn-price{font-size:.75rem;color:var(--muted);margin-top:2px}
+.rating-summary{display:flex;gap:1.2rem;align-items:flex-start;background:var(--pink-soft);border-radius:var(--r-lg);padding:1.2rem;margin-top:1.2rem;border:1.5px solid var(--border)}
+.rating-summary-score{font-size:3rem;font-weight:900;color:var(--pink);line-height:1}
+.rating-summary-right{flex:1}
+.rating-stars-big .fa-star{font-size:1.1rem}
+.rating-summary-count{font-size:.82rem;color:var(--muted);margin:.2rem 0 .5rem}
+.rating-bar-row{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--muted);margin-bottom:2px}
+.rating-bar-track{flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.rating-bar-fill{height:100%;background:linear-gradient(to right,var(--pink),var(--orange));border-radius:3px}
+.star-filled{color:#f6ad55!important}
+.star-empty{color:#e0e0e0!important}
+.inline-stars .fa-star{font-size:.9rem}
+.review-jump-link{font-size:.8rem;color:var(--pink);text-decoration:none;font-weight:700;margin-left:.5rem}
+.reviews-section{margin-top:3rem;padding-top:2rem;border-top:2px solid var(--border)}
+.reviews-title{font-size:1.4rem;font-weight:900;color:var(--heading);margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+.reviews-count-badge{background:var(--pink);color:#fff;font-size:.75rem;font-weight:800;padding:.2rem .6rem;border-radius:var(--r-pill)}
+.review-form-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-xl);padding:1.6rem;margin-bottom:1.5rem;box-shadow:var(--shadow-sm)}
+.review-form-title{font-size:1rem;font-weight:800;color:var(--heading);margin-bottom:1.2rem}
+.star-picker{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap}
+.star-picker-label{font-size:.82rem;font-weight:700;color:var(--muted)}
+.star-picker-stars{display:flex;flex-direction:row-reverse;gap:2px}
+.star-picker-stars input{display:none}
+.star-picker-stars label{cursor:pointer;font-size:1.9rem;color:#e0e0e0;transition:.15s}
+.star-picker-stars input:checked ~ label,.star-picker-stars label:hover,.star-picker-stars label:hover ~ label{color:#f6ad55}
+.star-picker-hint{font-size:.8rem;color:var(--muted);font-weight:600}
+.review-comment-field{margin-bottom:.8rem}
+.review-textarea{width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.93rem;resize:vertical;min-height:90px;outline:none;transition:border-color .2s}
+.review-textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,107,107,.1)}
+.review-image-field{margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.review-img-label{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border:1.5px dashed var(--border-hover);border-radius:var(--r-md);cursor:pointer;font-size:.85rem;color:var(--muted);font-weight:600;transition:.2s}
+.review-img-label:hover{border-color:var(--pink);color:var(--pink)}
+.review-img-input{display:none}
+.review-img-preview{width:70px;height:70px;border-radius:var(--r-md);object-fit:cover;border:1.5px solid var(--border)}
+.review-form-actions{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
+.btn-submit-review{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;font-weight:800;padding:.7rem 1.8rem;border-radius:var(--r-pill);border:none;cursor:pointer;box-shadow:var(--shadow-md);transition:.3s}
+.btn-submit-review:hover{transform:translateY(-2px)}
+.btn-delete-review{display:inline-flex;align-items:center;gap:.4rem;background:#fff;color:var(--red);border:1.5px solid var(--red);font-weight:700;padding:.65rem 1.2rem;border-radius:var(--r-pill);cursor:pointer;font-size:.85rem;transition:.2s}
+.btn-delete-review:hover{background:var(--red);color:#fff}
+.review-login-prompt{display:flex;align-items:center;gap:.6rem;background:var(--pink-soft);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.4rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--muted)}
+.review-login-prompt a{color:var(--pink);font-weight:700}
+.review-list{display:flex;flex-direction:column;gap:1rem}
+.review-item{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:1.2rem;transition:.2s}
+.review-item:hover{border-color:var(--border-hover);box-shadow:var(--shadow-sm)}
+.review-item-header{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem}
+.review-item-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0}
+.review-item-meta{flex:1}
+.review-item-user{display:block;font-weight:700;font-size:.88rem;color:var(--heading)}
+.review-item-stars .fa-star{font-size:.78rem}
+.review-item-date{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.review-item-comment{font-size:.9rem;color:var(--text);line-height:1.7;margin-bottom:.6rem}
+.review-item-img{max-width:140px;border-radius:var(--r-md);cursor:pointer;transition:all .3s;border:1.5px solid var(--border)}
+.review-item-img--zoom{max-width:80vw;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;border-radius:var(--r-lg);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.reviews-empty{text-align:center;padding:2.5rem;color:var(--muted)}
+.reviews-empty i{font-size:2.5rem;opacity:.3;display:block;margin-bottom:.8rem}
 </style>
 
 <script>
-// ── Dữ liệu giá gốc sản phẩm ─────────────────────
-const basePrice    = '{{ product.price }}';
-const baseSalePrice = '{{ product.sale_price|default:"" }}';
-const baseImageUrl = '{{ product.image.url|default:"" }}';
-
-// ── Format tiền VND ───────────────────────────────
-function formatVND(amount) {
-  const n = parseFloat(amount);
-  if (isNaN(n)) return '';
-  return n.toLocaleString('vi-VN') + 'đ';
+const hints=['','1 ★ — Rất tệ','2 ★ — Không hài lòng','3 ★ — Bình thường','4 ★ — Hài lòng','5 ★ — Tuyệt vời'];
+document.querySelectorAll('.star-picker-stars input').forEach(r=>{
+  r.addEventListener('change',()=>{const h=document.getElementById('star-hint');if(h)h.textContent=hints[r.value]||'';});
+});
+function previewReviewImg(input){
+  const img=document.getElementById('review-img-preview');
+  if(input.files&&input.files[0]){const r=new FileReader();r.onload=e=>{img.src=e.target.result;img.style.display='block';};r.readAsDataURL(input.files[0]);}
 }
-
-// ── Chọn biến thể ─────────────────────────────────
-function selectVariant(btn) {
-  // Bỏ active tất cả
-  document.querySelectorAll('.variant-option-btn').forEach(b => b.classList.remove('active'));
+function selectVariant(btn){
+  document.querySelectorAll('.variant-option-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-
-  const variantId    = btn.dataset.variantId;
-  const variantPrice = btn.dataset.variantPrice;
-  const variantStock = parseInt(btn.dataset.variantStock);
-  const variantImage = btn.dataset.variantImage;
-  const variantName  = btn.dataset.variantName;
-
-  // 1. Đổi ảnh chính
-  if (variantImage) {
-    const mainImg = document.getElementById('main-product-image');
-    if (mainImg) {
-      mainImg.style.opacity = '0';
-      setTimeout(() => {
-        mainImg.src = variantImage;
-        mainImg.style.opacity = '1';
-      }, 150);
-    }
-    // Sync thumbnail active
-    document.querySelectorAll('.variant-thumb').forEach(t => t.classList.remove('variant-thumb--active'));
-    document.querySelectorAll('.variant-thumb img').forEach(img => {
-      if (img.src === variantImage || img.src.endsWith(variantImage)) {
-        img.closest('.variant-thumb').classList.add('variant-thumb--active');
-      }
-    });
-  }
-
-  // 2. Đổi giá
-  const priceEl    = document.getElementById('price-display');
-  const origEl     = document.getElementById('price-original-display');
-  const pctEl      = document.getElementById('discount-pct-badge');
-  if (priceEl) priceEl.textContent = formatVND(variantPrice);
-  if (origEl)  origEl.style.display = 'none';
-  if (pctEl)   pctEl.style.display  = 'none';
-
-  // 3. Đổi stock
-  const stockEl = document.getElementById('stock-status');
-  const qtyInput = document.getElementById('quantity');
-  const addBtn   = document.getElementById('btn-add-cart');
-  if (stockEl) {
-    if (variantStock > 0) {
-      stockEl.innerHTML = `<span class="stock-in"><i class="fas fa-check-circle"></i> Còn hàng (${variantStock})</span>`;
-      if (qtyInput) qtyInput.max = variantStock;
-      if (addBtn)   addBtn.disabled = false;
-    } else {
-      stockEl.innerHTML = `<span class="stock-out"><i class="fas fa-times-circle"></i> Hết hàng</span>`;
-      if (addBtn) addBtn.disabled = true;
-    }
-  }
-
-  // 4. Ghi variant_id vào form
-  document.getElementById('selected-variant-id').value = variantId;
+  const img=btn.dataset.variantImage,stk=parseInt(btn.dataset.variantStock);
+  if(img){const m=document.getElementById('main-product-image');if(m){m.style.opacity='0';setTimeout(()=>{m.src=img;m.style.opacity='1'},150);}}
+  const pd=document.getElementById('price-display');
+  if(pd)pd.textContent=parseFloat(btn.dataset.variantPrice).toLocaleString('vi-VN')+'đ';
+  const st=document.getElementById('stock-status');
+  if(st){if(stk>0){st.innerHTML='<span class="stock-in"><i class="fas fa-check-circle"></i> Còn hàng ('+stk+')</span>';document.getElementById('quantity').max=stk;const ab=document.getElementById('btn-add-cart');if(ab)ab.disabled=false;}else{st.innerHTML='<span class="stock-out"><i class="fas fa-times-circle"></i> Hết hàng</span>';const ab=document.getElementById('btn-add-cart');if(ab)ab.disabled=true;}}
+  document.getElementById('selected-variant-id').value=btn.dataset.variantId;
 }
-
-// ── Chọn ảnh từ thumbnail ─────────────────────────
-function selectVariantThumb(btn, imageUrl, variantId) {
-  document.querySelectorAll('.variant-thumb').forEach(t => t.classList.remove('variant-thumb--active'));
+function selectVariantThumb(btn,url,vid){
+  document.querySelectorAll('.variant-thumb').forEach(t=>t.classList.remove('variant-thumb--active'));
   btn.classList.add('variant-thumb--active');
+  const m=document.getElementById('main-product-image');if(m){m.style.opacity='0';setTimeout(()=>{m.src=url;m.style.opacity='1'},150);}
+  if(vid){document.querySelectorAll('.variant-option-btn').forEach(b=>b.classList.toggle('active',b.dataset.variantId==vid));document.getElementById('selected-variant-id').value=vid;}
+}
+function changeProductQty(d){const e=document.getElementById('quantity'),v=parseInt(e.value)+d,m=parseInt(e.max)||9999;if(v>=1&&v<=m)e.value=v;}
+function switchDetailTab(btn,id){document.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('detail-tab--active'));document.querySelectorAll('.detail-tab-panel').forEach(p=>p.classList.add('detail-tab-panel--hidden'));btn.classList.add('detail-tab--active');document.getElementById(id).classList.remove('detail-tab-panel--hidden');}
+const acf=document.querySelector('.ajax-cart-form');
+if(acf){acf.addEventListener('submit',function(e){e.preventDefault();const btn=this.querySelector('.btn-add-to-cart-large'),orig=btn.innerHTML;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;fetch(this.action,{method:'POST',body:new FormData(this),headers:{'X-Requested-With':'XMLHttpRequest'}}).then(()=>{const badge=document.querySelector('.cart-badge');if(badge)badge.textContent=parseInt(badge.textContent||0)+1;else{const cl=document.querySelector('.cart-link');if(cl){const b=document.createElement('span');b.className='cart-badge';b.textContent='1';cl.appendChild(b);}}if(typeof showCartToast==='function')showCartToast();}).catch(()=>acf.submit()).finally(()=>{btn.innerHTML=orig;btn.disabled=false;});});}
 
-  const mainImg = document.getElementById('main-product-image');
-  if (mainImg) {
-    mainImg.style.opacity = '0';
-    setTimeout(() => {
-      mainImg.src = imageUrl;
-      mainImg.style.opacity = '1';
-    }, 150);
-  }
+// ════════════════════════════════ REVIEW JS ════════════════════════════════
+let selectedRating = parseInt(document.getElementById('rating-input')?.value || 0);
 
-  // Sync active variant button nếu có
-  if (variantId) {
-    document.querySelectorAll('.variant-option-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.variantId == variantId);
+function pickStar(val) {
+  selectedRating = val;
+  document.getElementById('rating-input').value = val;
+  document.querySelectorAll('.star-pick-btn').forEach((btn, idx) => {
+    btn.classList.toggle('star-pick-btn--active', idx < val);
+  });
+}
+
+function previewImage(input) {
+  const preview = document.getElementById('img-preview');
+  preview.innerHTML = '';
+  if (!input.files[0]) return;
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(input.files[0]);
+  img.className = 'review-preview-img';
+  preview.appendChild(img);
+}
+
+function getCsrf() {
+  const c = document.cookie.split(';').find(x => x.trim().startsWith('csrftoken='));
+  return c ? c.split('=')[1] : '';
+}
+
+function buildStars(rating) {
+  return [1,2,3,4,5].map(i =>
+    `<i class="fas fa-star ${i <= rating ? 'review-star--filled' : 'review-star--empty'}"></i>`
+  ).join('');
+}
+
+function updateSummary(avg, total) {
+  const avgEl  = document.getElementById('avg-score');
+  const starsEl = document.getElementById('avg-stars');
+  const cntEl  = document.getElementById('avg-count');
+  if (avgEl)   avgEl.textContent = avg;
+  if (starsEl) starsEl.innerHTML = buildStars(Math.round(avg));
+  if (cntEl)   cntEl.textContent = total + ' {% trans "đánh giá" %}';
+}
+
+// ── Submit review ────────────────────────────────
+const reviewForm = document.getElementById('review-form');
+if (reviewForm) {
+  reviewForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const errorEl = document.getElementById('review-error');
+    errorEl.style.display = 'none';
+
+    if (!selectedRating) {
+      errorEl.textContent = '{% trans "Vui lòng chọn số sao." %}';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    const btn = this.querySelector('.btn-submit-review');
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
+
+    const fd = new FormData(this);
+    try {
+      const res  = await fetch('/review/submit/{{ product.id }}/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCsrf() },
+        body: fd,
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        errorEl.textContent = data.error;
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const r = data.review;
+
+      const emptyEl = document.getElementById('review-empty');
+      if (emptyEl) emptyEl.remove();
+
+      const html = `
+        <div class="review-item" id="review-${r.id}">
+          <div class="review-item-header">
+            <div class="review-user-avatar">${r.username[0].toUpperCase()}</div>
+            <div class="review-user-info">
+              <span class="review-username">${r.username}</span>
+              ${r.verified ? '<span class="review-verified">✓ {% trans "Đã mua hàng" %}</span>' : ''}
+            </div>
+            <div class="review-item-stars">${buildStars(r.rating)}</div>
+            <span class="review-date">${r.date}</span>
+          </div>
+          ${r.title ? `<h5 class="review-item-title">${r.title}</h5>` : ''}
+          <p class="review-item-comment">${r.comment}</p>
+          ${r.image_url ? `<img src="${r.image_url}" class="review-item-image">` : ''}
+        </div>`;
+
+      const list = document.getElementById('review-list');
+      const existing = document.getElementById(`review-${r.id}`);
+      if (existing) {
+        existing.outerHTML = html;
+      } else {
+        list.insertAdjacentHTML('afterbegin', html);
+      }
+
+      updateSummary(data.avg_rating, data.total);
+
+      const formTitle = document.querySelector('.review-form-title');
+      if (formTitle) formTitle.innerHTML = '✏️ {% trans "Sửa đánh giá của bạn" %}';
+
+      const actions = document.querySelector('.review-form-actions');
+      if (actions && !actions.querySelector('.btn-delete-review')) {
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'btn-delete-review';
+        delBtn.innerHTML = '<i class="fas fa-trash-alt"></i> {% trans "Xóa" %}';
+        delBtn.onclick = () => deleteReview(r.id);
+        actions.appendChild(delBtn);
+      }
+
+      showCartToast('{% trans "Đánh giá đã được gửi!" %}');
+
+    } catch(err) {
+      errorEl.textContent = '{% trans "Có lỗi xảy ra, vui lòng thử lại." %}';
+      errorEl.style.display = 'block';
+    } finally {
+      btn.innerHTML = origHtml;
+      btn.disabled = false;
+    }
+  });
+}
+
+// ── Delete review ────────────────────────────────
+async function deleteReview(reviewId) {
+  if (!confirm('{% trans "Bạn có chắc muốn xóa đánh giá này?" %}')) return;
+
+  try {
+    const res  = await fetch(`/review/delete/${reviewId}/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCsrf() },
     });
-    document.getElementById('selected-variant-id').value = variantId;
+    const data = await res.json();
+    if (data.ok) {
+      const el = document.getElementById(`review-${reviewId}`);
+      if (el) el.remove();
+      updateSummary(data.avg_rating, data.total);
+
+      const form = document.getElementById('review-form');
+      if (form) form.reset();
+      selectedRating = 0;
+      document.querySelectorAll('.star-pick-btn').forEach(b => b.classList.remove('star-pick-btn--active'));
+      document.getElementById('rating-input').value = 0;
+      document.getElementById('img-preview').innerHTML = '';
+
+      const formTitle = document.querySelector('.review-form-title');
+      if (formTitle) formTitle.innerHTML = '✍️ {% trans "Viết đánh giá" %}';
+
+      const delBtn = document.querySelector('.btn-delete-review');
+      if (delBtn) delBtn.remove();
+
+      if (data.total === 0) {
+        document.getElementById('review-list').innerHTML = `
+          <div class="review-empty" id="review-empty">
+            <div class="review-empty-icon">💬</div>
+            <p>{% trans "Chưa có đánh giá nào. Hãy là người đầu tiên!" %}</p>
+          </div>`;
+      }
+    }
+  } catch(e) {
+    alert('{% trans "Có lỗi xảy ra, vui lòng thử lại." %}');
   }
 }
 
-// ── Số lượng ─────────────────────────────────────
-function changeProductQty(delta) {
-  const el  = document.getElementById('quantity');
-  const val = parseInt(el.value) + delta;
-  const max = parseInt(el.max) || 9999;
-  if (val >= 1 && val <= max) el.value = val;
-}
-
-// ── Tab ───────────────────────────────────────────
-function switchDetailTab(btn, tabId) {
-  document.querySelectorAll('.detail-tab').forEach(b => b.classList.remove('detail-tab--active'));
-  document.querySelectorAll('.detail-tab-panel').forEach(p => p.classList.add('detail-tab-panel--hidden'));
-  btn.classList.add('detail-tab--active');
-  document.getElementById(tabId).classList.remove('detail-tab-panel--hidden');
-}
-
-// ── Hiệu ứng fade ảnh ────────────────────────────
-const mainImg = document.getElementById('main-product-image');
-if (mainImg) {
-  mainImg.style.transition = 'opacity 0.15s ease';
-}
 </script>
 {% endblock %}

@@ -6,6 +6,8 @@ from django.contrib.auth import views as auth_views
 
 from accounts import views as accounts_views
 from accounts.account_views import my_account, chatbot_api
+from store import review_views
+from carts import voucher_views
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -48,12 +50,20 @@ urlpatterns = [
     path('accounts/logout/',   auth_views.LogoutView.as_view(), name='logout'),
     path('accounts/register/', accounts_views.register,         name='register'),
     
-    # My Account - profile page
-    path('accounts/profile/',  my_account,                      name='account:my_account'),
+    # My Account - profile page (sửa tên không dấu hai chấm)
+    path('accounts/profile/',  my_account,                      name='account_my_account'),
     path('accounts/me/',       my_account,                      name='my_account'),  # Alias đơn giản
     
     # Chatbot API proxy (gọi Anthropic từ backend để bảo mật API key)
     path('api/chat/',          chatbot_api,                     name='chatbot_api'),
+
+    # Reviews
+    path('review/submit/<int:product_id>/', review_views.submit_review, name='submit_review'),
+    path('review/delete/<int:review_id>/',  review_views.delete_review,  name='delete_review'),
+
+    # Voucher
+    path('api/voucher/apply/',  voucher_views.apply_voucher,  name='apply_voucher'),
+    path('api/voucher/remove/', voucher_views.remove_voucher, name='remove_voucher'),
 ]
 
 
