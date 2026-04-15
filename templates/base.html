@@ -241,6 +241,8 @@ function scrollToTop() { window.scrollTo({top:0,behavior:'smooth'}); }
 document.querySelectorAll('form').forEach(f => {
   // Bỏ qua form chatbot và form ngôn ngữ (nhỏ, không cần spinner)
   if (f.closest('.chatbot-input-area') || f.closest('.lang-menu')) return;
+  // Bỏ qua form AJAX thêm giỏ hàng vì đã xử lý riêng
+  if (f.classList.contains('ajax-cart-form')) return;
   f.addEventListener('submit', () => {
     document.getElementById('global-spinner').classList.add('global-spinner--show');
   });
