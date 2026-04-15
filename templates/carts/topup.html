@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load store_filters %}
+
+{% block title %}{% trans "Nạp tiền" %} — GTShop{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop Wallet</p>
+    <h1 class="page-header-title">💳 {% trans "Nạp tiền vào ví" %}</h1>
+    <p class="page-header-subtitle">{% trans "Số dư hiện tại:" %} <b>{{ wallet.balance|floatformat:0|intcomma }}₫</b></p>
+  </div>
+</div>
+
+<div class="container topup-container">
+
+  <div class="topup-packages">
+    {% for pkg in packages %}
+    <form method="post" action="{% url 'wallet_topup' %}">
+      {% csrf_token %}
+      <input type="hidden" name="amount" value="{{ pkg.amount }}">
+      <input type="hidden" name="bonus" value="{{ pkg.bonus }}">
+      <button type="submit" class="topup-package-card {% if pkg.bonus > 0 %}topup-package-card--popular{% endif %}">
+        {% if pkg.bonus > 0 %}
+        <span class="topup-badge">+{{ pkg.bonus|floatformat:0|intcomma }}₫ {% trans "bonus" %}</span>
+        {% endif %}
+        <div class="topup-amount">{{ pkg.label }}</div>
+        {% if pkg.bonus > 0 %}
+        <div class="topup-total">{% trans "Nhận" %} {{ pkg.amount|add:pkg.bonus|floatformat:0|intcomma }}₫</div>
+        {% else %}
+        <div class="topup-total">{% trans "Nhận" %} {{ pkg.label }}</div>
+        {% endif %}
+        <div class="topup-btn-label">{% trans "Nạp ngay" %}</div>
+      </button>
+    </form>
+    {% endfor %}
+  </div>
+
+  {# Custom amount #}
+  <div class="topup-custom">
+    <h3>{% trans "Hoặc nhập số tiền tùy ý" %}</h3>
+    <form method="post" action="{% url 'wallet_topup' %}" class="topup-custom-form">
+      {% csrf_token %}
+      <input type="hidden" name="bonus" value="0">
+      <div class="topup-input-wrap">
+        <input type="number" name="amount" min="10000" step="10000"
+               placeholder="{% trans 'Nhập số tiền (tối thiểu 10.000đ)' %}" class="topup-custom-input">
+        <span class="topup-currency">₫</span>
+      </div>
+      <button type="submit" class="btn-topup-confirm">
+        <i class="fas fa-wallet"></i> {% trans "Nạp tiền" %}
+      </button>
+    </form>
+  </div>
+
+  <div class="topup-note">
+    <i class="fas fa-info-circle"></i>
+    <span>{% trans "Demo mode: tiền được nạp ngay lập tức. Production cần tích hợp VNPay/Momo/ZaloPay." %}</span>
+  </div>
+
+  <div class="text-center mt-3">
+    <a href="{% url 'wallet_home' %}" class="btn-back-wallet">
+      <i class="fas fa-arrow-left"></i> {% trans "Quay lại ví" %}
+    </a>
+  </div>
+
+</div>
+{% endblock %}

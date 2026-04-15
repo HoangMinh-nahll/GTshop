@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load store_filters %}
+
+{% block title %}{% trans "Ví GTShop" %} | GTShop{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop</p>
+    <h1 class="page-header-title">💳 {% trans "Ví GTShop" %}</h1>
+    <p class="page-header-subtitle">{% trans "Quản lý số dư và voucher của bạn" %}</p>
+  </div>
+</div>
+
+<div class="container wallet-container">
+  <div class="wallet-layout">
+
+    {# ── Cột trái: Balance + Actions ── #}
+    <div class="wallet-left">
+
+      {# Balance card #}
+      <div class="wallet-balance-card">
+        <div class="wallet-balance-label">{% trans "Số dư hiện tại" %}</div>
+        <div class="wallet-balance-amount">{{ wallet.balance|floatformat:0|intcomma }}₫</div>
+        <div class="wallet-actions">
+          <a href="{% url 'wallet_topup' %}" class="btn-wallet-topup">
+            <i class="fas fa-plus-circle"></i> {% trans "Nạp tiền" %}
+          </a>
+          <a href="{% url 'wallet_spin' %}" class="btn-wallet-spin">
+            <i class="fas fa-dharmachakra"></i> {% trans "Vòng quay" %}
+          </a>
+        </div>
+      </div>
+
+      {# My Vouchers #}
+      <div class="wallet-section-card">
+        <h3 class="wallet-section-title"><i class="fas fa-ticket-alt"></i> {% trans "Voucher của tôi" %}</h3>
+        {% if vouchers %}
+        <div class="voucher-list">
+          {% for uv in vouchers %}
+          <div class="voucher-item">
+            <div class="voucher-item-icon">🎟️</div>
+            <div class="voucher-item-info">
+              <span class="voucher-code">{{ uv.voucher.code }}</span>
+              <span class="voucher-desc">{{ uv.voucher }}</span>
+              {% if uv.voucher.expires_at %}
+              <span class="voucher-exp">{% trans "Hết hạn:" %} {{ uv.voucher.expires_at|date:"d/m/Y" }}</span>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="wallet-empty">
+          <span>🎟️</span>
+          <p>{% trans "Bạn chưa có voucher nào." %}<br>
+            <a href="{% url 'wallet_spin' %}">{% trans "Quay vòng quay may mắn" %}</a> {% trans "để nhận voucher!" %}
+          </p>
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    {# ── Cột phải: Transaction history ── #}
+    <div class="wallet-right">
+      <div class="wallet-section-card">
+        <h3 class="wallet-section-title"><i class="fas fa-history"></i> {% trans "Lịch sử giao dịch" %}</h3>
+        {% if transactions %}
+        <div class="txn-list">
+          {% for txn in transactions %}
+          <div class="txn-item">
+            <div class="txn-icon txn-icon--{{ txn.type }}">
+              {% if txn.type == 'topup' %}<i class="fas fa-arrow-down"></i>
+              {% elif txn.type == 'spend' %}<i class="fas fa-shopping-bag"></i>
+              {% else %}<i class="fas fa-gift"></i>{% endif %}
+            </div>
+            <div class="txn-info">
+              <span class="txn-note">{{ txn.note|default:"—" }}</span>
+              <span class="txn-date">{{ txn.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+            <span class="txn-amount {% if txn.amount > 0 %}txn-amount--in{% else %}txn-amount--out{% endif %}">
+              {% if txn.amount > 0 %}+{% endif %}{{ txn.amount|floatformat:0|intcomma }}₫
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="wallet-empty">
+          <span>📋</span>
+          <p>{% trans "Chưa có giao dịch nào." %}</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

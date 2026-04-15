@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load store_filters %}
+
+{% block title %}{% trans "Vòng quay may mắn" %} — GTShop{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <p class="page-header-eyebrow">GTShop</p>
+    <h1 class="page-header-title">🎡 {% trans "Vòng quay may mắn" %}</h1>
+    <p class="page-header-subtitle">{% trans "Quay để nhận voucher giảm giá hấp dẫn!" %}</p>
+  </div>
+</div>
+
+<div class="container spin-container">
+  <div class="spin-layout">
+
+    {# ── Vòng quay ── #}
+    <div class="spin-wheel-wrap">
+
+      {# Balance badge #}
+      <div class="spin-balance-badge">
+        <i class="fas fa-wallet"></i>
+        <span id="spin-balance">{{ wallet.balance|floatformat:0|intcomma }}₫</span>
+        <a href="{% url 'wallet_topup' %}" class="spin-topup-link">+{% trans "Nạp" %}</a>
+      </div>
+
+      {# Canvas wheel #}
+      <div class="spin-wheel-container">
+        <canvas id="spinCanvas" width="380" height="380"></canvas>
+        <div class="spin-arrow">▼</div>
+        <button class="btn-spin" id="btn-spin" onclick="doSpin()">
+          <span class="btn-spin-text">{% trans "QUAY!" %}</span>
+          <span class="btn-spin-cost">{{ spin_cost|floatformat:0|intcomma }}₫</span>
+        </button>
+      </div>
+
+      <p class="spin-cost-note">
+        <i class="fas fa-coins"></i>
+        {% trans "Mỗi lần quay tốn" %} <b>{{ spin_cost|floatformat:0|intcomma }}₫</b>
+      </p>
+
+    </div>
+
+    {# ── Kết quả + Voucher ── #}
+    <div class="spin-right">
+
+      {# Result panel #}
+      <div class="spin-result-panel" id="spin-result" style="display:none">
+        <div class="spin-result-icon" id="spin-result-icon">🎉</div>
+        <h3 class="spin-result-title" id="spin-result-title">{% trans "Chúc mừng!" %}</h3>
+        <p class="spin-result-msg" id="spin-result-msg"></p>
+        <div class="spin-result-code" id="spin-result-code" style="display:none">
+          <span id="spin-code-text"></span>
+          <button onclick="copyCode()" class="btn-copy-code"><i class="fas fa-copy"></i></button>
+        </div>
+        <button onclick="hideResult()" class="btn-spin-again">{% trans "Quay tiếp" %}</button>
+      </div>
+
+      {# My vouchers #}
+      <div class="spin-vouchers-card">
+        <h4><i class="fas fa-ticket-alt"></i> {% trans "Voucher đã có" %}</h4>
+        <div id="spin-voucher-list">
+          {% if my_vouchers %}
+          {% for uv in my_vouchers %}
+          <div class="spin-voucher-item">
+            <span class="spin-voucher-code">{{ uv.voucher.code }}</span>
+            <span class="spin-voucher-desc">{{ uv.voucher }}</span>
+            {% if uv.voucher.expires_at %}
+            <span class="spin-voucher-exp">{{ uv.voucher.expires_at|date:"d/m/Y" }}</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+          {% else %}
+          <p class="spin-vouchers-empty" id="spin-vouchers-empty">{% trans "Chưa có voucher. Quay thử đi!" %}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Prizes table #}
+      <div class="spin-prizes-card">
+        <h4><i class="fas fa-list"></i> {% trans "Bảng phần thưởng" %}</h4>
+        {% for p in prizes %}
+        <div class="spin-prize-row" style="--prize-color:{{ p.color|default:'#ff6b6b' }}">
+          <span class="spin-prize-dot"></span>
+          <span class="spin-prize-label">{{ p.label }}</span>
+          <span class="spin-prize-chance">{{ p.weight }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Wheel data ──────────────────────────────────
+const prizes = {{ prizes|safe }};
+const N = prizes.length;
+const TWO_PI = Math.PI * 2;
+const ARC = TWO_PI / N;
+
+// ── Draw wheel ──────────────────────────────────
+const canvas = document.getElementById('spinCanvas');
+const ctx = canvas.getContext('2d');
+let currentAngle = 0;
+
+function drawWheel(angle) {
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  const R = cx - 10;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  prizes.forEach((p, i) => {
+    const start = angle + i * ARC;
+    const end   = start + ARC;
+
+    // Sector
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, start, end);
+    ctx.closePath();
+    ctx.fillStyle = p.color || '#ff6b6b';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + ARC / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px Inter, sans-serif';
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 3;
+    ctx.fillText(p.label, R - 14, 5);
+    ctx.restore();
+  });
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, 32, 0, TWO_PI);
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 32);
+  grad.addColorStop(0, '#fff');
+  grad.addColorStop(1, '#ffe0e0');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = '#ff6b6b';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.fillStyle = '#ff6b6b';
+  ctx.font = 'bold 11px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('GTShop', cx, cy + 4);
+}
+
+drawWheel(0);
+
+// ── Spin logic ──────────────────────────────────
+let spinning = false;
+
+async function doSpin() {
+  if (spinning) return;
+
+  const btn = document.getElementById('btn-spin');
+  btn.disabled = true;
+  spinning = true;
+
+  // Hide previous result
+  document.getElementById('spin-result').style.display = 'none';
+
+  try {
+    const res  = await fetch('/api/wallet/spin/', {
+      method: 'POST',
+      headers: {'X-CSRFToken': getCsrf()},
+    });
+    const data = await res.json();
+
+    if (!data.ok) {
+      alert(data.error);
+      btn.disabled = false;
+      spinning = false;
+      return;
+    }
+
+    // Calculate target angle so prize_idx lands under arrow (top = -PI/2)
+    const prizeIdx = data.prize_idx;
+    const targetSector = -Math.PI / 2 - (prizeIdx * ARC + ARC / 2);
+    const fullRotations = (5 + Math.random() * 3) * TWO_PI;
+    const finalAngle    = currentAngle + fullRotations + (targetSector - ((currentAngle) % TWO_PI));
+
+    // Animate
+    const duration  = 5000;
+    const startTime = performance.now();
+    const startAngle = currentAngle;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      currentAngle = startAngle + (finalAngle - startAngle) * easeOut(progress);
+      drawWheel(currentAngle);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        currentAngle = finalAngle % TWO_PI;
+        drawWheel(currentAngle);
+        showResult(data);
+        // Update balance
+        document.getElementById('spin-balance').textContent =
+          parseInt(data.new_balance).toLocaleString('vi-VN') + '₫';
+        spinning = false;
+        btn.disabled = false;
+      }
+    }
+    requestAnimationFrame(animate);
+
+  } catch(e) {
+    alert('Lỗi kết nối. Thử lại!');
+    btn.disabled = false;
+    spinning = false;
+  }
+}
+
+function showResult(data) {
+  const panel = document.getElementById('spin-result');
+  const icon  = document.getElementById('spin-result-icon');
+  const title = document.getElementById('spin-result-title');
+  const msg   = document.getElementById('spin-result-msg');
+  const codeWrap = document.getElementById('spin-result-code');
+  const codeText = document.getElementById('spin-code-text');
+
+  panel.style.display = 'block';
+  msg.textContent = data.result_msg;
+
+  if (data.voucher_code) {
+    icon.textContent = '🎉';
+    title.textContent = 'Chúc mừng!';
+    codeWrap.style.display = 'flex';
+    codeText.textContent = data.voucher_code;
+    // Add to voucher list
+    addVoucherToList(data.voucher_code, data.prize_label);
+  } else {
+    icon.textContent = '🎲';
+    title.textContent = 'Chúc bạn may mắn!';
+    codeWrap.style.display = 'none';
+  }
+  panel.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function hideResult() {
+  document.getElementById('spin-result').style.display = 'none';
+}
+
+function addVoucherToList(code, label) {
+  const list = document.getElementById('spin-voucher-list');
+  const empty = document.getElementById('spin-vouchers-empty');
+  if (empty) empty.remove();
+  const div = document.createElement('div');
+  div.className = 'spin-voucher-item spin-voucher-item--new';
+  div.innerHTML = `<span class="spin-voucher-code">${code}</span>
+                   <span class="spin-voucher-desc">${label}</span>`;
+  list.insertAdjacentElement('afterbegin', div);
+}
+
+function copyCode() {
+  const code = document.getElementById('spin-code-text').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.btn-copy-code');
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 2000);
+  });
+}
+
+function getCsrf() {
+  const v = document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='));
+  return v ? v.split('=')[1] : '';
+}
+</script>
+{% endblock %}
